@@ -3,7 +3,6 @@ import {
 } from "react-router-dom";
 
 // homepage
-import Landing from '../pages/landing/landing.js'
 import Homepage from "../pages/landing/homepage.js";
 
 // login and register
@@ -15,14 +14,6 @@ import Register from "../pages/user/register";
 const default_router = createBrowserRouter([
     {
         path: '/',
-        element: <Homepage />
-    },
-    {
-        path: '/landing',
-        element: <Landing />
-    },
-    {
-        path: '/homepage',
         element: <Homepage />
     },
     {
