@@ -6,19 +6,13 @@ import {
 import Homepage from "../pages/landing/homepage.js";
 
 // login and register
-import Login from "../pages/user/login";
 import LoginAndRegister from "../pages/user/loginAndRegister";
 import FindPassword from "../pages/user/findPassword";
-import Register from "../pages/user/register";
 
 const default_router = createBrowserRouter([
     {
         path: '/',
         element: <Homepage />
-    },
-    {
-        path: '/login',
-        element: <Login />
     },
     {
         path: '/loginAndRegister',
@@ -27,10 +21,6 @@ const default_router = createBrowserRouter([
     {
         path: '/findPassword',
         element: <FindPassword />
-    },
-    {
-        path: '/register',
-        element: <Register />
     },
 ])
 

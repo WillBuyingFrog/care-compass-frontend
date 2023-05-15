@@ -6,37 +6,6 @@ import Conferences from "./conferences";
 import Papers from "./paper";
 import MyHeader from "../../components/header/header";
 
-function Header1(){
-    const [input,setInput] = React.useState()
-    return (
-        <Row>
-            <Col span={2}>
-                <img src={require("../../assets/acegate_icon.png")} style={{height:80,width:80, marginRight:30}}></img>
-            </Col>
-            <Col span={19}>
-                <Input
-                    style={{marginTop:20}}
-                    size='lg'
-                    backgroundColor='white'
-                    width='80%'
-                    placeholder="输入您想搜索的论文，学者等，敲下回车"
-                    onChange={(e) => {
-                        setInput(e.target.value)
-                    }}
-                    onKeyPress={(value) => {
-                        if(value.key === "Enter") {
-                            window.open("/defaultSearch?q=" + input)
-                        }
-                    }}
-                />
-            </Col>
-            <Col span={3}>
-
-            </Col>
-        </Row>
-    )
-}
-
 function Homepage(){
     useEffect(()=>{
         let bg = document.querySelector('#bg')
@@ -55,7 +24,7 @@ function Homepage(){
     }, [])
     return(
         <Box>
-        {/*<MyHeader></MyHeader>*/}
+        <MyHeader></MyHeader>
         <div className="homepage">
             <section>
                 <img
@@ -76,10 +45,10 @@ function Homepage(){
                 />
                 <div id="middle">
                     <Text className="text1" fontWeight={'extrabold'}>
-                        AceGate
+                        CareCompass
                     </Text>
                     <Text className="text2" fontWeight={'extrabold'}>
-                        Your Gate Towards Academia.
+                        Your Compass Towards Health Care.
                     </Text>
                 </div>
             </section>

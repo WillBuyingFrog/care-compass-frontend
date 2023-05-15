@@ -6,7 +6,7 @@ import MyHeader from '../../components/header/header';
 import {
     Typography,
     Layout,
-message,
+    message,
     Upload,
     Col,
     Row,
@@ -66,7 +66,7 @@ const registerUser  = (username, password, email, verificationCode) =>{
                 message.success("注册成功，请前往登录")
                 status = res.data.status
             }
-            
+
             else
             message.error(res.data.message)
             console.log(res.data)
@@ -124,7 +124,7 @@ function LoginAndRegister () {
                     navigate("/");
                 }, 1000);
             }
-            
+
         }else if(data.status === "登录成功") {
         } else if (data.status === "密码错误") {
         } else {
@@ -155,7 +155,7 @@ function LoginAndRegister () {
             }
             else
                 message.error(res.data.message)
-            
+
         })
         console.log(ret)
         return ret;
@@ -175,10 +175,10 @@ function LoginAndRegister () {
     //             duration: 9000,
     //             isClosable: true,
     //           })
-    //           return -1; 
+    //           return -1;
     //     }
     //     if (countdown === 0) {
-    //         let result =  await sendVerificationEmail(email); 
+    //         let result =  await sendVerificationEmail(email);
     //         if(result == 200){
     //             // let siv = setInterval(() => {
     //             //     if(wait == 0)
@@ -203,10 +203,10 @@ function LoginAndRegister () {
                 duration: 9000,
                 isClosable: true,
               })
-              return -1; 
+              return -1;
         }
         if (countdown === 0) {
-            let result =  await sendVerificationEmail(email); 
+            let result =  await sendVerificationEmail(email);
             console.log(result)
             if(result == 200){
                 let second = wait;
@@ -246,7 +246,7 @@ function LoginAndRegister () {
                 duration: 9000,
                 isClosable: true,
               })
-              return -1; 
+              return -1;
         }
         if (password.length < 8 || password.length > 16) {
             toast({
@@ -256,10 +256,10 @@ function LoginAndRegister () {
                 duration: 9000,
                 isClosable: true,
               })
-              return -1; 
+              return -1;
         }
 
-        
+
         var reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
         if (!reg.test(password)) {
             toast({
@@ -269,7 +269,7 @@ function LoginAndRegister () {
                 duration: 9000,
                 isClosable: true,
               })
-              return -1; 
+              return -1;
         }
         if (password !== password2) {
             toast({
@@ -279,7 +279,7 @@ function LoginAndRegister () {
                 duration: 9000,
                 isClosable: true,
               })
-              return -1; 
+              return -1;
         }
         if (email === "") {
             toast({
@@ -289,7 +289,7 @@ function LoginAndRegister () {
                 duration: 9000,
                 isClosable: true,
               })
-              return -1; 
+              return -1;
         }
 
         if (!validateEmail(email)) {
@@ -300,7 +300,7 @@ function LoginAndRegister () {
                 duration: 9000,
                 isClosable: true,
               })
-              return -1; 
+              return -1;
         }
 
         if (hasSendCode === 0) {
@@ -315,7 +315,7 @@ function LoginAndRegister () {
         }
         let status = registerUser(username, password, email, verifyCode);
         setTimeout(goToLogin(), 1000)
-        
+
     }
 
     // 去注册
@@ -344,7 +344,7 @@ function LoginAndRegister () {
     }
 
     return (
-        
+
         <Layout className="layout">
             <MyHeader></MyHeader>
             <Content
@@ -448,7 +448,7 @@ function LoginAndRegister () {
                                             width: '55%',
                                         }}
                                     />
-                                    
+
                                     {
                                          wait == 60?(
                                             <Button
@@ -482,7 +482,7 @@ function LoginAndRegister () {
                                             </Button>
                                          )
                                     }
-                                    
+
                                 </Form.Item>
                             </Form>
                             <Button
