@@ -31,6 +31,7 @@ function MyHeader({textColor, isLanding=false}){
     const [user, SetUser]=React.useState({uname:''});
     const [open, setOpen] = React.useState(false);
     const [isLoggedIn, setIsLoggedIn]=React.useState(0);
+    const [status, setStatus]=React.useState(0);
     const showDrawer = () => {
         setOpen(true);
     };
@@ -110,7 +111,7 @@ function MyHeader({textColor, isLanding=false}){
         <Box
             w='100%'
             h='9.5vh'
-            bg='#0a2a43'
+            bg='#1A365D'
         >
             <Row>
                 <Col span='17'>
@@ -178,7 +179,7 @@ function MyHeader({textColor, isLanding=false}){
                         :
                         <Button w='150px' mt='8px' onClick={()=>{
                             navigate('/loginAndRegister')
-                        }}
+                        }} id='loginButton'
                         >登录/注册</Button>
                     }
                 </Col>

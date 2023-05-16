@@ -87,6 +87,8 @@ function LoginAndRegister () {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
+    const [officialID, setOfficialID] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [data ,setData] = React.useState();
     const navigate = useNavigate();
     const toast = useToast();
@@ -230,7 +232,7 @@ function LoginAndRegister () {
     const handleRegister = () => {
         if(username == ''){
             toast({
-                title: '请输入用户名',
+                title: '请输入真实姓名',
                 status: 'error',
                 position:'top',
                 duration: 9000,
@@ -281,31 +283,10 @@ function LoginAndRegister () {
               })
               return -1;
         }
-        if (email === "") {
-            toast({
-                title: '请填写邮箱',
-                status: 'error',
-                position:'top',
-                duration: 9000,
-                isClosable: true,
-              })
-              return -1;
-        }
-
-        if (!validateEmail(email)) {
-            toast({
-                title: '请填写合法的邮箱',
-                status: 'error',
-                position:'top',
-                duration: 9000,
-                isClosable: true,
-              })
-              return -1;
-        }
 
         if (hasSendCode === 0) {
             toast({
-                title: '请获取邮箱验证码',
+                title: '请获取验证码',
                 status: 'error',
                 position:'top',
                 duration: 9000,
@@ -364,8 +345,8 @@ function LoginAndRegister () {
                         backgroundColor: 'white',
                         boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
                         borderRadius: '10px',
-                        width: '650px',
-                        height: '415px',
+                        width: '680px',
+                        height: '430px',
                         margin: 'auto',
                         marginTop: '80px',
                     }}
@@ -399,9 +380,19 @@ function LoginAndRegister () {
                                 >
                                     <Input
                                         className={'registerInput'}
-                                        placeholder="用户名"
+                                        placeholder="姓名"
                                         autoComplete={'off'}
                                         onChange={e => setUsername(e.target.value)}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    name="officialID"
+                                >
+                                    <Input
+                                        className={'registerInput'}
+                                        placeholder="身份证号"
+                                        autoComplete={'off'}
+                                        onChange={e => setOfficialID(e.target.value)}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -425,14 +416,13 @@ function LoginAndRegister () {
                                     />
                                 </Form.Item>
                                 <Form.Item
-                                    name="email"
+                                    name="phoneNumber"
                                 >
                                     <Input
                                         className={'registerInput'}
                                         autoComplete={'off'}
-                                        placeholder="邮箱"
-                                        type="email"
-                                        onChange={e => setEmail(e.target.value)}
+                                        placeholder="手机号"
+                                        onChange={e => setPhoneNumber(e.target.value)}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -587,8 +577,8 @@ function LoginAndRegister () {
                         >去登录</Button>
                     </div>
                     <div className="con-box right">
-                        <h2>欢迎来到<span className="blueText">AceGate</span></h2>
-                        <p>Your gate towards<span className="blueText"> academia</span>.</p>
+                        <h2>欢迎来到<span className="blueText">CareCompass</span></h2>
+                        <p>Your compass towards<span className="blueText"> health care</span>.</p>
                         <Image
                             style={{
                                 margin: 'auto',

@@ -14,11 +14,11 @@ body{
 .form-box{
     /* 绝对定位 */
     position: absolute;
-    top: -10%;
+    top: -15%;
     left: 5%;
-    background-color: #a3b9f8;
-    width: 320px;
-    height: 500px;
+    background-color: #748ba9;
+    width: 340px;
+    height: 550px;
     border-radius: 10px;
     box-shadow: 4px 4px 15px 0 rgba(0,0,0,0.1);
     display: flex;
@@ -59,9 +59,9 @@ body{
     color: #fff;
 }
 .loginInput:focus{
-    color: #24388a;
+    color: #2C5282;
     outline: none;
-    border-bottom: 1px solid #24388a;
+    border-bottom: 1px solid #2C5282;
     transition: 0.5s;
     box-shadow: none;
 }
@@ -76,7 +76,7 @@ body{
     border: none;
     /* 下边框样式 */
     border-bottom: 1px solid rgba(255,255,255,0.4);
-    padding: 10px 0;
+    padding: 3px 0;
     text-indent: 10px;
     margin: 0;
     font-size: 14px;
@@ -86,9 +86,9 @@ body{
     color: #fff;
 }
 .registerInput:focus{
-    color: #24388a;
+    color: #2C5282;
     outline: none;
-    border-bottom: 1px solid #24388a;
+    border-bottom: 1px solid #2C5282;
     transition: 0.5s;
     box-shadow: none;
 }
@@ -99,7 +99,7 @@ body{
 
 .form-box button{
     background-color: #f6f6f6;
-    color: #728fea;
+    color: #2C5282;
     outline: none;
     padding: 13px;
     /*color: #a262ad;*/
@@ -108,7 +108,7 @@ body{
     cursor: pointer;
 }
 .form-box button:hover{
-    background-color: #1b3bbb;
+    background-color: #2C5282;
     color: #f6f6f6;
     transition: background-color 0.5s ease;
 }
@@ -132,21 +132,21 @@ body{
     right: -2%;
 }
 .con-box h2{
-    color: #8e9aaf;
+    color: #2C5282;
     font-size: 25px;
     font-weight: bold;
-    letter-spacing: 3px;
+    letter-spacing: 0px;
     text-align: center;
     margin-bottom: 4px;
 }
 .con-box p{
     font-size: 12px;
     letter-spacing: 2px;
-    color: #8e9aaf;
+    color: #2C5282;
     text-align: center;
 }
 .blueText{
-    color: #a3b9f8;
+    color: #A0AEC0;
 }
 .con-box img{
     width: 150px;
@@ -158,8 +158,8 @@ body{
 .con-box button{
     margin-top: 3%;
     background-color: #fff;
-    color: #1b3bbb;
-    border: 1px solid #a3b9f8;
+    color: #2C5282;
+    border: 1px solid #2C5282;
     padding: 6px 10px;
     /*border-radius: 5px;*/
     letter-spacing: 1px;
@@ -167,7 +167,7 @@ body{
     cursor: pointer;
 }
 .con-box button:hover {
-    background-color: #a3b9f8;
+    background-color: #2C5282;
     color: #fff;
     border: none;
 }
