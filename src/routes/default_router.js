@@ -9,6 +9,12 @@ import Homepage from "../pages/landing/homepage.js";
 import LoginAndRegister from "../pages/user/loginAndRegister";
 import FindPassword from "../pages/user/findPassword";
 
+// manage
+import Manage from "../pages/manage/left.js";
+import Info from "../pages/manage/info.js";
+import Checked from "../pages/manage/checked.js";
+import UnCheck from "../pages/manage/uncheck.js";
+
 const default_router = createBrowserRouter([
     {
         path: '/',
@@ -21,6 +27,24 @@ const default_router = createBrowserRouter([
     {
         path: '/findPassword',
         element: <FindPassword />
+    },
+    {
+        path: '/manage',
+        element: <Manage />,
+        children: [
+            {
+                path: 'info',
+                element: <Info />
+            },
+            {
+                path: 'checked',
+                element: <Checked />
+            },
+            {
+                path: 'uncheck',
+                element: <UnCheck />
+            }
+        ]
     },
 ])
 

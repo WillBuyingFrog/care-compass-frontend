@@ -1,7 +1,7 @@
 import './loginAndRegister.css';
 import "antd/dist/antd.min.css";
-import loginImg from '../../assets/findPassword.png'
-import registerImg from '../../assets/advsearch.png'
+import loginImg from '../../assets/doctors.png'
+import registerImg from '../../assets/medicalCare.png'
 import MyHeader from '../../components/header/header';
 import {
     Typography,
@@ -345,16 +345,16 @@ function LoginAndRegister () {
                         backgroundColor: 'white',
                         boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
                         borderRadius: '10px',
-                        width: '680px',
-                        height: '430px',
+                        width: '700px',
+                        height: '450px',
                         margin: 'auto',
-                        marginTop: '80px',
+                        marginTop: '60px',
                     }}
                 >
                     <div
                         className="form-box"
                         style={{
-                            transform: currentIsLogin ? 'translateX(0%)' : 'translateX(85%)',
+                            transform: currentIsLogin ? 'translateX(-5%)' : 'translateX(90%)',
                         }}
                     >
                         {/*register*/}
@@ -551,8 +551,8 @@ function LoginAndRegister () {
                         </div>
                     </div>
                     <div className="con-box left">
-                        <h2>欢迎来到<span className="blueText">AceGate</span></h2>
-                        <p>Your gate towards<span className="blueText"> academia</span>.</p>
+                        <h2>欢迎来到<span className="blueText">CareCompass</span></h2>
+                        <p>Your compass towards<span className="blueText"> health care</span>.</p>
                         <Image
                             style={{
                                 margin: 'auto',
@@ -562,7 +562,7 @@ function LoginAndRegister () {
                             src={registerImg}
                             preview={false}
                         />
-                        <p>已有账号</p>
+                        <p>已有账号？</p>
                         <Button
                             id="login"
                             shape={"round"}

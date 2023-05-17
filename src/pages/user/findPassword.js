@@ -32,8 +32,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import {Link, useLocation} from 'react-router-dom'
 import axios from "axios";
-import findPasswordImg from '../../assets/findPassword.png'
-import reset from '../../assets/advsearch.png'
+import findPasswordImg from '../../assets/doctors.png'
+import reset from '../../assets/doctors.png'
 import {useToast} from "@chakra-ui/react";
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;

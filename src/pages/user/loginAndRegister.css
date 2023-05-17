@@ -14,7 +14,7 @@ body{
 .form-box{
     /* 绝对定位 */
     position: absolute;
-    top: -15%;
+    top: -10%;
     left: 5%;
     background-color: #748ba9;
     width: 340px;

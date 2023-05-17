@@ -55,6 +55,7 @@ const theme = extendTheme({
       900: '#1A365D'
     },
     chants:{
+      50: '#A0AEC0',
       100: '#748ba9',
     },
   },
