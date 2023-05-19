@@ -1,6 +1,7 @@
 /*
- * 后代管理页面左侧导航栏
+ * 后台管理页面左侧导航栏
  */
+import './left.css'
 import { BarsOutlined, TeamOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Menu } from "antd";
 import { Outlet, useNavigate } from 'react-router-dom'
