@@ -8,6 +8,7 @@ import Homepage from "../pages/landing/homepage.js";
 // login and register
 import LoginAndRegister from "../pages/user/loginAndRegister";
 import FindPassword from "../pages/user/findPassword";
+import MakeAppointment from "../pages/patient/makeAppointment";
 
 // manage
 import Manage from "../pages/manage/left.js";
@@ -46,6 +47,10 @@ const default_router = createBrowserRouter([
             }
         ]
     },
+    {
+        path: 'makeAppointment',
+        element: <MakeAppointment />
+    }
 ])
 
 export default default_router;
