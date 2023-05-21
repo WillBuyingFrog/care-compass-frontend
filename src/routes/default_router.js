@@ -15,6 +15,9 @@ import Manage from "../pages/manage/left.js";
 import Info from "../pages/manage/info.js";
 import Checked from "../pages/manage/checked.js";
 import UnCheck from "../pages/manage/uncheck.js";
+import Patient from "../pages/patient/patient";
+import SelectDepartment from "../pages/patient/steps/selectDepartment";
+import SelectDoctor from "../pages/patient/steps/selectDoctor";
 
 const default_router = createBrowserRouter([
     {
@@ -48,8 +51,14 @@ const default_router = createBrowserRouter([
         ]
     },
     {
-        path: 'makeAppointment',
-        element: <MakeAppointment />
+        path: '/patient',
+        element: <Patient />,
+        children: [
+            {
+                path: 'makeAppointment',
+                element: <MakeAppointment />,
+            }
+        ]
     }
 ])
 

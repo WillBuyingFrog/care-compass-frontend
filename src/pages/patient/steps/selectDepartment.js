@@ -1,24 +1,35 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {Card} from "antd";
+import {Card, Col, Menu, Row, Typography} from "antd";
 import {Link} from "react-router-dom";
 
+const { Title } = Typography;
 
-function DepartmentCard({departmentName, departmentDescription, departmentId}){
-    return (
-        <Link to={'/makeAppointment/selectDoctor/' + departmentId}>
-            <Card
-                title={departmentName}
-            >
-                <p>{departmentDescription}</p>
-            </Card>
-        </Link>
-    )
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+    };
 }
 
-function SelectDepartment(){
+function getSidebarItemsByDepartmentData(arr){
+    // console.log("接收到的json array：")
+    // console.log(arr)
+    let items = []
+    arr.map((item) => {
+        items.push(getItem(item.name, item.id))
+    })
+    return items
+}
+
+
+function SelectDepartment({selectedDepartment, setSelectedDepartment}) {
     // 科室信息，json array格式
     const [departmentData, setDepartmentData] = useState(null);
+    const [deptSidebarData, setDeptSidebarData] = useState(null);
     // 是否正在加载科室信息
     const [loading, setLoading] = useState(true);
 
@@ -27,8 +38,10 @@ function SelectDepartment(){
         const getDepartmentList = async () => {
             try {
                 const response = await axios.post('https://mock.apifox.cn/m2/2632066-0-default/80582204');
-                console.log(response.data);
+                // 保存科室原始信息
                 setDepartmentData(response.data);
+                // 获取用于sidebar展示的科室信息
+                setDeptSidebarData(getSidebarItemsByDepartmentData(response.data));
                 setLoading(false);
             } catch (error) {
                 console.log(error);
@@ -37,19 +50,25 @@ function SelectDepartment(){
         getDepartmentList();
     }, []);
 
+    const handleDepartmentClick = (e) => {
+        // console.log(e.key)
+        setSelectedDepartment(e.key);
+    }
+
     return (
-        <div>
+        <div style={{'margin': '20px', 'width' : '100%'}}>
             {loading ? (
                 <div>loading...</div>
             ) : (
                 <div>
-                    {departmentData.map((department) => (
-                        <DepartmentCard
-                            departmentName={department.name}
-                            departmentDescription={department.description}
-                            departmentId={department.id}
-                        />
-                    ))}
+                    <Menu
+                        style={{
+                            'width': '80%'
+                        }}
+                        mode="inline"
+                        items={deptSidebarData}
+                        onClick={handleDepartmentClick}
+                    />
                 </div>
                 )
             }
