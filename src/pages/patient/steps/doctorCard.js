@@ -1,80 +1,124 @@
-import {Box, Text} from "@chakra-ui/react";
+import {Box, Center, Text} from "@chakra-ui/react";
 import {Link as ChakraLink} from "@chakra-ui/react";
 import {useState} from "react";
+import {Button, Col, Row} from "antd";
 
-function DoctorName(props) {
-    const [isHover, setIsHover] = useState(false)
+function DoctorInfo(props) {
 
-    const handleMouseEnter = () => {
-        setIsHover(true)
-    }
-
-    const handleMouseLeave = () => {
-        setIsHover(false);
-    }
-
-    const linkStyle = {
+    const nameStyle = {
         color: '#161616',
-        fontSize: '30px',
-        textDecoration: isHover ? 'underline' : 'none'
+        fontSize: '28px',
+        marginRight: '5px'
+    }
+
+    const titleStyle = {
+        color: '#a0a0a0',
+        fontSize: '16px',
     }
 
     return (
-        <Box ml={1}>
-            <ChakraLink href={'/'}
-                  style={linkStyle}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-            >
-
-
-                <Text noOfLines={1} pt={'30px'} pl={'30px'}>
-                    {props.name},{props.title}
-                </Text>
-            </ChakraLink>
+        <Box ml={1} mt={5} mb={3}>
+            <span style={nameStyle}>
+                {props.name}
+            </span>
+            <span style={titleStyle}>
+                {props.title}
+            </span>
         </Box>
     )
-
 }
 
-function DoctorInfo(props) {
-    const [isHover, setIsHover] = useState(false)
+function DoctorAppointment(props){
 
-    const handleMouseEnter = () => {
-        setIsHover(true)
-    }
-
-    const handleMouseLeave = () => {
-        setIsHover(false);
-    }
-
-    const handleClick = () => {
-        window.open('/paperDetails?PID=' + props.PID)
-    }
-
-    const linkStyle = {
+    const appointmentLabelStyle = {
         color: '#a0a0a0',
         fontSize: '14px',
-        cursor: 'pointer',
-        textDecoration: isHover ? 'underline' : 'none'
+        verticalAlign: 'baseline'
     }
-    return(
-        <Box ml={1}>
-            <ChakraLink
-                style={linkStyle}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={handleClick}
-            >
-                <Text noOfLines={3} wordBreak={'break-word'} marginRight={'50px'} fontWeight={500}>
-                    剩余号源{props.available}
-                </Text>
-            </ChakraLink>
-        </Box>
+
+    const appointmentAvailableStyle = {
+        marginLeft: '10px',
+        // 设置文字颜色为橙色
+        color: '#ff8c00',
+        fontWeight: 'bold',
+        fontSize: '20px',
+        verticalAlign: 'baseline'
+    }
+
+    return (
+        <div>
+            <Row>
+                <Col span={4} />
+                <Col span={16}>
+                    {
+                        props.doctor.morningAvailable !== -1 ? (
+                            <Center>
+                                <span style={appointmentLabelStyle}>
+                                    上午
+                                </span>
+                                <span style={appointmentAvailableStyle}>
+                                    余 {props.doctor.morningAvailable}
+                                </span>
+                                <Button
+                                    type="primary" shape="round" size='small'
+                                    style={{'marginLeft': '10px'}}
+                                    onClick={() => {
+                                        props.handleClickAppointment(props.doctor, props.periodKey, 1)
+                                    }}
+                                >
+                                    预约
+                                </Button>
+                            </Center>
+                        ) : (
+                            <div>
+
+                            </div>
+                        )
+                    }
+                </Col>
+                <Col span={4} />
+                <Col span={4} />
+                <Col span={16}>
+                    {
+                        props.doctor.afternoonAvailable !== -1 ? (
+                            <Center>
+                                <span style={appointmentLabelStyle}>
+                                    下午
+                                </span>
+                                <span style={appointmentAvailableStyle}>
+                                    余 {props.doctor.afternoonAvailable}
+                                </span>
+                                <Button
+                                    type="primary" shape="round" size='small'
+                                    style={{'marginLeft': '10px'}}
+                                    onClick={() => {
+                                        props.handleClickAppointment(props.doctor, props.periodKey, 1)
+                                    }}
+                                >
+                                    预约
+                                </Button>
+                            </Center>
+                        ) : (
+                            <div>
+
+                            </div>
+                        )
+                    }
+                </Col>
+            </Row>
+        </div>
     )
 }
 
+
 function DoctorCard(props){
+
+    const handleClickAppointment = (doctor, periodKey, isAfternoon) => {
+        props.setSelectedDoctor(doctor);
+        props.setSelectedPeriod((periodKey - 1) * 2 + (isAfternoon ? 2 : 1));
+        props.showConfirmDrawer();
+    }
+
 
     return (
         <Box
@@ -87,9 +131,12 @@ function DoctorCard(props){
             backgroundColor={'#ffffff'}
             pl={3} pr={3} pt={2} pb={2} mt={4}
         >
-            <DoctorName name={props.doctor.doctorName} title={props.doctor.doctorTitle}/>
-            <DoctorInfo available={props.doctor.available}/>
-
+            <DoctorInfo name={props.doctor.doctorName} title={props.doctor.doctorTitle} />
+            <DoctorAppointment
+                doctor={props.doctor}
+                periodKey={props.periodKey}
+                handleClickAppointment={handleClickAppointment}
+            />
         </Box>
     )
 }
