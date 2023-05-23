@@ -512,7 +512,7 @@ function LoginAndRegister () {
                                 >
                                     <Input
                                         className={'loginInput'}
-                                        placeholder="用户名"
+                                        placeholder="身份证号/工号"
                                         autoComplete={'off'}
                                         onChange={e => setUsername(e.target.value)}
                                     />

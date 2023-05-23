@@ -125,7 +125,7 @@ function FindPassword() {
     const handleSendVerifyEmail = () => {
         if (!validateEmail(email)) {
             toast({
-                title: '请填写合法的邮箱',
+                title: '请填写合法的手机号',
                 status: 'error',
                 position:'top',
                 duration: 9000,
@@ -282,7 +282,7 @@ function FindPassword() {
                                     textAlign: 'center',
                                     margin: '4px',
                                 }}
-                            >请输入您的邮箱，我们将会发送验证码到您的邮箱。</Paragraph>
+                            >请输入您的手机号，我们将会给您发送验证码。</Paragraph>
                             <Form>
                                 <Form.Item
                                     name="email"
@@ -290,7 +290,7 @@ function FindPassword() {
                                     <Input
                                         className={'findPasswordInput'}
                                         autoComplete={'off'}
-                                        placeholder="请输入您的邮箱"
+                                        placeholder="请输入您的手机号"
                                         type="email"
                                         onChange={e => setEmail(e.target.value)}
                                     />
