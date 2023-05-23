@@ -46,6 +46,20 @@ function MakeAppointment() {
         return periodText;
     }
 
+    const getAppointmentDateText = (periodKey) => {
+        let today = new Date();
+        let appointmentDay = new Date(today.getTime() + (24 * 60 * 60 * 1000) * Math.floor((periodKey + 1) / 2));
+        let periodText = "";
+        if (appointmentDay.getMonth() + 1 >= 10) {
+            periodText = (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
+        } else {
+            periodText = "0" + (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
+        }
+        // let periodText = (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
+        periodText = appointmentDay.getFullYear().toString() + "-" + periodText;
+        return periodText;
+    }
+
     // 监听selectedDepartment的变化
     useEffect(() => {
         if(selectedDepartment != null){
@@ -88,10 +102,11 @@ function MakeAppointment() {
         // 最后，跳转到支付页面
         setConfirmDrawerButtonText("正在创建预约挂号记录和账单...");
         setConfirmDrawerButtonDisabled(true);
+        console.log(getAppointmentDateText(selectedPeriod));
         const createAppointmentResponse = await axios.post(
             '/patient/appointment/create/',
             {
-                date: "sample",
+                date: getAppointmentDateText(selectedPeriod),
                 time: selectedPeriod % 2,
                 doctorID: selectedDoctor.doctorID
         });

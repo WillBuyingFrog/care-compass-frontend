@@ -1,5 +1,5 @@
 import {useLoaderData} from "react-router-dom";
-import {Button, Col, Radio, Row, Space, Typography} from "antd";
+import {Button, Col, Drawer, Image, Radio, Row, Space, Typography} from "antd";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {Center} from "@chakra-ui/react";
@@ -62,7 +62,9 @@ function PayBill(props) {
                                                 <Radio value={2}>微信</Radio>
                                             </Radio.Group>
                                             <Center>
-                                                <Button>
+                                                <Button
+
+                                                >
                                                     前往支付
                                                 </Button>
                                             </Center>
@@ -72,6 +74,13 @@ function PayBill(props) {
                             </Col>
                             <Col span={2} />
                         </Row>
+                        <Drawer title="进行支付">
+                            <Title level={3}>请扫描二维码完成支付</Title>
+                            <Image
+                                src='../../assets/pay_qrcode.png'
+                                width={200}
+                                />
+                        </Drawer>
                     </div>
                 )
             }

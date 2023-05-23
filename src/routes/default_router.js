@@ -25,6 +25,9 @@ import Department from "../pages/manage/department.js";
 import Medicine from "../pages/manage/medicine.js";
 import Portal from "../pages/manage/Portal";
 import EditPortal from "../pages/manage/EditPortal";
+import MyAppointments from "../pages/patient/myAppointments";
+import MyMedicalRecords from "../pages/patient/myMedicalRecords";
+import MyBills from "../pages/patient/myBills";
 
 const default_router = createBrowserRouter([
     {
@@ -93,6 +96,18 @@ const default_router = createBrowserRouter([
                 path: 'payBill/:billID',
                 element: <PayBill />,
                 loader: singleBillLoader
+            },
+            {
+                path: 'myBills',
+                element: <MyBills />
+            },
+            {
+                path: 'myAppointments',
+                element: <MyAppointments />
+            },
+            {
+                path: 'myMedicalRecords',
+                element: <MyMedicalRecords />
             }
         ]
     }

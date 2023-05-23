@@ -43,7 +43,7 @@ const NavLink = ({ children, href }) => (
 
 function PatientHeader(){
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn]=React.useState(0);
+    const [isLoggedIn, setIsLoggedIn]=React.useState(1);
     const [user, setUser]=React.useState({uname:''});
 
     const confirm = (e) => {
@@ -61,23 +61,11 @@ function PatientHeader(){
     };
 
     let userButton;
-    if(isLoggedIn && user.utype == "default"){
-        userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/applyPortal')
-        }}
-        >申请入驻</Button>)
-    }
-    else if(isLoggedIn && user.utype == "admin"){
-        userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/manage/info')
-        }}
-        >后台管理</Button>)
-    }
-    else{
-        userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/scholarPortal?RID=' + user.u_rid)
-        }}>我的门户</Button>)
-    }
+
+    userButton = (<Button w='220px' mt='8px' onClick={()=>{
+        navigate('/')
+    }}>另一个功能</Button>)
+
 
     const patientMenuItems = [
         // getItem('预约挂号', 'makeAppointment', <FontAwesomeIcon icon={faUserNurse} />),
@@ -146,9 +134,9 @@ function PatientHeader(){
                                 <PopoverBody>
                                     <Row>
                                         <Button w='220px' onClick={()=>{
-                                            navigate('/favorite')
+                                            navigate('/myMedicalRecords')
                                         }}>
-                                            我的收藏</Button>
+                                            诊疗记录</Button>
                                     </Row>
                                     <Row>
                                         <Button w='220px' mt='8px' onClick={()=>{
@@ -170,7 +158,6 @@ function PatientHeader(){
                                         >
                                             <Button w='220px' mt='8px'>退出登录</Button>
                                         </Popconfirm>
-
                                     </Row>
                                 </PopoverBody>
                             </PopoverContent>
