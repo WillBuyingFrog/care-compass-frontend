@@ -1,0 +1,49 @@
+.portal .chart{
+    height: 90%;
+    margin-top: 30px;
+    padding: 40px 20px 30px 10px;
+    box-shadow: 4px 4px 15px 0 rgba(0,0,0,0.1);
+}
+
+.portal .chart-icon {
+    font-size: 28px;
+    color: #3a3af1 !important;
+    margin-top: 3px;
+    margin-left: 15px;
+}
+
+.portal .chart-head{
+    font-size: 23px !important;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    letter-spacing:0.7mm;
+}
+
+.portal .apexcharts-menu-item {
+    width: 105px;
+}
+
+.dark-text {
+    color: #4A5568;
+    text-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+}
+
+.portal .paperList{
+    /*padding: 40px;*/
+}
+
+.portal .paperList .ant-table-thead>tr>th {
+    color: #4A5568;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.portal .paperList .ant-table-tbody>tr>td {
+    font-size: 14px;
+    font-weight: 550;
+}
+
+.portal .paperList .css-spn4bz:hover {
+    color: #1b3bbb;
+}
+

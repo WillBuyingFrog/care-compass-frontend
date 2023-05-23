@@ -2,9 +2,10 @@
  * 后台管理页面左侧导航栏
  */
 import './left.css'
-import { BarsOutlined, TeamOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import './manage.css';
+import { BarsOutlined, TeamOutlined, InfoCircleOutlined, ScheduleOutlined, AuditOutlined, DatabaseOutlined, HomeOutlined, StockOutlined } from '@ant-design/icons';
 import { Menu } from "antd";
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom';
 import React, { useState } from "react";
 import { Layout } from "antd";
 import Header from '../../components/header/header';
@@ -19,9 +20,11 @@ function getItem(label, key, icon){
 }
 
 const items = [
-    getItem("平台概况", "info", <InfoCircleOutlined />),
-    getItem("已审核认领", "checked", <TeamOutlined />),
-    getItem("待审核认领", "uncheck", <BarsOutlined />),
+    getItem("医院概况", "info", <InfoCircleOutlined />),
+    getItem("排班管理", "doctorSchedule", <ScheduleOutlined />),
+    getItem("请假审批", "doctorLeave", <AuditOutlined />),
+    getItem("科室信息管理", "department", <HomeOutlined />),
+    getItem("药品/检查管理", "medicine", <DatabaseOutlined />),
 ]
 
 
@@ -33,12 +36,11 @@ function LeftMenu(){
         console.log(1);
     }
     return(
-            <Menu style={{width: 200}}
-            defaultSelectedKeys={[1]}
-            theme="light"
-            items={items}
-            mode="vertical"
-            onClick={onClick}
+            <Menu style={{width: '100%'}}
+                defaultSelectedKeys={[1]}
+                items={items}
+                mode="vertical"
+                onClick={onClick}
             ></Menu>
     )
 
@@ -59,11 +61,15 @@ function Manage(){
         <div>
             <Layout>
                 <Header></Header>
-                <Layout style={{background:'rgb(230,235,247)'}}>
-                    <Sider style={{width:200, height:700}}
-                    theme="light">
+                <Layout style={{background:'rgb(220,225,242)'}}>
+                    <Sider style={{
+                        height:'90.5vh',
+                        borderRadius: '0 20px 20px 0',
+                        boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    }}
+                    >
                         <div className='left'><LeftMenu/></div>
-                        <img src={require('../../assets/doctors.png')} style={{marginTop:350}} />
+                        <img src={require('../../assets/doctors.png')} style={{marginTop:200}} />
                     </Sider>
                     <Content>
                         <Outlet />

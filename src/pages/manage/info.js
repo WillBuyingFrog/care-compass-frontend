@@ -2,11 +2,12 @@
  * 后台管理/平台概况
  */
 import './info.css';
+import './manage.css';
 import { Avatar } from '@chakra-ui/react'
 import { Card, Row, Col } from 'antd';
 import * as echarts from 'echarts'
 import { Component, useEffect, useState } from 'react';
-import { TeamOutlined, RiseOutlined, BookOutlined, HomeOutlined, PieChartOutlined, VerifiedOutlined } from '@ant-design/icons'
+import { TeamOutlined, RiseOutlined, HomeOutlined, DatabaseOutlined, StockOutlined, IdcardOutlined } from '@ant-design/icons'
 import axios from 'axios';
 const { Meta } = Card;
 
@@ -52,38 +53,35 @@ function Info(){
 
     return(
         <div className='info'>
-            <div className='totalTitle'>平台基本信息</div>
+            <div className='totalTitle'>医院基本信息</div>
             <Row>
                 <Col span={16}>
                     <Row gutter={15} wrap={true}>
                         <Col span={12}>
-                            <Cards title="注册用户数量" color="#422AFB"
+                            <Cards title="注册患者数量" color="#422AFB"
                             num={0} icon={<TeamOutlined/>} class="user"/>
                         </Col>
                         <Col span={12}>
-                            <Cards title="领域总数" color="#805AD5"
-                            num={0} icon={<PieChartOutlined />} class="field"/>
+                            <Cards title="科室总数" color="#805AD5"
+                            num={0} icon={<HomeOutlined />} class="field"/>
                         </Col>
                     </Row>
                     <Row gutter={15} wrap={true}>
                         <Col span={12}>
-                            <Cards title="学者总数" color="#56C3FF"
-                            num={0} icon={<RiseOutlined />} class="sch"/>
+                            <Cards title="医生总数" color="#56C3FF"
+                            num={0} icon={<IdcardOutlined />} class="sch"/>
                         </Col>
                         <Col span={12}>
-                            <Cards title="已入驻学者数" color="#00B5D8"
-                            num={0} icon={<VerifiedOutlined />} class="ident"/>
+                            <Cards title="药品总数" color="#00B5D8"
+                            num={0} icon={<DatabaseOutlined />} class="ident"/>
                         </Col>
                     </Row>
                     <Row gutter={15} wrap={true}>
                         <Col span={12}>
-                            <Cards title="文献总数" color="#01B574"
-                            num={0} icon={<BookOutlined />} class="paper"/>
+                            <Cards title="可提供检查总数" color="#01B574"
+                            num={0} icon={<StockOutlined />} class="paper"/>
                         </Col>
-                        <Col span={12}>
-                            <Cards title="机构总数" color="#319795"
-                            num={0} icon={<HomeOutlined/>} class="search"/>
-                        </Col>
+
                     </Row>
                 </Col>
                 <Col span={8}>
