@@ -6,6 +6,8 @@ import {tokenContext} from "./contexts/tokenContext";
 import React, {useState} from "react";
 import axios from "axios";
 import {ConfigProvider} from "antd";
+import zhCN from 'antd/es/locale/zh_CN';
+
 
 const theme = extendTheme({
   colors: {

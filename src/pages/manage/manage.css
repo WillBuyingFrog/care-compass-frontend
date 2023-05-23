@@ -1,0 +1,11 @@
+.manageCard {
+    width: 80vw;
+    height: 85vh;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.1);
+    padding: 20px 50px;
+    margin: 20px;
+    position: relative;
+    overflow: hidden;
+}

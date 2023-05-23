@@ -1,0 +1,59 @@
+.medicine {
+    width: 80vw;
+    height: 85vh;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.1);
+    padding: 20px 50px;
+    margin: 20px;
+    position: relative;
+    overflow: hidden;
+}
+.medicine .chart{
+    height: 90%;
+    margin-top: 30px;
+    padding: 40px 20px 30px 10px;
+    box-shadow: 4px 4px 15px 0 rgba(0,0,0,0.1);
+}
+
+.medicine .chart-icon {
+    font-size: 28px;
+    color: #3a3af1 !important;
+    margin-top: 3px;
+    margin-left: 15px;
+}
+
+.medicine .chart-head{
+    font-size: 23px !important;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    letter-spacing:0.7mm;
+}
+
+.medicine .apexcharts-menu-item {
+    width: 105px;
+}
+
+.dark-text {
+    color: #4A5568;
+    text-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+}
+
+.medicine .medicineList{
+    /*padding: 40px;*/
+}
+
+.medicine .medicineList .ant-table-thead>tr>th {
+    color: #4A5568;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.medicine .medicineList .ant-table-tbody>tr>td {
+    font-size: 14px;
+    font-weight: 550;
+}
+
+.medicine .medicineList .css-spn4bz:hover {
+    color: #1b3bbb;
+}
