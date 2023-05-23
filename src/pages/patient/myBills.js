@@ -2,6 +2,7 @@ import {Button, Col, Row, Space, Table, Typography} from "antd";
 import {useEffect, useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import axios from "axios";
+import {Center} from "@chakra-ui/react";
 
 const {Title, Text} = Typography;
 
@@ -149,12 +150,14 @@ function MyBills(props){
             <Row>
                 <Col span={4} />
                 <Col span={16}>
-                    <Space direction='vertical'>
-                        <Title level={1}>
-                            我的账单
-                        </Title>
-                        <Table columns={columns} dataSource={bills}  />
-                    </Space>
+                    <Center>
+                        <Space direction='vertical'>
+                            <Title level={1}>
+                                我的账单
+                            </Title>
+                            <Table columns={columns} dataSource={bills}  />
+                        </Space>
+                    </Center>
                 </Col>
                 <Col span={4} />
             </Row>
