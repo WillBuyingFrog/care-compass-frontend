@@ -12,7 +12,7 @@ const { Header, Footer, Sider, Content } = Layout;
 function Patient(){
     return (
         <div>
-            <Layout>
+            <Layout style={{'height': '100%'}}>
                 <PatientHeader />
                 <Layout style={{'height': '600px'}}>
                     <Content>
