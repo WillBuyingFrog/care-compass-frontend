@@ -1,5 +1,5 @@
 import {useLoaderData} from "react-router-dom";
-import {Button, Col, Drawer, Image, Radio, Row, Space, Typography} from "antd";
+import {Button, Col, Drawer, Image, Radio, Row, Space, Typography, message} from "antd";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {Center} from "@chakra-ui/react";
@@ -24,6 +24,24 @@ function PayBill(props) {
     const [paymentMethod, setPaymentMethod] = useState(1);
     const handlePaymentMethodChange = (e) => {
         setPaymentMethod(e.target.value);
+    }
+
+    // 记录完成支付的Drawer的状态
+    const [paymentDrawerOpen, setPaymentDrawerOpen] = useState(false);
+
+    // 用户点击“已完成支付”按钮后，向后端发送支付完成的post请求的函数
+    const handlePaymentFinish = async () => {
+        try {
+            const response = await axios.post('/patient/bill/pay/', {
+                billID: billID,
+                billType: billInfo.billType
+            });
+            if(response.code === 200) {
+
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     useEffect(() => {
@@ -74,7 +92,9 @@ function PayBill(props) {
                             </Col>
                             <Col span={2} />
                         </Row>
-                        <Drawer title="进行支付">
+                        <Drawer title="进行支付" width={550} closeable={false}
+
+                        >
                             <Title level={3}>请扫描二维码完成支付</Title>
                             <Image
                                 src='../../assets/pay_qrcode.png'
