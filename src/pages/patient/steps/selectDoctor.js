@@ -58,8 +58,10 @@ function getAllDaySchedule(doctorData){
         let temp = [];
         singleDaySchedule.morning.map((doctor) => {
             doctor.morningAvailable = doctor.available;
+            doctor.morningPrice = doctor.price;
             // 先无条件填充下午的排班信息
             doctor.afternoonAvailable = -1;
+            doctor.afternoonPrice = -1
             temp.push(doctor);
         })
         singleDaySchedule.afternoon.map((doctor) => {
@@ -67,11 +69,14 @@ function getAllDaySchedule(doctorData){
             if(index !== -1){
                 // 医生上午也有排班，所以在temp里面
                 temp[index].afternoonAvailable = doctor.available;
+                temp[index].afternoonPrice = doctor.price;
             }else{
                 // 医生上午没有排班，填充上午的排班信息
                 doctor.afternoonAvailable = doctor.available;
+                doctor.afternoonPrice = doctor.price;
                 // -1表示上午没有排班
                 doctor.morningAvailable = -1;
+                doctor.morningPrice = -1;
                 temp.push(doctor);
             }
         })
@@ -118,7 +123,7 @@ function SelectDoctor(props){
 
             let config = {
                 method: 'post',
-                url: 'https://mock.apifox.cn/m2/2632066-0-default/80582206',
+                url: 'department/workshift/',
                 data: data
             };
             let response = await axios(config);
@@ -154,7 +159,7 @@ function SelectDoctor(props){
                         {
                             periods.map((period) => {
                                     return (
-                                        <Col span={8}>
+                                        <Col span={8} key={period.key}>
                                             <PeriodCard
                                                 date={period.date}
                                                 handleClickPeriod={() => {
@@ -175,7 +180,7 @@ function SelectDoctor(props){
                     (loading === false && props.departmentID != null) ? (
                         currentDoctorData.map((doctor) => {
                                 return (
-                                    <Col span={8}>
+                                    <Col span={8} key={doctor.doctorID}>
                                         <DoctorCard
                                             doctor={doctor}
                                             periodKey = {currentPeriod}

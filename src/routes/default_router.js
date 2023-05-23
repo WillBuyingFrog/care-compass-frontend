@@ -18,6 +18,7 @@ import UnCheck from "../pages/manage/uncheck.js";
 import Patient from "../pages/patient/patient";
 import SelectDepartment from "../pages/patient/steps/selectDepartment";
 import SelectDoctor from "../pages/patient/steps/selectDoctor";
+import PayBill, {singleBillLoader} from "../pages/patient/payBill";
 
 const default_router = createBrowserRouter([
     {
@@ -57,6 +58,11 @@ const default_router = createBrowserRouter([
             {
                 path: 'makeAppointment',
                 element: <MakeAppointment />,
+            },
+            {
+                path: 'payBill/:billID',
+                element: <PayBill />,
+                loader: singleBillLoader
             }
         ]
     }

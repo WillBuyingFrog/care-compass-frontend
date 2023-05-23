@@ -48,27 +48,38 @@ function DoctorAppointment(props){
     return (
         <div>
             <Row>
-                <Col span={4} />
-                <Col span={16}>
+                <Col span={3} />
+                <Col span={18}>
                     {
                         props.doctor.morningAvailable !== -1 ? (
-                            <Center>
-                                <span style={appointmentLabelStyle}>
-                                    上午
-                                </span>
-                                <span style={appointmentAvailableStyle}>
-                                    余 {props.doctor.morningAvailable}
-                                </span>
-                                <Button
-                                    type="primary" shape="round" size='small'
-                                    style={{'marginLeft': '10px'}}
-                                    onClick={() => {
-                                        props.handleClickAppointment(props.doctor, props.periodKey, 1)
-                                    }}
-                                >
-                                    预约
-                                </Button>
-                            </Center>
+                            <Row>
+                                <Col span={12}>
+                                    <span style={appointmentLabelStyle}>
+                                        上午
+                                    </span>
+                                    <span style={appointmentAvailableStyle}>
+                                        余 {props.doctor.morningAvailable}
+                                    </span>
+                                </Col>
+                                <Col span={12}>
+                                    <div style={{float: 'right'}}>
+                                        <Center>
+                                            <span style={appointmentAvailableStyle}>
+                                                ¥ {props.doctor.morningPrice}
+                                            </span>
+                                            <Button
+                                                type="primary" shape="round" size='small'
+                                                style={{'marginLeft': '10px'}}
+                                                onClick={() => {
+                                                    props.handleClickAppointment(props.doctor, props.periodKey, 0)
+                                                }}
+                                            >
+                                                预约
+                                            </Button>
+                                        </Center>
+                                    </div>
+                                </Col>
+                            </Row>
                         ) : (
                             <div>
 
@@ -76,28 +87,39 @@ function DoctorAppointment(props){
                         )
                     }
                 </Col>
-                <Col span={4} />
-                <Col span={4} />
-                <Col span={16}>
+                <Col span={3} />
+                <Col span={3} />
+                <Col span={18}>
                     {
                         props.doctor.afternoonAvailable !== -1 ? (
-                            <Center>
-                                <span style={appointmentLabelStyle}>
-                                    下午
-                                </span>
-                                <span style={appointmentAvailableStyle}>
-                                    余 {props.doctor.afternoonAvailable}
-                                </span>
-                                <Button
-                                    type="primary" shape="round" size='small'
-                                    style={{'marginLeft': '10px'}}
-                                    onClick={() => {
-                                        props.handleClickAppointment(props.doctor, props.periodKey, 1)
-                                    }}
-                                >
-                                    预约
-                                </Button>
-                            </Center>
+                            <Row>
+                                <Col span={12}>
+                                    <span style={appointmentLabelStyle}>
+                                        下午
+                                    </span>
+                                    <span style={appointmentAvailableStyle}>
+                                        余 {props.doctor.afternoonAvailable}
+                                    </span>
+                                </Col>
+                                <Col span={12}>
+                                    <div style={{float: 'right'}}>
+                                        <Center>
+                                            <span style={appointmentAvailableStyle}>
+                                                ¥ {props.doctor.afternoonPrice}
+                                            </span>
+                                            <Button
+                                                type="primary" shape="round" size='small'
+                                                style={{'marginLeft': '10px'}}
+                                                onClick={() => {
+                                                    props.handleClickAppointment(props.doctor, props.periodKey, 1)
+                                                }}
+                                            >
+                                                预约
+                                            </Button>
+                                        </Center>
+                                    </div>
+                                </Col>
+                            </Row>
                         ) : (
                             <div>
 

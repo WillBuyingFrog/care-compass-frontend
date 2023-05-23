@@ -37,7 +37,7 @@ function SelectDepartment({selectedDepartment, setSelectedDepartment}) {
     useEffect(() => {
         const getDepartmentList = async () => {
             try {
-                const response = await axios.post('https://mock.apifox.cn/m2/2632066-0-default/80582204');
+                const response = await axios.post('department/list/');
                 // 保存科室原始信息
                 setDepartmentData(response.data);
                 // 获取用于sidebar展示的科室信息
