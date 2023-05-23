@@ -6,7 +6,7 @@ import {Col, Drawer, Layout, Row, Typography, Input, Button} from "antd";
 import MyHeader from "../../components/header/header";
 import PatientSidebar from "./patientSidebar";
 import SelectDepartment from "./steps/selectDepartment";
-import {Outlet} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 import SelectDoctor from "./steps/selectDoctor";
 import {Center} from "@chakra-ui/react";
 const { Title , Text} = Typography;
@@ -79,6 +79,8 @@ function MakeAppointment() {
         setConfirmDrawerOpen(false);
     }
 
+    const navigate = useNavigate();
+
     // 确认预约并前往支付的函数
     const confirmAppointment = async () => {
         // 首先，发送POST请求以新建预约挂号记录
@@ -105,6 +107,7 @@ function MakeAppointment() {
         const newBillID = createBillResponse.data.billID;
         console.log("newBillID", newBillID);
         setConfirmDrawerButtonText("正在跳转支付...")
+        navigate('/patient/payBill/' + newBillID.toString());
     }
 
 
