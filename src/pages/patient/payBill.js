@@ -1,4 +1,4 @@
-import {useLoaderData} from "react-router-dom";
+import {useLoaderData, useNavigate} from "react-router-dom";
 import {Button, Col, Drawer, Image, Radio, Row, Space, Typography, message} from "antd";
 import axios from "axios";
 import {useEffect, useState} from "react";
@@ -26,8 +26,16 @@ function PayBill(props) {
         setPaymentMethod(e.target.value);
     }
 
-    // 记录完成支付的Drawer的状态
+    // 进行支付的Drawer
     const [paymentDrawerOpen, setPaymentDrawerOpen] = useState(false);
+    const showPaymentDrawer = () => {
+        setPaymentDrawerOpen(true);
+    }
+    const closePaymentDrawer = () => {
+        setPaymentDrawerOpen(false);
+    }
+
+    const navigate = useNavigate();
 
     // 用户点击“已完成支付”按钮后，向后端发送支付完成的post请求的函数
     const handlePaymentFinish = async () => {
@@ -36,8 +44,11 @@ function PayBill(props) {
                 billID: billID,
                 billType: billInfo.billType
             });
-            if(response.code === 200) {
-
+            // TODO 和后端沟通，支付成功后返回的code是多少
+            if (true) {
+            // if(response.code === 200) {
+                message.success("支付成功！跳转中...");
+                navigate('/patient/myBills');
             }
         } catch (error) {
             console.log(error);
@@ -81,7 +92,7 @@ function PayBill(props) {
                                             </Radio.Group>
                                             <Center>
                                                 <Button
-
+                                                    onClick={showPaymentDrawer}
                                                 >
                                                     前往支付
                                                 </Button>
@@ -93,13 +104,19 @@ function PayBill(props) {
                             <Col span={2} />
                         </Row>
                         <Drawer title="进行支付" width={550} closeable={false}
-
+                                onClose={closePaymentDrawer} open={paymentDrawerOpen}
                         >
-                            <Title level={3}>请扫描二维码完成支付</Title>
-                            <Image
-                                src='../../assets/pay_qrcode.png'
-                                width={200}
+                            <Space direction='vertical'>
+                                <Title level={3}>请扫描二维码完成支付</Title>
+                                <Image
+                                    src={require("../../assets/pay_qrcode.jpg")}
+                                    width={200}
                                 />
+                                <Text>支付完成后，请点击"已完成支付"，供平台检查支付结果</Text>
+                                <Button onClick={handlePaymentFinish}>
+                                    已完成支付
+                                </Button>
+                            </Space>
                         </Drawer>
                     </div>
                 )
