@@ -60,11 +60,26 @@ function PatientHeader(){
         }, 1000);
     };
 
-    let userButton;
-
-    userButton = (<Button w='220px' mt='8px' onClick={()=>{
+    let userButton = (<Button w='220px' mt='8px' onClick={()=>{
         navigate('/patient/myBills')
     }}>我的账单</Button>)
+
+    let depracatedButtons = (
+        <>
+            <Row>
+                <Button w='220px' onClick={()=>{
+                    navigate('/patient/myMedicalRecords')
+                }}>
+                    诊疗记录</Button>
+            </Row>
+            <Row>
+                <Button w='220px' mt='8px' onClick={()=>{
+                    navigate('/patient/myBills')
+                }}>
+                    我的账单</Button>
+            </Row>
+        </>
+    )
 
 
     const patientMenuItems = [
@@ -133,20 +148,14 @@ function PatientHeader(){
                                 </PopoverHeader>
                                 <PopoverBody>
                                     <Row>
-                                        <Button w='220px' onClick={()=>{
-                                            navigate('/patient/myMedicalRecords')
-                                        }}>
-                                            诊疗记录</Button>
-                                    </Row>
-                                    <Row>
-                                        <Button w='220px' mt='8px' onClick={()=>{
-                                            navigate('/patient/myBills')
-                                        }}>
-                                            我的账单</Button>
                                         <Button w='220px' mt='8px' onClick={()=>{
                                             navigate('/patient/personInfo')
                                         }}>
-                                            账户设置</Button>
+                                            账户信息一览</Button>
+                                        <Button w='220px' mt='8px' onClick={()=>{
+                                            navigate('/patient/editInfo')
+                                        }}>
+                                            个人信息管理</Button>
                                     </Row>
                                     <Row>
 

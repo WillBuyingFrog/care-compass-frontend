@@ -1,8 +1,9 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {Button, Col, Row, Space, Table, Typography} from "antd";
+import {Button, Col, Drawer, Row, Space, Table, Typography} from "antd";
 import {Center} from "@chakra-ui/react";
 import {useNavigate} from "react-router-dom";
+import MedicalRecord from "./medicalRecord";
 
 const {Title, Text} = Typography;
 
@@ -31,6 +32,17 @@ function MyMedicalRecords(){
     const [rawMedicalRecords, setRawMedicalRecords] = useState([])
 
     const [medicalRecords, setMedicalRecords] = useState([]);
+
+    const [selectedMedicalRecordID, setSelectedMedicalRecordID] = useState(-1);
+    const [medicalRecordDrawerOpen, setMedicalRecordDrawerOpen] = useState(false);
+
+    const handleMedicalRecordDrawerClose = () => {
+        setMedicalRecordDrawerOpen(false);
+    }
+
+    const handleMedicalRecordDrawerOpen = () => {
+        setMedicalRecordDrawerOpen(true);
+    }
 
     useEffect(() => {
         const getRawMedicalRecords = async () => {
@@ -94,7 +106,8 @@ function MyMedicalRecords(){
                 return (
                     <Button
                         onClick={() => {
-                            navigate('/patient/medicalRecord/' + record.id.toString());
+                            setSelectedMedicalRecordID(record.id);
+                            handleMedicalRecordDrawerOpen();
                         }}
                     >
                         查看详情
@@ -108,13 +121,10 @@ function MyMedicalRecords(){
     return (
         <div style={{'marginTop': '3vh'}}>
             <Row>
-                <Col span={4} />
-                <Col span={16}>
+                <Col span={2} />
+                <Col span={20}>
                     <Center>
                         <Space direction='vertical'>
-                            <Title level={1}>
-                                诊疗记录清单
-                            </Title>
                             <Table
                                 style={{'width': '950px'}}
                                 columns={columns} dataSource={medicalRecords}
@@ -122,8 +132,14 @@ function MyMedicalRecords(){
                         </Space>
                     </Center>
                 </Col>
-                <Col span={4} />
+                <Col span={2} />
             </Row>
+            <Drawer
+                width={1200}     title="诊疗记录详情"
+                onClose={handleMedicalRecordDrawerClose} open={medicalRecordDrawerOpen}
+            >
+                <MedicalRecord medicalRecordID={selectedMedicalRecordID} />
+            </Drawer>
         </div>
     )
 }

@@ -16,9 +16,10 @@ export function medicalRecordLoader({params}){
 
 }
 
-function MedicalRecord(){
+function MedicalRecord(props){
 
-    const {medicalRecordID} = useLoaderData();
+    // const {medicalRecordID} = useLoaderData();
+    const [medicalRecordID, setMedicalRecordID] = useState(props.medicalRecordID);
     const [medicalRecord, setMedicalRecord] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -27,6 +28,11 @@ function MedicalRecord(){
     useEffect(() => {
         const getMedicalRecord = async () => {
             try {
+                if (medicalRecordID === -1){
+                    setLoading(true);
+                    return;
+                }
+                console.log("medicalRecordID: ", medicalRecordID);
                 const response = await axios.post('/treatment/getHistoryRecord/single/', {
                     recordID: medicalRecordID,
                     patientID: patientID
@@ -50,11 +56,11 @@ function MedicalRecord(){
             ) : (
                 <div style={{'marginTop': '3vh'}}>
                     <Row>
-                        <Col span={6} />
-                        <Col span={12}>
+                        <Col span={3} />
+                        <Col span={18}>
                             <Space direction='vertical'>
                                 <Title level={1}>
-                                    诊疗记录 #{medicalRecordID}
+                                    诊疗记录 #{props.medicalRecordID}
                                 </Title>
                                 <Text style={{'fontSize': '18px'}} strong>
                                     {medicalRecord.departmentName},{medicalRecord.doctorName}
@@ -74,7 +80,7 @@ function MedicalRecord(){
                                 </Center>
                             </Space>
                         </Col>
-                        <Col span={6} />
+                        <Col span={3} />
                     </Row>
                 </div>
             )}

@@ -162,20 +162,17 @@ function MyBills(props){
     return (
         <div style={{'marginTop': '3vh'}}>
             <Row>
-                <Col span={4} />
-                <Col span={16}>
+                <Col span={2} />
+                <Col span={20}>
                     <Center>
                         <Space direction='vertical'>
-                            <Title level={1}>
-                                我的账单
-                            </Title>
                             <Table columns={columns} dataSource={bills}
                                    pagination={{pageSize: 8}}
                             />
                         </Space>
                     </Center>
                 </Col>
-                <Col span={4} />
+                <Col span={2} />
             </Row>
         </div>
     )
