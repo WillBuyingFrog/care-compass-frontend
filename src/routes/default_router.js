@@ -95,7 +95,7 @@ const default_router = createBrowserRouter([
             },
             {
                 path: 'doctorAccount',
-                element: <Board />
+                element: <DoctorAccount />
             }
         ]
     },
