@@ -3,7 +3,7 @@
  */
 import './left.css'
 import './manage.css';
-import { BarsOutlined, TeamOutlined, InfoCircleOutlined, ScheduleOutlined, AuditOutlined, DatabaseOutlined, HomeOutlined, StockOutlined } from '@ant-design/icons';
+import { UserOutlined, BarsOutlined, TeamOutlined, InfoCircleOutlined, ScheduleOutlined, AuditOutlined, DatabaseOutlined, HomeOutlined, StockOutlined, NotificationOutlined } from '@ant-design/icons';
 import { Menu } from "antd";
 import { Outlet, useNavigate } from 'react-router-dom';
 import React, { useState } from "react";
@@ -23,8 +23,10 @@ const items = [
     getItem("医院概况", "info", <InfoCircleOutlined />),
     getItem("排班管理", "doctorSchedule", <ScheduleOutlined />),
     getItem("请假审批", "doctorLeave", <AuditOutlined />),
+    getItem("医生账号管理", "doctorAccount", <UserOutlined />),
     getItem("科室信息管理", "department", <HomeOutlined />),
     getItem("药品/检查管理", "medicine", <DatabaseOutlined />),
+    getItem("公告管理", "board", <NotificationOutlined />),
 ]
 
 
@@ -37,7 +39,7 @@ function LeftMenu(){
     }
     return(
             <Menu style={{width: '100%'}}
-                defaultSelectedKeys={[1]}
+                defaultSelectedKeys={["info"]}
                 items={items}
                 mode="vertical"
                 onClick={onClick}
@@ -69,7 +71,7 @@ function Manage(){
                     }}
                     >
                         <div className='left'><LeftMenu/></div>
-                        <img src={require('../../assets/doctors.png')} style={{marginTop:200}} />
+                        <img src={require('../../assets/doctors.png')} style={{marginTop:100}} />
                     </Sider>
                     <Content>
                         <Outlet />

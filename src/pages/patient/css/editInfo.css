@@ -1,0 +1,39 @@
+.inputLabel {
+    font-weight: bold;
+    font-size: 20px;
+    color: #4A5568;
+    text-shadow: 4px 4px 15px 0 rgba(0,0,0,0.1);
+}
+
+.editInput{
+    background-color: transparent;
+    color: #4A5568;
+    /* 下边框样式 */
+    /*border-bottom: 1px solid rgba(255,255,255,0.4);*/
+    border: 2px solid #8e9aaf;
+    padding: 10px 0;
+    text-indent: 10px;
+    margin: 0px 5px 0 10px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    border-radius: 10px;
+}
+.editInput::placeholder{
+    color: #8e9aaf;
+}
+.editInput:hover{
+    border: 2px solid #718096;
+    box-shadow: 4px 4px 15px 0 rgba(0,0,0,0.1);
+}
+.editInput:focus{
+    color: #4A5568;
+    outline: none;
+    border: 2px solid #4A5568;
+    transition: 0.5s;
+    box-shadow: none;
+}
+
+.editInput:focus::placeholder{
+    opacity: 0;
+}
+
