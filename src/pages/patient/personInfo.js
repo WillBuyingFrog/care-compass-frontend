@@ -16,12 +16,19 @@ function PersonInfo(props){
 
     const [patientID, setPatientID] = useOutletContext();
 
+    const [isDefaulted, setIsDefaulted] = useState(0);
+
     const [personalInfo, setPersonalInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const getPersonalInfo = async () => {
             try {
-                const response = await axios.post('/patient/info/', {
+                let response = await axios.post('/patient/defaultedAppointmentsCheck', {
+                    patientID: patientID
+                });
+                setIsDefaulted(response.data.isDefaulted);
+                console.log(response.data.isDefaulted);
+                response = await axios.post('/patient/info/', {
                     UserID: patientID
                 });
                 if (response.status === 200) {
@@ -65,6 +72,13 @@ function PersonInfo(props){
                             </Title>
                             <Center>
                                 <Space direction='vertical' style={{'width': '60%'}}>
+                                    {
+                                        isDefaulted === 1 ? (
+                                            <div>您是失约患者，暂时无法使用预约挂号功能。</div>
+                                        ): (
+                                            <></>
+                                        )
+                                    }
                                     <div
                                         style={{
                                             padding: '24px',

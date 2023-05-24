@@ -155,7 +155,7 @@ function PatientHeader(){
                                         <Button w='220px' mt='8px' onClick={()=>{
                                             navigate('/patient/editInfo')
                                         }}>
-                                            个人信息管理</Button>
+                                            个人信息修改</Button>
                                     </Row>
                                     <Row>
 
