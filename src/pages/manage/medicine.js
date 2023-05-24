@@ -19,7 +19,7 @@ import {
     Skeleton,
     Table,
     Spin,
-    Image
+    Image, Popconfirm
 } from 'antd';
 import {
     UserOutlined,
@@ -90,6 +90,7 @@ function MedicineList(props) {
         if (props.MediList){
             setMediList(props.MediList)
         }
+        console.log(MediList.length)
         // getData()
     }, [props])
 
@@ -174,6 +175,11 @@ function MedicineList(props) {
         console.log(ret);
         return ret;
     }
+    const [count, setCount] = useState(2);
+    const handleDelete = (key) => {
+        const newData = MediList.filter((item) => item.key !== key);
+        setMediList(newData);
+    };
 
     const columns = [
         {
@@ -220,7 +226,17 @@ function MedicineList(props) {
             render:(_,record) =>(
                 <Text>{record.mprice}</Text>
             )
-        }
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            render: (_, record) =>
+                MediList.length >= 1 ? (
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
+                        <a>删除</a>
+                    </Popconfirm>
+                ) : null,
+        },
     ];
 
     return (
@@ -353,6 +369,7 @@ function ExaminationList(props) {
         if (props.ExamList){
             setExamList(props.ExamList)
         }
+        console.log(ExamList.length)
         // getData()
     }, [props])
 
@@ -437,6 +454,11 @@ function ExaminationList(props) {
         console.log(ret);
         return ret;
     }
+    const [count, setCount] = useState(2);
+    const handleDelete = (key) => {
+        const newData = ExamList.filter((item) => item.key !== key);
+        setExamList(newData);
+    };
 
     const columns = [
         {
@@ -475,7 +497,17 @@ function ExaminationList(props) {
             render:(_,record) =>(
                 <Text>{record.eprice}</Text>
             )
-        }
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            render: (_, record) =>
+                ExamList.length >= 1 ? (
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
+                        <a>删除</a>
+                    </Popconfirm>
+                ) : null,
+        },
     ];
 
     return (
@@ -570,7 +602,7 @@ function Medicine(){
                             label: `检查管理`,
                             key: '2',
                             children: <ExaminationList
-                                MediList={ExamList}
+                                ExamList={ExamList}
                                 // ExamList={data.ExaminationList}
                             />,
                         },

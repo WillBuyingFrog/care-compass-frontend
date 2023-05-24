@@ -340,7 +340,9 @@ function WorkCalendar(){
 };
 
 function DoctorSchedule(){
+
     const [department, setDepartment] = useState();
+    const [departmentList, setDepartmentList] = useState();
     const [current, setCurrent] = useState(0);
     const next = () => {
         setCurrent(current + 1);
@@ -349,8 +351,17 @@ function DoctorSchedule(){
         setCurrent(current - 1);
     };
 
-    const chooseDepartmentFinish = () => {
-        next()
+    const chooseDepartmentFinish = (dID) => {
+        setDepartment(dID);
+        console.log(department);
+        // while (department !== undefined) {
+        //     next();
+        // }
+        next();
+    }
+    const returnToChooseDepartment = () => {
+        setDepartment(undefined);
+        prev();
     }
 
     const scheduled = () => {
@@ -360,6 +371,26 @@ function DoctorSchedule(){
     const finished = () => {
         setCurrent(0);
     }
+    const getDepartments = () => {
+        axios({
+            method: "post",
+            url: "https://mock.apifox.cn/m2/2632066-0-default/83726813",
+            data: {
+            },
+            headers: {
+                token: localStorage.getItem("userToken")
+            }
+        })
+            .then(res => {
+                setDepartmentList(res.data.data.departmentList);
+                console.log(res.data.data);
+                console.log(res.data.data.departmentList);
+                console.log(departmentList);
+            })
+    }
+    useEffect(() => {
+        getDepartments();
+    }, [])
 
     const steps = [
         {
@@ -369,15 +400,13 @@ function DoctorSchedule(){
                 <HomeOutlined />,
             content: (
                 <div>
-                    <Card title="科室列表">
-                        <Card.Grid style={gridStyle} onClick={chooseDepartmentFinish}>Content</Card.Grid>
-                        <Card.Grid style={gridStyle} onClick={chooseDepartmentFinish}>Content</Card.Grid>
-                        <Card.Grid style={gridStyle} onClick={chooseDepartmentFinish}>Content</Card.Grid>
-                        <Card.Grid style={gridStyle} onClick={chooseDepartmentFinish}>Content</Card.Grid>
-                        <Card.Grid style={gridStyle} onClick={chooseDepartmentFinish}>Content</Card.Grid>
-                        <Card.Grid style={gridStyle} onClick={chooseDepartmentFinish}>Content</Card.Grid>
-                        <Card.Grid style={gridStyle} onClick={chooseDepartmentFinish}>Content</Card.Grid>
-                    </Card>
+                    {departmentList !== undefined &&
+                        <Card title="科室列表">
+                            {departmentList.map((item) => (
+                                <Card.Grid style={gridStyle} onClick={()=>chooseDepartmentFinish(item.departmentID)}>{item.departmentName}</Card.Grid>
+                            ))}
+                        </Card>
+                        }
                 </div>
             ),
         },
@@ -387,7 +416,9 @@ function DoctorSchedule(){
             icon: <PieChartOutlined />,
             content: (
                 <div>
-                    <WorkCalendar />
+                    {department !== undefined &&
+                        <WorkCalendar />
+                    }
                 </div>
             ),
         },
@@ -441,14 +472,16 @@ function DoctorSchedule(){
                 }}
             />
             <Divider dashed style={{marginTop: '1vh'}}/>
-            <div
-                className="steps-content"
-                style={{
-                    padding: 0,
-                }}
-            >
-                {steps[current].content}
-            </div>
+            {/*{steps[current].content !== undefined &&*/}
+                <div
+                    className="steps-content"
+                    style={{
+                        padding: 0,
+                    }}
+                >
+                    {steps[current].content}
+                </div>
+            {/*}*/}
             <div className="steps-action">
                 {current === 0 && (
                     <Row>
@@ -482,7 +515,7 @@ function DoctorSchedule(){
                                     margin: '0 10px',
                                     marginBottom: '20px',
                                 }}
-                                onClick={() => prev()}
+                                onClick={() => returnToChooseDepartment()}
                             >
                                 返回
                             </Button>
