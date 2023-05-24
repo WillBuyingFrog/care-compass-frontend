@@ -63,8 +63,8 @@ function PatientHeader(){
     let userButton;
 
     userButton = (<Button w='220px' mt='8px' onClick={()=>{
-        navigate('/')
-    }}>另一个功能</Button>)
+        navigate('/patient/myBills')
+    }}>我的账单</Button>)
 
 
     const patientMenuItems = [
@@ -76,7 +76,7 @@ function PatientHeader(){
         },
         {
             name: '我的挂号',
-            key: 'myAppointment'
+            key: 'myAppointments'
         }
     ]
 
@@ -134,18 +134,19 @@ function PatientHeader(){
                                 <PopoverBody>
                                     <Row>
                                         <Button w='220px' onClick={()=>{
-                                            navigate('/myMedicalRecords')
+                                            navigate('/patient/myMedicalRecords')
                                         }}>
                                             诊疗记录</Button>
                                     </Row>
                                     <Row>
                                         <Button w='220px' mt='8px' onClick={()=>{
+                                            navigate('/patient/myBills')
+                                        }}>
+                                            我的账单</Button>
+                                        <Button w='220px' mt='8px' onClick={()=>{
                                             navigate('/personInfo')
                                         }}>
                                             账户设置</Button>
-                                    </Row>
-                                    <Row>
-                                        {userButton}
                                     </Row>
                                     <Row>
 

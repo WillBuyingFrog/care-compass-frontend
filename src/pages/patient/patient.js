@@ -22,7 +22,7 @@ function Patient(){
         <div>
             <Layout style={{'height': '100%'}}>
                 <PatientHeader />
-                <Layout style={{'height': '600px'}}>
+                <Layout style={{'height': '90.5vh'}}>
                     <Content>
                         <Outlet context={[patientId, setPatientId]}/>
                     </Content>
