@@ -1,4 +1,4 @@
-import {Avatar, Col, Row, Space, Tabs, Typography} from "antd";
+import {Alert, Avatar, Col, Row, Space, Tabs, Typography} from "antd";
 import default_avatar from '../../assets/patient.png'
 import {BulbOutlined, HomeOutlined, MailOutlined, SolutionOutlined} from "@ant-design/icons";
 import {Center, Link as ChakraLink} from "@chakra-ui/react";
@@ -74,7 +74,7 @@ function PersonInfo(props){
                                 <Space direction='vertical' style={{'width': '60%'}}>
                                     {
                                         isDefaulted === 1 ? (
-                                            <div>您是失约患者，暂时无法使用预约挂号功能。</div>
+                                            <Alert message="您是失约患者，暂时无法使用预约挂号功能。" type="warning" />
                                         ): (
                                             <></>
                                         )

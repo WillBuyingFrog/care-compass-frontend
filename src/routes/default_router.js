@@ -38,6 +38,7 @@ import VisitInterface from "../pages/doctorSystem/visitInterface.js";
 import LeaveDetail from "../pages/doctorSystem/leaveDetail.js";
 import MedicalRecord, {medicalRecordLoader} from "../pages/patient/medicalRecord";
 import PersonInfo from "../pages/patient/personInfo";
+import EditInfo from "../pages/patient/editInfo";
 
 const default_router = createBrowserRouter([
     {
@@ -129,6 +130,10 @@ const default_router = createBrowserRouter([
             {
                 path: 'personInfo',
                 element: <PersonInfo />
+            },
+            {
+                path: 'editInfo',
+                element: <EditInfo />
             }
         ]
     },
