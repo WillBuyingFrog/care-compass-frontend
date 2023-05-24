@@ -18,6 +18,8 @@ function processPartRawBills(partRawBills, billType) {
             createTime: bill.createTime,
             payTime: bill.payTime,
             billType: billType,
+            relatedID: -1,
+            medicalRecordID: bill.medicalRecordID,
             price: bill.price,
             status: -1,
         }
@@ -27,6 +29,19 @@ function processPartRawBills(partRawBills, billType) {
         } else {
             // 没有时间记录，说明未支付
             processedBill.status = 0;
+        }
+        switch(billType) {
+            case 'Appointment':
+                processedBill.relatedID = bill.appointmentID;
+                break;
+            case 'Prescription':
+                processedBill.relatedID = bill.prescriptionID;
+                break;
+            case 'Inspection':
+                processedBill.relatedID = bill.inspectionID;
+                break;
+            default:
+                break;
         }
         processedBills.push(processedBill);
     }
@@ -134,9 +149,32 @@ function MyBills(props){
                         }}>缴费</Button>
                     )
                 }else{
-                    // TODO 完善medicalRecord页面后在这里加跳转
+                    let buttonText = "";
+                    let buttonDisabled = false;
+                    let buttonNavigate = "";
+                    if (record.billType === 'Appointment') {
+                        // 预约挂号账单，区分是否看诊完毕
+                        if (record.medicalRecordID === -1) {
+                            // 未看诊完毕
+                            buttonText = "查看预约记录";
+                            buttonNavigate = "/patient/myAppointments";
+                        }else {
+                            // 已经看诊完毕，跳转到对应诊疗详情页面
+                            buttonText = "查看对应诊疗";
+                            buttonNavigate = "/patient/medicalRecord/" + record.medicalRecordID.toString();
+                        }
+                    } else {
+                        buttonText = "查看对应诊疗";
+                        buttonNavigate = "/patient/medicalRecord/" + record.medicalRecordID.toString();
+                    }
                     return (
-                        <Button type='primary' disabled>查看详情</Button>
+                        <Button type='primary' disabled={buttonDisabled}
+                                onClick={() => {
+                                    navigate(buttonNavigate);
+                                }}
+                        >
+                            {buttonText}
+                        </Button>
                     )
                 }
             }
@@ -155,7 +193,9 @@ function MyBills(props){
                             <Title level={1}>
                                 我的账单
                             </Title>
-                            <Table columns={columns} dataSource={bills}  />
+                            <Table columns={columns} dataSource={bills}
+                                   pagination={{pageSize: 8}}
+                            />
                         </Space>
                     </Center>
                 </Col>
