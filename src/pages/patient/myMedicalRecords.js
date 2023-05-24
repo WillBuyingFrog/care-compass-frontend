@@ -77,7 +77,7 @@ function MyMedicalRecords(){
             }
         },
         {
-            title: '预约时间',
+            title: '就诊时间',
             dataIndex: 'medicalDate',
             key: 'medicalDate',
             render: (text) => {

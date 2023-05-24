@@ -19,10 +19,9 @@ function Patient(){
 
 
     return (
-        <div>
-            <Layout style={{'height': '100%'}}>
+            <Layout style={{'height': '100%', 'overflow': 'scroll'}}>
                 <PatientHeader />
-                <Layout style={{'height': '90.5vh'}}>
+                <Layout style={{'height': 'max(90.5vh, 100%)'}}>
                     <Content>
                         <Outlet context={[patientId, setPatientId]}/>
                     </Content>
@@ -31,7 +30,6 @@ function Patient(){
 
                 </Footer>
             </Layout>
-        </div>
     )
 }
 
