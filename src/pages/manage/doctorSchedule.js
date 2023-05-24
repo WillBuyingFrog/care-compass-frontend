@@ -5,11 +5,12 @@ import 'antd/dist/antd.variable.min.css';
 import './doctorSchedule.css';
 import './manage.css';
 import { Avatar } from '@chakra-ui/react'
-import {Card, Row, Col, Badge, Calendar, ConfigProvider, Divider, Steps, Typography, Button} from 'antd';
+import {Card, Row, Col, Badge, Calendar, ConfigProvider, Divider, Steps, Typography, Button, Alert} from 'antd';
 import * as echarts from 'echarts'
 import React, { useEffect, useRef, useState } from 'react';
 import {Link, useLocation} from 'react-router-dom'
 import axios from 'axios';
+import moment from 'moment';
 import {
     TeamOutlined,
     RiseOutlined,
@@ -76,6 +77,21 @@ const getListData = (value) => {
 };
 
 function WorkCalendar(){
+    const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const nextMonth1st = moment().add(1, 'months').format('YYYY-MM-01');
+    // const [value, setValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
+    // const [selectedValue, setSelectedValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
+    const [value, setValue] = useState(() => moment(nextMonth1st));
+    const [selectedValue, setSelectedValue] = useState(() => moment(nextMonth1st));
+
+    const onSelect = (newValue) => {
+        setValue(newValue);
+        setSelectedValue(newValue);
+    };
+    const onPanelChange = (newValue) => {
+        setValue(newValue);
+    };
+
     const dateCellRender = (value) => {
         const listData = getListData(value);
         return (
@@ -88,8 +104,13 @@ function WorkCalendar(){
             </ul>
         );
     };
-    return <Calendar dateCellRender={dateCellRender} />;
-}
+    return (
+        <>
+            <Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />
+            <Calendar dateCellRender={dateCellRender} value={value} onSelect={onSelect} onPanelChange={onPanelChange}/>;
+        </>
+    );
+};
 
 function DoctorSchedule(){
     const [current, setCurrent] = useState(1);
@@ -171,13 +192,14 @@ function DoctorSchedule(){
     return(
         <div className='manageCard'>
             <Steps
+                size={"small"}
                 current={current}
                 items={items}
                 style={{
                     padding: 0,
                 }}
             />
-            <Divider dashed/>
+            <Divider dashed style={{marginTop: '1vh'}}/>
             <div
                 className="steps-content"
                 style={{

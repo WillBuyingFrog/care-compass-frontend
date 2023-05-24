@@ -12,7 +12,7 @@
     padding: 0;
 }
 .ant-badge-status-text {
-    font-size: 13px;
+    font-size: 12px;
 }
 .notes-month {
     font-size: 28px;
@@ -33,7 +33,7 @@
 }
 .ant-picker-calendar-date-value {
     height: 2vh;
-    font-size: 13px;
+    font-size: 12px;
 
 }
 .ant-picker-calendar-date-content {

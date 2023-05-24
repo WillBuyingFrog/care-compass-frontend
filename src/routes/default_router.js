@@ -8,26 +8,31 @@ import Homepage from "../pages/landing/homepage.js";
 // login and register
 import LoginAndRegister from "../pages/user/loginAndRegister";
 import FindPassword from "../pages/user/findPassword";
-import MakeAppointment from "../pages/patient/makeAppointment";
 
 // manage
 import Manage from "../pages/manage/left.js";
 import Info from "../pages/manage/info.js";
-import Checked from "../pages/manage/checked.js";
-import UnCheck from "../pages/manage/uncheck.js";
-import Patient from "../pages/patient/patient";
-import SelectDepartment from "../pages/patient/steps/selectDepartment";
-import SelectDoctor from "../pages/patient/steps/selectDoctor";
-import PayBill, {singleBillLoader} from "../pages/patient/payBill";
 import DoctorSchedule from "../pages/manage/doctorSchedule.js";
 import DoctorLeave from "../pages/manage/doctorLeave.js";
 import Department from "../pages/manage/department.js";
 import Medicine from "../pages/manage/medicine.js";
 import Portal from "../pages/manage/Portal";
 import EditPortal from "../pages/manage/EditPortal";
+import Board from "../pages/manage/board";
+import DoctorAccount from "../pages/manage/doctorAccount"
+
+// patient
+import MakeAppointment from "../pages/patient/makeAppointment";
+import Patient from "../pages/patient/patient";
+import SelectDepartment from "../pages/patient/steps/selectDepartment";
+import SelectDoctor from "../pages/patient/steps/selectDoctor";
+import PayBill, {singleBillLoader} from "../pages/patient/payBill";
 import MyAppointments from "../pages/patient/myAppointments";
 import MyMedicalRecords from "../pages/patient/myMedicalRecords";
 import MyBills from "../pages/patient/myBills";
+
+
+// doctor
 import DoctorMain from "../pages/doctorSystem/doctorMain.js";
 import PatientAppointment from "../pages/doctorSystem/patientAppointment.js";
 import CheckSchedule from "../pages/doctorSystem/checkSchedule.js";
@@ -69,14 +74,6 @@ const default_router = createBrowserRouter([
                 element: <Info />
             },
             {
-                path: 'checked',
-                element: <Checked />
-            },
-            {
-                path: 'uncheck',
-                element: <UnCheck />
-            },
-            {
                 path: 'doctorSchedule',
                 element: <DoctorSchedule />
             },
@@ -92,6 +89,14 @@ const default_router = createBrowserRouter([
                 path: 'medicine',
                 element: <Medicine />
             },
+            {
+                path: 'board',
+                element: <Board />
+            },
+            {
+                path: 'doctorAccount',
+                element: <Board />
+            }
         ]
     },
     {
