@@ -171,7 +171,7 @@ function MyAppointments() {
                 <Col span={4} />
                 <Col span={16}>
                     <Title level={1}>
-                        我的预约
+                        我的挂号
                     </Title>
                     <Table columns={columns} dataSource={appointments} />
                 </Col>

@@ -144,7 +144,7 @@ function PatientHeader(){
                                         }}>
                                             我的账单</Button>
                                         <Button w='220px' mt='8px' onClick={()=>{
-                                            navigate('/personInfo')
+                                            navigate('/patient/personInfo')
                                         }}>
                                             账户设置</Button>
                                     </Row>

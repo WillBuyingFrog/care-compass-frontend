@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {Col, Row, Space, Typography} from "antd";
 import {Center} from "@chakra-ui/react";
 import axios from "axios";
-import {useLoaderData} from "react-router-dom";
+import {useLoaderData, useOutletContext} from "react-router-dom";
 import DescriptionCard from "./medicalRecordCards/DescriptionCard";
 import PrescriptionAndInspectionCard from "./medicalRecordCards/PrescriptionAndInspectionCard";
 import DiagnoseCard from "./medicalRecordCards/DiagnoseCard";
@@ -22,14 +22,17 @@ function MedicalRecord(){
     const [medicalRecord, setMedicalRecord] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const [patientID, setPatientID] = useOutletContext();
+
     useEffect(() => {
         const getMedicalRecord = async () => {
             try {
-                const response = await axios.post('/patient/consultation/get/', {
-                    recordID: medicalRecordID
+                const response = await axios.post('/treatment/getHistoryRecord/single/', {
+                    recordID: medicalRecordID,
+                    patientID: patientID
                 });
                 if (response.status === 200) {
-                    setMedicalRecord(response.data);
+                    setMedicalRecord(response.data.data);
                     setLoading(false);
                 }
             } catch (error) {

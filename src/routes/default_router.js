@@ -37,6 +37,7 @@ import PicturesWall  from "../pages/doctorSystem/pictureWall.js";
 import VisitInterface from "../pages/doctorSystem/visitInterface.js";
 import LeaveDetail from "../pages/doctorSystem/leaveDetail.js";
 import MedicalRecord, {medicalRecordLoader} from "../pages/patient/medicalRecord";
+import PersonInfo from "../pages/patient/personInfo";
 
 const default_router = createBrowserRouter([
     {
@@ -124,6 +125,10 @@ const default_router = createBrowserRouter([
                 path: 'medicalRecord/:medicalRecordID',
                 element: <MedicalRecord />,
                 loader: medicalRecordLoader
+            },
+            {
+                path: 'personInfo',
+                element: <PersonInfo />
             }
         ]
     },
