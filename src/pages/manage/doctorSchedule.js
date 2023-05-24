@@ -1,15 +1,16 @@
 /**
- * 后台管理/科室信息管理
+ * 后台管理/医生排班管理
  */
 import 'antd/dist/antd.variable.min.css';
 import './doctorSchedule.css';
 import './manage.css';
 import { Avatar } from '@chakra-ui/react'
-import {Card, Row, Col, Badge, Calendar, ConfigProvider, Divider, Steps, Typography, Button} from 'antd';
+import {Card, Row, Col, Badge, Calendar, ConfigProvider, Divider, Steps, Typography, Button, Alert, Drawer, Space, Form, Input, Popconfirm, Table} from 'antd';
 import * as echarts from 'echarts'
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import {Link, useLocation} from 'react-router-dom'
 import axios from 'axios';
+import moment from 'moment';
 import {
     TeamOutlined,
     RiseOutlined,
@@ -30,6 +31,204 @@ ConfigProvider.config({
         successColor: '#50af78',
     },
 });
+
+// 科室列表
+const gridStyle = {
+    width: '25%',
+    textAlign: 'center',
+};
+
+// 排班抽屉
+const EditableContext = React.createContext(null);
+const EditableRow = ({ index, ...props }) => {
+    const [form] = Form.useForm();
+    return (
+        <Form form={form} component={false}>
+            <EditableContext.Provider value={form}>
+                <tr {...props} />
+            </EditableContext.Provider>
+        </Form>
+    );
+};
+const EditableCell = ({
+                          title,
+                          editable,
+                          children,
+                          dataIndex,
+                          record,
+                          handleSave,
+                          ...restProps
+                      }) => {
+    const [editing, setEditing] = useState(false);
+    const inputRef = useRef(null);
+    const form = useContext(EditableContext);
+    useEffect(() => {
+        if (editing) {
+            inputRef.current.focus();
+        }
+    }, [editing]);
+    const toggleEdit = () => {
+        setEditing(!editing);
+        form.setFieldsValue({
+            [dataIndex]: record[dataIndex],
+        });
+    };
+    const save = async () => {
+        try {
+            const values = await form.validateFields();
+            toggleEdit();
+            handleSave({
+                ...record,
+                ...values,
+            });
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo);
+        }
+    };
+    let childNode = children;
+    if (editable) {
+        childNode = editing ? (
+            <Form.Item
+                style={{
+                    margin: 0,
+                }}
+                name={dataIndex}
+                rules={[
+                    {
+                        required: true,
+                        message: `${title} is required.`,
+                    },
+                ]}
+            >
+                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{
+                    paddingRight: 24,
+                }}
+                onClick={toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    }
+    return <td {...restProps}>{childNode}</td>;
+};
+
+const ScheduleList = () => {
+    const [dataSource, setDataSource] = useState([
+        {
+            key: '0',
+            name: 'Edward King 0',
+            age: '32',
+            address: 'London, Park Lane no. 0',
+        },
+        {
+            key: '1',
+            name: 'Edward King 1',
+            age: '32',
+            address: 'London, Park Lane no. 1',
+        },
+    ]);
+    const [count, setCount] = useState(2);
+    const handleDelete = (key) => {
+        const newData = dataSource.filter((item) => item.key !== key);
+        setDataSource(newData);
+    };
+    const defaultColumns = [
+        {
+            title: '姓名',
+            dataIndex: 'name',
+            width: '20%',
+        },
+        {
+            title: '工号',
+            dataIndex: 'age',
+        },
+        {
+            title: '时间段',
+            dataIndex: 'age',
+        },
+        {
+            title: '放号量',
+            dataIndex: 'address',
+            editable: true,
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            render: (_, record) =>
+                dataSource.length >= 1 ? (
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
+                        <a>删除排班</a>
+                    </Popconfirm>
+                ) : null,
+        },
+    ];
+    const handleAdd = () => {
+        const newData = {
+            key: count,
+            name: `Edward King ${count}`,
+            age: '32',
+            address: `London, Park Lane no. ${count}`,
+        };
+        setDataSource([...dataSource, newData]);
+        setCount(count + 1);
+    };
+    const handleSave = (row) => {
+        const newData = [...dataSource];
+        const index = newData.findIndex((item) => row.key === item.key);
+        const item = newData[index];
+        newData.splice(index, 1, {
+            ...item,
+            ...row,
+        });
+        setDataSource(newData);
+    };
+    const components = {
+        body: {
+            row: EditableRow,
+            cell: EditableCell,
+        },
+    };
+    const columns = defaultColumns.map((col) => {
+        if (!col.editable) {
+            return col;
+        }
+        return {
+            ...col,
+            onCell: (record) => ({
+                record,
+                editable: col.editable,
+                dataIndex: col.dataIndex,
+                title: col.title,
+                handleSave,
+            }),
+        };
+    });
+    return (
+        <div>
+            <Button
+                onClick={handleAdd}
+                type="primary"
+                style={{
+                    marginBottom: 16,
+                }}
+            >
+                添加出诊医生
+            </Button>
+            <Table
+                components={components}
+                rowClassName={() => 'editable-row'}
+                bordered
+                dataSource={dataSource}
+                columns={columns}
+            />
+        </div>
+    );
+};
 
 const getListData = (value) => {
     let listData;
@@ -75,7 +274,32 @@ const getListData = (value) => {
     return listData || [];
 };
 
+// 排班日历
 function WorkCalendar(){
+    const [open, setOpen] = useState(false);
+    const showDrawer = () => {
+        setOpen(true);
+    };
+    const onClose = () => {
+        setOpen(false);
+    };
+    const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const nextMonth1st = moment().add(1, 'months').format('YYYY-MM-01');
+    // const [value, setValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
+    // const [selectedValue, setSelectedValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
+    const [value, setValue] = useState(() => moment(nextMonth1st));
+    const [selectedValue, setSelectedValue] = useState(() => moment(nextMonth1st));
+
+    const onSelect = (newValue) => {
+        setValue(newValue);
+        setSelectedValue(newValue);
+        showDrawer();
+        console.log(newValue.format('YYYY-MM-DD'));
+    };
+    const onPanelChange = (newValue) => {
+        setValue(newValue);
+    };
+
     const dateCellRender = (value) => {
         const listData = getListData(value);
         return (
@@ -88,11 +312,38 @@ function WorkCalendar(){
             </ul>
         );
     };
-    return <Calendar dateCellRender={dateCellRender} />;
-}
+    return (
+        <>
+            {/*<Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />*/}
+            <Calendar dateCellRender={dateCellRender} value={value} onSelect={onSelect} onPanelChange={onPanelChange}/>;
+            <Drawer
+                title={`心脏外科 ${selectedValue?.format('YYYY-MM-DD')}排班情况`}
+                width={720}
+                onClose={onClose}
+                open={open}
+                bodyStyle={{
+                    paddingBottom: 80,
+                }}
+                extra={
+                    <Space>
+                        <Button onClick={onClose}>取消</Button>
+                        <Button onClick={onClose} type="primary">
+                            提交
+                        </Button>
+                    </Space>
+                }
+            >
+                <ScheduleList />
+            </Drawer>
+        </>
+    );
+};
 
 function DoctorSchedule(){
-    const [current, setCurrent] = useState(1);
+
+    const [department, setDepartment] = useState();
+    const [departmentList, setDepartmentList] = useState();
+    const [current, setCurrent] = useState(0);
     const next = () => {
         setCurrent(current + 1);
     };
@@ -100,13 +351,46 @@ function DoctorSchedule(){
         setCurrent(current - 1);
     };
 
-    const chooseDepartmentFinish = () => {
-        next()
+    const chooseDepartmentFinish = (dID) => {
+        setDepartment(dID);
+        console.log(department);
+        // while (department !== undefined) {
+        //     next();
+        // }
+        next();
+    }
+    const returnToChooseDepartment = () => {
+        setDepartment(undefined);
+        prev();
     }
 
     const scheduled = () => {
         next()
     }
+
+    const finished = () => {
+        setCurrent(0);
+    }
+    const getDepartments = () => {
+        axios({
+            method: "post",
+            url: "https://mock.apifox.cn/m2/2632066-0-default/83726813",
+            data: {
+            },
+            headers: {
+                token: localStorage.getItem("userToken")
+            }
+        })
+            .then(res => {
+                setDepartmentList(res.data.data.departmentList);
+                console.log(res.data.data);
+                console.log(res.data.data.departmentList);
+                console.log(departmentList);
+            })
+    }
+    useEffect(() => {
+        getDepartments();
+    }, [])
 
     const steps = [
         {
@@ -116,6 +400,13 @@ function DoctorSchedule(){
                 <HomeOutlined />,
             content: (
                 <div>
+                    {departmentList !== undefined &&
+                        <Card title="科室列表">
+                            {departmentList.map((item) => (
+                                <Card.Grid style={gridStyle} onClick={()=>chooseDepartmentFinish(item.departmentID)}>{item.departmentName}</Card.Grid>
+                            ))}
+                        </Card>
+                        }
                 </div>
             ),
         },
@@ -125,7 +416,9 @@ function DoctorSchedule(){
             icon: <PieChartOutlined />,
             content: (
                 <div>
-                    <WorkCalendar />
+                    {department !== undefined &&
+                        <WorkCalendar />
+                    }
                 </div>
             ),
         },
@@ -171,39 +464,43 @@ function DoctorSchedule(){
     return(
         <div className='manageCard'>
             <Steps
+                size={"small"}
                 current={current}
                 items={items}
                 style={{
                     padding: 0,
                 }}
             />
-            <Divider dashed/>
-            <div
-                className="steps-content"
-                style={{
-                    padding: 0,
-                }}
-            >
-                {steps[current].content}
-            </div>
+            <Divider dashed style={{marginTop: '1vh'}}/>
+            {/*{steps[current].content !== undefined &&*/}
+                <div
+                    className="steps-content"
+                    style={{
+                        padding: 0,
+                    }}
+                >
+                    {steps[current].content}
+                </div>
+            {/*}*/}
             <div className="steps-action">
                 {current === 0 && (
                     <Row>
-                        <Button
-                            type="primary"
-                            onClick={chooseDepartmentFinish}
-                            shape={"round"}
-                            size="large"
-                            style={{
-                                margin: 'auto',
-                                // backgroundColor: '#3a3af1',
-                                border: 'none',
-                                boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
-                                marginBottom: '20px',
-                            }}
-                        >
-                            下一步
-                        </Button>
+                        {/*<Button*/}
+                        {/*    type="primary"*/}
+                        {/*    onClick={chooseDepartmentFinish}*/}
+                        {/*    shape={"round"}*/}
+                        {/*    size="large"*/}
+                        {/*    style={{*/}
+                        {/*        margin: 'auto',*/}
+                        {/*        // backgroundColor: '#3a3af1',*/}
+                        {/*        border: 'none',*/}
+                        {/*        boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',*/}
+                        {/*        marginTop: '20px',*/}
+                        {/*        marginBottom: '20px',*/}
+                        {/*    }}*/}
+                        {/*>*/}
+                        {/*    下一步*/}
+                        {/*</Button>*/}
                     </Row>
 
                 )}
@@ -218,7 +515,7 @@ function DoctorSchedule(){
                                     margin: '0 10px',
                                     marginBottom: '20px',
                                 }}
-                                onClick={() => prev()}
+                                onClick={() => returnToChooseDepartment()}
                             >
                                 返回
                             </Button>
@@ -239,15 +536,16 @@ function DoctorSchedule(){
                     </Row>
                 )}
                 {current ===2 && (
+                    <>
                     <Row>
-                        <Link
-                            to={{
-                                pathname: '/',
-                            }}
-                            style={{
-                                margin: 'auto',
-                            }}
-                        >
+                        {/*<Link*/}
+                        {/*    to={{*/}
+                        {/*        pathname: '/manage/doctorSchedule',*/}
+                        {/*    }}*/}
+                        {/*    style={{*/}
+                        {/*        margin: 'auto',*/}
+                        {/*    }}*/}
+                        {/*>*/}
                             <Button
                                 type="primary"
                                 // onClick={() => message.success('即将返回首页!')}
@@ -255,14 +553,16 @@ function DoctorSchedule(){
                                 size="large"
                                 style={{
                                     border: 'none',
+                                    margin: 'auto',
                                     marginBottom: '20px',
                                 }}
+                                onClick={finished}
                             >
                                 返回
                             </Button>
-                        </Link>
+                        {/*</Link>*/}
                     </Row>
-                )}
+                    </>)}
             </div>
 
         </div>

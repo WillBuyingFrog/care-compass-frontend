@@ -1,7 +1,7 @@
 /**
- * 后台管理/检查管理
+ * 后台管理/公告管理
  */
-import './medicine.css';
+import './board.css';
 import './manage.css';
 import Chart from 'react-apexcharts'
 import {
@@ -55,7 +55,7 @@ const onChange = (key) => {
     console.log(key);
 };
 
-const MediList = [
+const BoardList = [
     {
         key: '1',
         mallowance: '胡彦斌',
@@ -65,7 +65,7 @@ const MediList = [
     },
 ];
 
-const ExamList = [
+const PassageList = [
     {
         key: '1',
         edepartment: '胡彦斌',
@@ -74,9 +74,9 @@ const ExamList = [
     },
 ];
 
-function MedicineList(props) {
+function BoardPassageList(props) {
 
-    const [MediList, setMediList] = useState({});
+    const [BoardList, setBoardList] = useState({});
     const [citenum, setCitenum] = useState([]);
     const [maxcite, setMaxcite] = useState(0);
 
@@ -87,10 +87,10 @@ function MedicineList(props) {
 
 
     useEffect(() =>{
-        if (props.MediList){
-            setMediList(props.MediList)
+        if (props.BoardList){
+            setBoardList(props.BoardList)
         }
-        console.log(MediList.length)
+        console.log(BoardList.length)
         // getData()
     }, [props])
 
@@ -176,14 +176,17 @@ function MedicineList(props) {
         return ret;
     }
     const [count, setCount] = useState(2);
+    const handleAdd = () => {
+
+    };
     const handleDelete = (key) => {
-        const newData = MediList.filter((item) => item.key !== key);
-        setMediList(newData);
+        const newData = BoardList.filter((item) => item.key !== key);
+        setBoardList(newData);
     };
 
     const columns = [
         {
-            title: '批准文号',
+            title: '标题',
             dataIndex: 'mallowance',
             key: 'mallowance',
             sorter: (a, b) => a.mallowance.localeCompare(b.mallowance),
@@ -194,7 +197,7 @@ function MedicineList(props) {
             ),
         },
         {
-            title: '药品名称',
+            title: '时间',
             dataIndex: 'mname',
             key: 'mname',
             ...getColumnSearchProps('mname'),
@@ -209,29 +212,10 @@ function MedicineList(props) {
             width: 400
         },
         {
-            title: '生产单位',
-            dataIndex: 'mcompany',
-            key: 'mcompany',
-            width: 150,
-            render: (_, record) => (
-                <Text>{record.mcompany}</Text>
-            ),
-        },{
-            title: '价格',
-            dataIndex: 'mprice',
-            key: 'mprice',
-            sorter: (a, b) => a.mprice - b.mprice,
-            sortDirections: ['descend', 'ascend'],
-            width: 200,
-            render:(_,record) =>(
-                <Text>{record.mprice}</Text>
-            )
-        },
-        {
             title: '操作',
             dataIndex: 'operation',
             render: (_, record) =>
-                MediList.length >= 1 ? (
+                BoardList.length >= 1 ? (
                     <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
                         <a>删除</a>
                     </Popconfirm>
@@ -248,6 +232,15 @@ function MedicineList(props) {
                 border: 'none',
             }}
         >
+            <Button
+                onClick={handleAdd}
+                type="primary"
+                style={{
+                    marginBottom: 16,
+                }}
+            >
+                添加公告
+            </Button>
             <Box css={{
                 height: 450,
                 overflow: 'auto',
@@ -263,46 +256,10 @@ function MedicineList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={props.MediList} columns={columns}
+                <Table dataSource={props.BoardList} columns={columns}
                        pagination={false}
-                       className='medicineList'
+                       className='boardList'
                        rowKey={(record) => record.mid}
-                       // expandable={{
-                       //     expandedRowRender: (record) => (
-                       //         <Row >
-                       //             <Col span={15} offset={1}>
-                       //                 <Heading as='h4' size='md' mb={'10px'}>
-                       //                     <div dangerouslySetInnerHTML={{ __html: record.mname }} />
-                       //                 </Heading>
-                       //                 <Row className='expand'>
-                       //                     {
-                       //                         record.pauthorname.map((value, key) => {
-                       //                             return (
-                       //                                 <Text fontSize='sm' mr='25px' mt='5px' color='#98bcdf'>{value}, </Text>
-                       //                             );})
-                       //                     }
-                       //                 </Row>
-                       //                 <div style={{marginTop: '10px'}} dangerouslySetInnerHTML={{ __html: record.pabstract }} />
-                       //                 <Row>
-                       //                     {
-                       //                         record.pconcepts.map((value, key) => (
-                       //                             key<8? (
-                       //                                 <Tag size='sm' mt='3px' variant='subtle' bg='#627cd177' color='white' mr='20px'>
-                       //                                     <TagLabel>{value}</TagLabel>
-                       //                                 </Tag>
-                       //                             ):(<p></p>)
-                       //                         ))
-                       //                     }
-                       //                 </Row>
-                       //             </Col>
-                       //             <Col span={7} style={{marginLeft:'20px'}}>
-                       //                 <Chart options={options}
-                       //                        series={[{data:record.pcitednum.reverse(), name:'引用量'}]}
-                       //                        type="area" height={250} />
-                       //             </Col>
-                       //         </Row>
-                       //     ),
-                       // }}
                 >
                 </Table>
             </Box>
@@ -361,15 +318,15 @@ function DataChart(props) {
     )
 }
 
-function ExaminationList(props) {
+function HealthyPassageList(props) {
 
-    const [ExamList, setExamList] = useState({});
+    const [PassageList, setPassageList] = useState({});
 
     useEffect(() =>{
-        if (props.ExamList){
-            setExamList(props.ExamList)
+        if (props.PassageList){
+            setPassageList(props.PassageList)
         }
-        console.log(ExamList.length)
+        console.log(PassageList.length)
         // getData()
     }, [props])
 
@@ -455,14 +412,17 @@ function ExaminationList(props) {
         return ret;
     }
     const [count, setCount] = useState(2);
+    const handleAdd = () => {
+
+    };
     const handleDelete = (key) => {
-        const newData = ExamList.filter((item) => item.key !== key);
-        setExamList(newData);
+        const newData = PassageList.filter((item) => item.key !== key);
+        setPassageList(newData);
     };
 
     const columns = [
         {
-            title: '科室',
+            title: '标题',
             dataIndex: 'edepartment',
             key: 'edepartment',
             sorter: (a, b) => a.edepartment.localeCompare(b.edepartment),
@@ -473,7 +433,7 @@ function ExaminationList(props) {
             ),
         },
         {
-            title: '项目',
+            title: '时间',
             dataIndex: 'ename',
             key: 'ename',
             ...getColumnSearchProps('ename'),
@@ -488,21 +448,10 @@ function ExaminationList(props) {
             width: 400
         },
         {
-            title: '价格',
-            dataIndex: 'eprice',
-            key: 'eprice',
-            sorter: (a, b) => a.eprice - b.eprice,
-            sortDirections: ['descend', 'ascend'],
-            width: 200,
-            render:(_,record) =>(
-                <Text>{record.eprice}</Text>
-            )
-        },
-        {
             title: '操作',
             dataIndex: 'operation',
             render: (_, record) =>
-                ExamList.length >= 1 ? (
+                PassageList.length >= 1 ? (
                     <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
                         <a>删除</a>
                     </Popconfirm>
@@ -519,6 +468,15 @@ function ExaminationList(props) {
                 border: 'none',
             }}
         >
+            <Button
+                onClick={handleAdd}
+                type="primary"
+                style={{
+                    marginBottom: 16,
+                }}
+            >
+                添加文章
+            </Button>
             <Box css={{
                 height: 450,
                 overflow: 'auto',
@@ -534,46 +492,10 @@ function ExaminationList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={props.MediList} columns={columns}
+                <Table dataSource={props.PassageList} columns={columns}
                        pagination={false}
-                       className='medicineList'
+                       className='boardList'
                        rowKey={(record) => record.mid}
-                    // expandable={{
-                    //     expandedRowRender: (record) => (
-                    //         <Row >
-                    //             <Col span={15} offset={1}>
-                    //                 <Heading as='h4' size='md' mb={'10px'}>
-                    //                     <div dangerouslySetInnerHTML={{ __html: record.mname }} />
-                    //                 </Heading>
-                    //                 <Row className='expand'>
-                    //                     {
-                    //                         record.pauthorname.map((value, key) => {
-                    //                             return (
-                    //                                 <Text fontSize='sm' mr='25px' mt='5px' color='#98bcdf'>{value}, </Text>
-                    //                             );})
-                    //                     }
-                    //                 </Row>
-                    //                 <div style={{marginTop: '10px'}} dangerouslySetInnerHTML={{ __html: record.pabstract }} />
-                    //                 <Row>
-                    //                     {
-                    //                         record.pconcepts.map((value, key) => (
-                    //                             key<8? (
-                    //                                 <Tag size='sm' mt='3px' variant='subtle' bg='#627cd177' color='white' mr='20px'>
-                    //                                     <TagLabel>{value}</TagLabel>
-                    //                                 </Tag>
-                    //                             ):(<p></p>)
-                    //                         ))
-                    //                     }
-                    //                 </Row>
-                    //             </Col>
-                    //             <Col span={7} style={{marginLeft:'20px'}}>
-                    //                 <Chart options={options}
-                    //                        series={[{data:record.pcitednum.reverse(), name:'引用量'}]}
-                    //                        type="area" height={250} />
-                    //             </Col>
-                    //         </Row>
-                    //     ),
-                    // }}
                 >
                 </Table>
             </Box>
@@ -581,7 +503,7 @@ function ExaminationList(props) {
     );
 }
 
-function Medicine(){
+function Board(){
 
     return(
         <div className='manageCard'>
@@ -591,18 +513,18 @@ function Medicine(){
                     onChange={onChange}
                     items={[
                         {
-                            label: `药品管理`,
+                            label: `就医须知`,
                             key: '1',
-                            children: <MedicineList
-                                MediList={MediList}
+                            children: <BoardPassageList
+                                BoardList={BoardList}
                                 // MediList={data.MedicineList}
                             />,
                         },
                         {
-                            label: `检查管理`,
+                            label: `健康科普`,
                             key: '2',
-                            children: <ExaminationList
-                                ExamList={ExamList}
+                            children: <HealthyPassageList
+                                PassageList={PassageList}
                                 // ExamList={data.ExaminationList}
                             />,
                         },
@@ -613,4 +535,4 @@ function Medicine(){
     )
 }
 
-export default Medicine;
+export default Board;

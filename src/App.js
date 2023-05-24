@@ -65,7 +65,7 @@ const theme = extendTheme({
 
 ConfigProvider.config({
   theme: {
-    primaryColor: '#3a3af1',
+    primaryColor: '#2C5282',
     successColor: '#50af78',
   },
 });
