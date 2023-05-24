@@ -149,32 +149,8 @@ function MyBills(props){
                         }}>缴费</Button>
                     )
                 }else{
-                    let buttonText = "";
-                    let buttonDisabled = false;
-                    let buttonNavigate = "";
-                    if (record.billType === 'Appointment') {
-                        // 预约挂号账单，区分是否看诊完毕
-                        if (record.medicalRecordID === -1) {
-                            // 未看诊完毕
-                            buttonText = "查看预约记录";
-                            buttonNavigate = "/patient/myAppointments";
-                        }else {
-                            // 已经看诊完毕，跳转到对应诊疗详情页面
-                            buttonText = "查看对应诊疗";
-                            buttonNavigate = "/patient/medicalRecord/" + record.medicalRecordID.toString();
-                        }
-                    } else {
-                        buttonText = "查看对应诊疗";
-                        buttonNavigate = "/patient/medicalRecord/" + record.medicalRecordID.toString();
-                    }
                     return (
-                        <Button type='primary' disabled={buttonDisabled}
-                                onClick={() => {
-                                    navigate(buttonNavigate);
-                                }}
-                        >
-                            {buttonText}
-                        </Button>
+                        <Button type='primary' disabled>已缴费</Button>
                     )
                 }
             }
