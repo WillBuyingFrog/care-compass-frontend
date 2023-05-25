@@ -1,8 +1,9 @@
 import {Button,Layout,Menu, Breadcrumb ,Select ,Input} from 'antd'
-import { Upload, Icon, Modal ,message} from 'antd';
+import { Upload, Icon, Modal ,message ,Radio} from 'antd';
 import { useLocation, useNavigate,Outlet} from 'react-router-dom';
 
 import PicturesWall from './pictureWall';
+import MyRadio from './myradio';
 
 const { SubMenu } = Menu;
 const { Option } = Select;
@@ -13,8 +14,11 @@ function ApplyVacation(){
     const nagivate = useNavigate()
     const location = useLocation()
 
+    let type=''
+
     const success = () => {
         message.success('您的申请已成功提交，管理员会在24小时内进行审批！');
+        console.log(type)
       };
       
     const error = () => {
@@ -24,6 +28,15 @@ function ApplyVacation(){
     function handleChange(value) {
         console.log(`selected ${value}`);
       }
+
+    function onChange(value) {
+        console.log(value.target.value);
+        type=value.target.value
+    };
+
+    function sendType(temtype){
+        type=temtype
+    }
     return(
         <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
@@ -42,7 +55,7 @@ function ApplyVacation(){
                 <br/>
                 <br/>
                 <div>
-                <span>请选择请假时间：</span>           
+                <span>请选择请假时间*：</span>           
                     <Select defaultValue="" style={{ width: 200 ,marginLeft:500}} onChange={handleChange}>
                         <Option value="6-8 周四 上午">6-8 周四 上午</Option>
                         <Option value="6-8 周四 下午">6-8 周四 下午</Option>
@@ -51,9 +64,15 @@ function ApplyVacation(){
                 </div>
                 <br/>
                 <br/>
+                <span>请选择请假类型*：</span>   
+                {/* <Radio.Group onChange={(e)=>onChange(e)} value={type} buttonStyle='solid'>
+                    <Radio value={'1'}>事假</Radio>
+                    <Radio value={'2'}>病假</Radio>
+                </Radio.Group> */}
+                <MyRadio senddata={sendType}/>
                 <br/>
                 <br/>
-                <span>请说明请假理由：</span>
+                <span>请说明请假理由*：</span>
                 <TextArea rows={6} placeholder='请输入理由'></TextArea>
                 <br/>
                 <br/>
