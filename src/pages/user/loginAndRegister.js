@@ -31,10 +31,10 @@ async function loginUser(username, password) {
     let ret;
     let status = ""
     const formData = new FormData();
-    formData.append("username", username);
+    formData.append("officialID", username);
     formData.append("password", password);
 
-    await axios.post('/login', formData)
+    await axios.post('/login/', formData)
         .then(res => {
             console.log(res.data);
             if(res.data.code == 200)

@@ -145,7 +145,7 @@ function MakeAppointment() {
         const createBillResponse = await axios.post(
             '/patient/bill/create/',
             {
-                billType: 'appointment',
+                billType: 'appointment', 
                 billPrice: selectedPeriod % 2 === 0 ? selectedDoctor.afternoonPrice : selectedDoctor.morningPrice,
                 typeID: newAppointmentID
             },{
@@ -161,7 +161,6 @@ function MakeAppointment() {
 
 
     return (
-
         <>
             {
                 loading ? (
