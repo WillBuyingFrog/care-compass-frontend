@@ -70,9 +70,13 @@ function MakeAppointment() {
     // 页面被加载时，检查患者是否为失约患者
     useEffect(() => {
         const checkIfPatientIsDefaulted = async () => {
-            let res = await axios.post("/patient/defaultedAppointmentsCheck", {
+            let res = await axios.post("/patient/defaultedAppointmentsCheck/", {
                 data: {
                     patientID: patientID
+                }
+            },{
+                headers: {
+                    token: localStorage.getItem('userToken')
                 }
             });
             if(res.data.isDefaulted === 1){
@@ -130,7 +134,12 @@ function MakeAppointment() {
                 date: getAppointmentDateText(selectedPeriod),
                 time: selectedPeriod % 2,
                 doctorID: selectedDoctor.doctorID
-        });
+            },
+            {
+                headers: {
+                    token: localStorage.getItem('userToken')
+                }
+            });
         const newAppointmentID = createAppointmentResponse.data.appointmentID;
         console.log("newAppointmentID", newAppointmentID);
         const createBillResponse = await axios.post(
@@ -139,6 +148,10 @@ function MakeAppointment() {
                 billType: 'appointment',
                 billPrice: selectedPeriod % 2 === 0 ? selectedDoctor.afternoonPrice : selectedDoctor.morningPrice,
                 typeID: newAppointmentID
+            },{
+                headers: {
+                    token: localStorage.getItem('userToken')
+                }
             });
         const newBillID = createBillResponse.data.billID;
         console.log("newBillID", newBillID);

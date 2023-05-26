@@ -23,7 +23,7 @@ function PersonInfo(props){
     useEffect(() => {
         const getPersonalInfo = async () => {
             try {
-                let response = await axios.post('/patient/defaultedAppointmentsCheck', {
+                let response = await axios.post('/patient/defaultedAppointmentsCheck/', {
                     patientID: patientID
                 });
                 setIsDefaulted(response.data.isDefaulted);
