@@ -16,6 +16,8 @@ import ApplyVacation from "../pages/doctorSystem/applyVacation.js";
 import PicturesWall  from "../pages/doctorSystem/pictureWall.js";
 import VisitInterface from "../pages/doctorSystem/visitInterface.js";
 import LeaveDetail from "../pages/doctorSystem/leaveDetail.js";
+import PatientHistory from "../pages/doctorSystem/patientHistory.js";
+import HistoricalRecord from "../pages/doctorSystem/historicalRecord.js";
 
 const default_router = createBrowserRouter([
     {
@@ -59,6 +61,14 @@ const default_router = createBrowserRouter([
             {
                 path:'leaveDetail',
                 element:<LeaveDetail/>
+            },
+            {
+                path:'patientHistory',
+                element:<PatientHistory/>
+            },
+            {
+                path:'historicalRecord',
+                element:<HistoricalRecord/>
             }
         ]
     },

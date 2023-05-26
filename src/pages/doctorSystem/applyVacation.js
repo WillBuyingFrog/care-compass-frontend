@@ -2,6 +2,8 @@ import {Button,Layout,Menu, Breadcrumb ,Select ,Input} from 'antd'
 import { Upload, Icon, Modal ,message ,Radio} from 'antd';
 import { useLocation, useNavigate,Outlet} from 'react-router-dom';
 
+import axios from 'axios'
+
 import PicturesWall from './pictureWall';
 import MyRadio from './myradio';
 
@@ -14,29 +16,115 @@ function ApplyVacation(){
     const nagivate = useNavigate()
     const location = useLocation()
 
-    let type=''
+    let type=0
+    let reason=''
+    let shiftlist=[]
+    let shiftID=0
+
+
+    const date = new Date()
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    month = (month > 9) ? month : ("0" + month);
+    day = (day < 10) ? ("0" + day) : day;
+    var today = year + "-" + month + "-" + day;
+    
+    axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
+        {
+            //doctorID需要从header获取
+            doctorID:0,
+            date:today
+        }
+    ))
+    .then(res=>{
+        console.log(res)
+        if(res.data.code === 1){
+            error(res.data.msg)
+        }
+        else if(res.data.code == 0 ){
+            shiftlist = res.data.data.shiftList
+        }
+    })
 
     const success = () => {
         message.success('您的申请已成功提交，管理员会在24小时内进行审批！');
         console.log(type)
+
+        //尝试部分：成功
+        let senddata=JSON.stringify(
+            {
+                shiftID:shiftID,
+                type:type,
+                reason:reason
+            }
+        )
+        axios.post('/treatment/applyLeave/',senddata)
+        .then(res=>{
+            console.log(success)
+            console.log(res)
+        })
       };
       
-    const error = () => {
-        message.error('This is an error message');
+    const error = (msg) => {
+        message.error(msg);
       };
+
+    function mixdate(date,time){
+        if(time == 0){
+            return date+' 上午'
+        }
+        else{
+            return date+' 下午'
+        }
+    }
+    
+    function splitdate(temmixdate){
+        let temdate=''
+        let temtime=null
+        temdate=temmixdate.substr(0,10)
+        if( temmixdate.substr(11,2) == '上午'){
+            temtime=0
+        }
+        else{
+            temtime=1
+        }
+        return {
+            date:temdate,
+            time:temtime
+        }
+    }
 
     function handleChange(value) {
         console.log(`selected ${value}`);
+        let temtime=splitdate(value).time
+        for(let i=0;i<shiftlist.length;i++){
+            if(temtime == shiftlist[i].time){
+                shiftID=shiftlist[i].id
+            }
+        }
       }
 
     function onChange(value) {
-        console.log(value.target.value);
-        type=value.target.value
+        reason=value.target.value
+        console.log(reason) 
     };
 
     function sendType(temtype){
-        type=temtype
+        if(temtype == '病假'){
+            type=0
+        }
+        else{
+            type=1
+        }
     }
+
+    var options =  shiftlist.map((item,index)=>{
+        return (
+            <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
+        )
+    })
+
     return(
         <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
@@ -57,9 +145,10 @@ function ApplyVacation(){
                 <div>
                 <span>请选择请假时间*：</span>           
                     <Select defaultValue="" style={{ width: 200 ,marginLeft:500}} onChange={handleChange}>
-                        <Option value="6-8 周四 上午">6-8 周四 上午</Option>
+                        {/* <Option value="6-8 周四 上午">6-8 周四 上午</Option>
                         <Option value="6-8 周四 下午">6-8 周四 下午</Option>
-                        <Option value="6-10 周六 上午">6-10 周六 上午</Option>
+                        <Option value="6-10 周六 上午">6-10 周六 上午</Option> */}
+                        {options}
                     </Select>
                 </div>
                 <br/>
@@ -73,7 +162,7 @@ function ApplyVacation(){
                 <br/>
                 <br/>
                 <span>请说明请假理由*：</span>
-                <TextArea rows={6} placeholder='请输入理由'></TextArea>
+                <TextArea rows={6} placeholder='请输入理由' onChange={onChange}></TextArea>
                 <br/>
                 <br/>
                 <span>点击添加图片：</span>

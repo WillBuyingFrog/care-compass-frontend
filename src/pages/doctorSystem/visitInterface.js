@@ -3,44 +3,48 @@ import { useLocation, useNavigate ,Outlet } from 'react-router-dom';
 import { Center} from '@chakra-ui/react';
 import PrescriptionList from './list/prescriptionList'
 import InspectList from './list/inspectList';
+import axios from 'axios';
+import React from 'react';
 
 const { Option } = Select;
 const { Header, Content, Sider } = Layout;
 const { TextArea } = Input;
 
-const children = [];
-for (let i = 10; i < 36; i++) {
-  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
+let children1 = [];
+let children2 = [];
+
 
 
 let value1=''
+let value2=''
+let recordID=0
 
 function VisitInterface(){
     const nagivate = useNavigate()
     const location = useLocation()
 
+    let patientName = ''
     let data = [
         {
-            id:'1',
+            id:1,
             name:'阿司匹林',
             description:'',
             num:1
         },
         {
-            id:'2',
+            id:2,
             name:'阿司匹林',
             description:'',
             num:1
         },
         {
-            id:'3',
+            id:3,
             name:'阿司匹林',
             description:'',
             num:1
         },
         {
-            id:'4',
+            id:4,
             name:'阿司匹林',
             description:'',
             num:1
@@ -49,28 +53,64 @@ function VisitInterface(){
 
     let data2 = [
         {
-            id:'1',
+            id:1,
             name:'CT',
             description:''
         },
         {
-            id:'2',
+            id:2,
             name:'CT',
             description:''
         },
         {
-            id:'3',
+            id:3,
             name:'CT',
             description:''
         },
         {
-            id:'4',
+            id:4,
             name:'CT',
             description:''
         }
     ]
 
+    if(location.state !== null){
+        patientName = location.state.patientName
+    }
     function handleChange(value) {
+        console.log(`selected ${value}`);
+        console.log(value)
+        // 远程链接
+        // if(value.length>=2){
+        //     axios.post('/treatment/searchPrescription/',JSON.stringify({msg:value}))
+        //     .then(res=>{
+        //         console.log(res.data.data.prescriptionList)
+        //         let templist=res.data.data.prescriptionList
+        // children1=[]
+        // for (let i =0; i < templist.length; i++) {
+        //     children1.push(<Option key={templist[i].id}>{templist[i].name}</Option>);
+        //   }
+        //     })
+        // }
+
+        //测试数据
+        children1=[]
+        let templist=[{
+            id:0,
+            name:'h'
+        },
+        {
+            id:2,
+            name:'l'
+        },
+        ]
+        for (let i =0; i < templist.length; i++) {
+            children1.push(<Option key={templist[i].id}>{templist[i].name}</Option>);
+        }
+        console.log(children1)  
+    }
+
+    function handleChange2(value) {
         console.log(`selected ${value}`);
     }
     function onChange(value) {
@@ -78,11 +118,41 @@ function VisitInterface(){
     }  
 
     const success = () => {
-        message.success('病人就诊信息已成功保存！');
         console.log('data')
         console.log(data)
         console.log('data2')
         console.log(data2)
+        axios.post('/treatment/createMedicalRecord/',JSON.stringify({
+            appointID:location.state.appointID,
+            description:value1,
+            diagnose:value2
+        }))
+        .then(res=>{
+            if(res.data.code === 0){
+                recordID=res.data.data.recordID
+                for(let i=0; i<data.length;i++){
+                    axios.post('/treatment/createPrescriptionForm/',JSON.stringify({
+                        recordID:recordID,
+                        prescriptionID:data[i].id,
+                        num:data[i].num,
+                        description:data[i].description
+                    }))
+                }
+
+                for(let i=0;i<data2.length;i++){
+                    axios.post('/treatment/createInspectionForm/',JSON.stringify({
+                        recordID:recordID,
+                        inspectionID:data2[i].id,
+                        description:data2[i].description
+                    }))
+                }
+            }
+            else{
+                message.error(res.data.message)
+            }
+        }
+        )
+        message.success('病人就诊信息已成功保存！');
       };
 
     function deleteItem(id) {
@@ -101,6 +171,10 @@ function VisitInterface(){
         value1=e.target.value
     }
 
+    function sendvalue2(e){
+        value2=e.target.value
+    }
+
     function sendPrescriptionData(temdata){
         console.log('get')
         data=temdata
@@ -111,6 +185,28 @@ function VisitInterface(){
         data2=temdata
     }
 
+    function getPrescription(temdata,id){
+        if(temdata!==null){
+            console.log('get it')
+            data.push({
+                id:id,
+                name:temdata,
+                description:'',
+                num:1
+            })
+            console.log('now is not null')
+            return (
+                <PrescriptionList msg={data} senddata={sendPrescriptionData}/>
+            )
+        }
+        else{
+            console.log('now is not null')
+            return (
+                <PrescriptionList msg={data} senddata={sendPrescriptionData}/>
+            )
+        }
+    }
+
     return(
         <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
@@ -118,7 +214,7 @@ function VisitInterface(){
                 <Breadcrumb.Item>就诊</Breadcrumb.Item>
                 </Breadcrumb>
                 <div>
-                    <span style={{fontSize:30}}>{location.state.patientName}</span> 
+                    <span style={{fontSize:30}}>{patientName}</span> 
                     <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date }})}}>返回预约界面</Button>          
                 </div>
                 <Content
@@ -129,20 +225,23 @@ function VisitInterface(){
                     minHeight: 600,
                 }}
                 >
+
+
                     <span>本次就诊症状*：</span>
                     <br/>
                     <TextArea rows={6} placeholder='请输入症状' onChange={sendvalue}></TextArea>
                     <br/>
                     <br/>
                     {/* 处方单部分 */}
-                    <div>
+                    {/* <div>
                         <span>开具处方:</span>
-                        <Select mode="tags" style={{ width: '50%' ,marginLeft:300}} placeholder="Tags Mode" onChange={handleChange}>
-                            {children}
+                        <Select showSearch style={{ width: '50%' ,marginLeft:300}} placeholder="Tags Mode" onSearch={handleChange}>
+                            {children1}
                         </Select>
+                        <MySelect style={{ width: '50%' ,marginLeft:300}} senddata={getPrescription}/>
                         <br/>
                         <br/>
-                        {/* <List
+                        <List
                             bordered
                             itemLayout="horizontal"
                             dataSource={data}
@@ -159,19 +258,21 @@ function VisitInterface(){
                                 <Button type="primary" shape="circle" onClick={()=>deleteItem(item.id)} >test</Button>
                             </List.Item>
                             )}
-                        /> */}
+                        />
                         <PrescriptionList msg={data} senddata={sendPrescriptionData}/>
-                    </div>
+                        {getPrescription(null,null)}
+                    </div> */}
+                    <PrescriptionList msg={data} senddata={sendPrescriptionData}/>
                     <br/>
                     <br/>
-                    <div>
+                    {/* <div>
                         <span>开具检查:</span>
-                        <Select mode="tags" style={{ width: '50%' ,marginLeft:300}} placeholder="Tags Mode" onChange={handleChange}>
-                            {children}
+                        <Select mode="tags" style={{ width: '50%' ,marginLeft:300}} placeholder="Tags Mode" onChange={handleChange2}>
+                            {children2}
                         </Select>
                         <br/>
                         <br/>
-                        {/* <List
+                        <List
                             bordered
                             itemLayout="horizontal"
                             dataSource={data2}
@@ -187,13 +288,14 @@ function VisitInterface(){
                                 <Button type="primary" shape="circle" onClick={()=>deleteItem(item.id)} >test</Button>
                             </List.Item>
                             )}
-                        /> */}
+                        />
                         <InspectList msg={data2} senddata={sendInspectData}/>
-                    </div>
+                    </div> */}
+                    <InspectList msg={data2} senddata={sendInspectData}/>
 
                     <span>医嘱*：</span>
                     <br/>
-                    <TextArea rows={6} placeholder='请输入医嘱'></TextArea>
+                    <TextArea rows={6} placeholder='请输入医嘱' onChange={sendvalue2}></TextArea>
                     <div style={{textAlign:'center',marginTop:10}}>
                                 <Button onClick={success}>提交</Button>
                             </div>
