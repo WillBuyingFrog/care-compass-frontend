@@ -78,6 +78,10 @@ function EditInfo(props){
         setCountdown(60);
         const response = await axios.post('/verifycode/', {
             phoneNumber: newPhoneNumber
+        },{
+            headers: {
+                token: localStorage.getItem('userToken')
+            }
         });
         message.info('验证码已发送，请注意查收');
     }
@@ -88,6 +92,10 @@ function EditInfo(props){
             newPhoneNumber: newPhoneNumber,
             verifyCode: verifyCode,
             password: password
+        },{
+            headers: {
+                token: localStorage.getItem('userToken')
+            }
         });
         if(response.status === 200){
             message.success('修改成功！');

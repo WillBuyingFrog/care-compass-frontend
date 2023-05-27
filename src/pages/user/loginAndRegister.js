@@ -31,19 +31,22 @@ async function loginUser(username, password) {
     let ret;
     let status = ""
     const formData = new FormData();
-    formData.append("username", username);
+    formData.append("officialID", username);
     formData.append("password", password);
 
-    await axios.post('/login', formData)
+    await axios.post('/login/', formData)
         .then(res => {
             console.log(res.data);
-            if(res.data.code == 200)
+            if(res.data.code === 200)
                 message.success('登录成功')
             else
-            message.error( res.data.message)
-            status = res.data.message
-            ret = res.data.data
+                message.error(res.data.message)
+            status = res.data.msg
+            ret = res.data
         })
+
+
+
     return {
         type: ret.type,
         token: ret.token,
@@ -116,9 +119,9 @@ function LoginAndRegister () {
             localStorage.setItem("userToken", data.token);
             localStorage.setItem("userType", data.type);
             localStorage.setItem("username", username);
-            if(data.type == "admin"){
+            if(data.type === 1){
                 setTimeout(function () {
-                    navigate("/manage/uncheck");
+                    navigate("/patient/personInfo");
                 }, 1000);
             }
             else{

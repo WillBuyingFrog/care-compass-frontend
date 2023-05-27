@@ -11,7 +11,7 @@ import default_router from "./routes/default_router";
 import App from "./App";
 
 // axios.defaults.baseURL = 'http://localhost:8081'
-axios.defaults.baseURL = 'https://mock.apifox.cn/m1/2632066-0-default'
+axios.defaults.baseURL = 'http://localhost:8000'
 // axios.defaults.baseURL = 'http://svc-backend.default:8081'
 // axios.defaults.baseURL = 'http://116.204.69.134:30881'
 // axios.defaults.baseURL = 'http://localhost:8083'

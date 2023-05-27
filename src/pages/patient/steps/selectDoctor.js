@@ -123,8 +123,11 @@ function SelectDoctor(props){
 
             let config = {
                 method: 'post',
-                url: 'department/workshift/',
-                data: data
+                url: '/department/workshift/',
+                data: data,
+                headers: {
+                    token: localStorage.getItem('userToken')
+                }
             };
             let response = await axios(config);
 

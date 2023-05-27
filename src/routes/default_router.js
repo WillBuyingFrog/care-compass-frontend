@@ -44,6 +44,8 @@ import LeaveDetail from "../pages/doctorSystem/leaveDetail.js";
 import MedicalRecord, {medicalRecordLoader} from "../pages/patient/medicalRecord";
 import PersonInfo from "../pages/patient/personInfo";
 import EditInfo from "../pages/patient/editInfo";
+import PatientHistory from "../pages/doctorSystem/patientHistory.js";
+import HistoricalRecord from "../pages/doctorSystem/historicalRecord.js";
 
 const default_router = createBrowserRouter([
     {
@@ -169,6 +171,14 @@ const default_router = createBrowserRouter([
             {
                 path:'leaveDetail',
                 element:<LeaveDetail/>
+            },
+            {
+                path:'patientHistory',
+                element:<PatientHistory/>
+            },
+            {
+                path:'historicalRecord',
+                element:<HistoricalRecord/>
             }
         ]
     },

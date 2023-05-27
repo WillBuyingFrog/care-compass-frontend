@@ -3,6 +3,7 @@ import { Upload, Icon, Modal } from 'antd';
 import { useLocation, useNavigate,Outlet,useSearchParams} from 'react-router-dom';
 
 import PicturesWall from './pictureWall';
+import MyRadio from './myradio';
 
 const { SubMenu } = Menu;
 const { Option } = Select;
@@ -35,18 +36,21 @@ function LeaveDetail(){
                 <br/>
                 <div>
                 <span>请选择请假时间：</span>           
-                    <Select defaultValue={location.state.title} style={{ width: 200 ,marginLeft:500}} onChange={handleChange}>
-                        <Option value="6-8 周四 上午">6-8 周四 上午</Option>
-                        <Option value="6-8 周四 下午">6-8 周四 下午</Option>
-                        <Option value="6-10 周六 上午">6-10 周六 上午</Option>
+                    <Select defaultValue={location.state.title} style={{ width: 200 ,marginLeft:500}} onChange={handleChange} disabled>
                     </Select>
                 </div>
                 <br/>
                 <br/>
+                <span>请选择请假类型*：</span>   
+                {/* <Radio.Group onChange={(e)=>onChange(e)} value={type} buttonStyle='solid'>
+                    <Radio value={'1'}>事假</Radio>
+                    <Radio value={'2'}>病假</Radio>
+                </Radio.Group> */}
+                <MyRadio msg1={location.state.type} disabled/>
                 <br/>
                 <br/>
                 <span>请说明请假理由：</span>
-                <TextArea rows={6} defaultValue={location.state.description} ></TextArea>
+                <TextArea rows={6} defaultValue={location.state.description} disabled></TextArea>
                 <br/>
                 <br/>
                 <span>点击添加图片：</span>
