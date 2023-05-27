@@ -275,7 +275,7 @@ const getListData = (value) => {
 };
 
 // 排班日历
-function WorkCalendar(){
+function WorkCalendar(props){
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
         setOpen(true);
@@ -283,29 +283,82 @@ function WorkCalendar(){
     const onClose = () => {
         setOpen(false);
     };
+    const onSubmit = () => {
+        setOpen(false);
+    }
     const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
     const nextMonth1st = moment().add(1, 'months').format('YYYY-MM-01');
     // const [value, setValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
     // const [selectedValue, setSelectedValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
     const [value, setValue] = useState(() => moment(nextMonth1st));
     const [selectedValue, setSelectedValue] = useState(() => moment(nextMonth1st));
+    const [dID, setDID] = useState();
+    const [dName, setDName] = useState();
+    const [monthData, setMonthData] = useState();
+
+    const getDateData = (departmentID, date) => {
+        axios({
+            method: "post",
+            url: "https://mock.apifox.cn/m2/2632066-0-default/83991021",
+            data: {
+            },
+            headers: {
+                token: localStorage.getItem("userToken")
+            }
+        })
+            .then(res => {
+                // setMonthData(res.data.data.ShiftList);
+                console.log(res.data.data);
+                console.log(res.data.data.ShiftList);
+                // console.log(monthData);
+            })
+    }
 
     const onSelect = (newValue) => {
         setValue(newValue);
         setSelectedValue(newValue);
+        getDateData(dID, newValue.format('YYYY-MM-DD'));
         showDrawer();
         console.log(newValue.format('YYYY-MM-DD'));
     };
+
     const onPanelChange = (newValue) => {
         setValue(newValue);
     };
+
+    const getMonthData = () => {
+        axios({
+            method: "post",
+            url: "https://mock.apifox.cn/m2/2632066-0-default/83991021",
+            data: {
+            },
+            headers: {
+                token: localStorage.getItem("userToken")
+            }
+        })
+            .then(res => {
+                setMonthData(res.data.data.ShiftList);
+                console.log(res.data.data);
+                console.log(res.data.data.ShiftList);
+                console.log(monthData);
+            })
+    }
+
+    useEffect(() => {
+        console.log(props.dID);
+        console.log(props.dName)
+        setDID(props.dID);
+        setDName(props.dName);
+        getMonthData();
+
+    }, []);
 
     const dateCellRender = (value) => {
         const listData = getListData(value);
         return (
             <ul className="events">
                 {listData.map((item) => (
-                    <li key={item.content}>
+                    <li key={item.type}>
                         <Badge status={item.type} text={item.content} />
                     </li>
                 ))}
@@ -317,8 +370,8 @@ function WorkCalendar(){
             {/*<Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />*/}
             <Calendar dateCellRender={dateCellRender} value={value} onSelect={onSelect} onPanelChange={onPanelChange}/>;
             <Drawer
-                title={`心脏外科 ${selectedValue?.format('YYYY-MM-DD')}排班情况`}
-                width={720}
+                title={`${dName} ${selectedValue?.format('YYYY-MM-DD')}排班情况`}
+                width={'70vw'}
                 onClose={onClose}
                 open={open}
                 bodyStyle={{
@@ -327,7 +380,7 @@ function WorkCalendar(){
                 extra={
                     <Space>
                         <Button onClick={onClose}>取消</Button>
-                        <Button onClick={onClose} type="primary">
+                        <Button onClick={onSubmit} type="primary">
                             提交
                         </Button>
                     </Space>
@@ -341,7 +394,8 @@ function WorkCalendar(){
 
 function DoctorSchedule(){
 
-    const [department, setDepartment] = useState();
+    const [departmentID, setDepartmentID] = useState();
+    const [departmentName, setDepartmentName] = useState();
     const [departmentList, setDepartmentList] = useState();
     const [current, setCurrent] = useState(0);
     const next = () => {
@@ -351,16 +405,19 @@ function DoctorSchedule(){
         setCurrent(current - 1);
     };
 
-    const chooseDepartmentFinish = (dID) => {
-        setDepartment(dID);
-        console.log(department);
+    const chooseDepartmentFinish = (dID, dName) => {
+        setDepartmentID(dID);
+        setDepartmentName(dName);
+        console.log(departmentID);
+        console.log(departmentName);
         // while (department !== undefined) {
         //     next();
         // }
         next();
     }
     const returnToChooseDepartment = () => {
-        setDepartment(undefined);
+        setDepartmentID(undefined);
+        setDepartmentName(undefined);
         prev();
     }
 
@@ -403,7 +460,7 @@ function DoctorSchedule(){
                     {departmentList !== undefined &&
                         <Card title="科室列表">
                             {departmentList.map((item) => (
-                                <Card.Grid style={gridStyle} onClick={()=>chooseDepartmentFinish(item.departmentID)}>{item.departmentName}</Card.Grid>
+                                <Card.Grid style={gridStyle} onClick={()=>chooseDepartmentFinish(item.departmentID, item.departmentName)}>{item.departmentName}</Card.Grid>
                             ))}
                         </Card>
                         }
@@ -416,8 +473,8 @@ function DoctorSchedule(){
             icon: <PieChartOutlined />,
             content: (
                 <div>
-                    {department !== undefined &&
-                        <WorkCalendar />
+                    {departmentID !== undefined &&
+                        <WorkCalendar dID={departmentID} dName={departmentName}/>
                     }
                 </div>
             ),
