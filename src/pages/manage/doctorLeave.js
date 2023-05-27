@@ -3,7 +3,7 @@
  */
 import './doctorLeave.css';
 import './manage.css';
-import {Avatar, Button, Link, useToast} from '@chakra-ui/react'
+import {Avatar, Button, Link, Text, useToast} from '@chakra-ui/react'
 import {Card, Row, Col, Tabs, Input, Modal, Form, Space, Table, Tag} from 'antd';
 import * as echarts from 'echarts'
 import React, { Component, useEffect, useRef, useState } from 'react';
@@ -18,58 +18,50 @@ const onChange = (key) => {
 };
 
 function UncheckList() {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const toast = useToast();
     var token = localStorage.getItem("userToken")
+    // const [unchecked, setUnchecked] = useState();
 
-    // const getData = ()=>{
-    //     axios({
-    //         method: "post",
-    //         url:"manage/unchecklist",
-    //         headers: {
-    //             'token': token
-    //         }
-    //     })
-    //         .then(res => {
-    //                 console.log(res.data)
-    //                 let a = res.data.data
-    //                 for(let i in a){
-    //                     let t = a[i]
-    //                     for(let j in t){
-    //                         if(!t[j]){
-    //                             t[j] = 'none'
-    //                         }
-    //                     }
-    //                 }
-    //                 setData(a)
-    //             }
-    //         )
-    // }
-    // useEffect(() => {
-    //   getData();
-    // }, [])
-
-    const temp_data = [
-        {
-            key: '1',
-            aaid: '1',
-            dname: '申请人',
-            aaname: '科室',
-            aaemail: '请假时间',
-            aatype: '请假类型(事假/病假)',
-            aalastUpdateTime: '申请时间',
-            dreason: '请假原因',
-            docid: '工号',
-            doctel: '联系方式',
-        },
-    ];
-
+    const getData = ()=>{
+        axios({
+            method: "post",
+            url:"admin/getAllUnLeave/",
+            // headers: {
+            //     'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.appList);
+                setData(res.data.data.appList);
+                console.log(data);
+            })
+    }
     useEffect(() => {
-        setData(temp_data)
+      getData();
     }, [])
+
+    // const temp_data = [
+    //     {
+    //         key: '1',
+    //         aaid: '1',
+    //         dname: '申请人',
+    //         aaname: '科室',
+    //         aaemail: '请假时间',
+    //         aatype: '请假类型(事假/病假)',
+    //         aalastUpdateTime: '申请时间',
+    //         dreason: '请假原因',
+    //         docid: '工号',
+    //         doctel: '联系方式',
+    //     },
+    // ];
+    //
+    // useEffect(() => {
+    //     setData(temp_data)
+    // }, [])
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -163,22 +155,22 @@ function UncheckList() {
                        title='请假申请详情' width={'50vw'} onCancel={handleCancel}>
                     <div className='detailForm'>
                         <Row>
-                            <Card title={props.A.aaname+'——'+props.A.dname+' 工号:'+props.A.docid} style={{width:'45vw'}}>
+                            <Card title={props.A.department+'——'+props.A.doctorName+' 工号:'+props.A.docid} style={{width:'45vw'}}>
                                     <Form labelCol={{span:8}}>
                                         <Form.Item label='请假时间'>
-                                            <div>{props.A.aaemail}</div>
+                                            <div>{props.A.commitTime}</div>
                                         </Form.Item>
                                         <Form.Item label='申请时间'>
-                                            <div>{props.A.aalastUpdateTime}</div>
+                                            <div>{props.A.commitTime}</div>
                                         </Form.Item>
                                         <Form.Item label='联系方式'>
                                             <div>{props.A.doctel}</div>
                                         </Form.Item>
                                         <Form.Item label='请假类型'>
-                                            <div>{props.A.aatype}</div>
+                                            <div>{props.A.type === 1 ? '病假':'事假'}</div>
                                         </Form.Item>
                                         <Form.Item label='请假理由'>
-                                            <div>{props.A.dreason}</div>
+                                            <div>{props.A.reason}</div>
                                         </Form.Item>
                                     </Form>
                                 </Card>
@@ -198,43 +190,47 @@ function UncheckList() {
         // var token = localStorage.getItem("userToken")
 
         const handleOk = () => {
-        //     axios({
-        //         method: 'post',
-        //         url: "/manage/check",
-        //         data: {
-        //             accept: props.type,
-        //             opinion: content,
-        //             AAID: props.AAID
-        //         },
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             'token': token
-        //         }
-        //     })
-        //         .then(res => {
-        //             if(res.data.code == 200){
-        //                 toast({
-        //                     description: "已"+text+"该申请！",
-        //                     status: 'success',
-        //                     duration: 5000,
-        //                     isClosable: true,
-        //                 })
-        //                 setContent("");
-        //                 setIsModalOpen(false);
-        //                 getData();
-        //             }
-        //             else{
-        //                 toast({
-        //                     description: res.data.message,
-        //                     status: 'error',
-        //                     duration: 5000,
-        //                     isClosable: true,
-        //                 })
-        //                 setContent("");
+            console.log(content);
+            console.log(props.type);
+            console.log(props.appID);
+            axios({
+                method: 'post',
+                url: "/admin/verifyApp/",
+                data: {
+                    appID: props.appID,
+                    state: props.type,
+                    verifyComment: content,
+                },
+                // headers: {
+                //     "Content-Type": "application/json",
+                //     'token': token
+                // }
+            })
+                .then(res => {
+                    if(res.data.code === 0){
+                        toast({
+                            description: "已"+text+"该申请！",
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
+                        setContent("");
                         setIsModalOpen(false);
-        //                 getData();
-        //             }
-        //         })
+                        getData();
+                    }
+                    else{
+                        toast({
+                            description: res.data.message,
+                            status: 'error',
+                            duration: 5000,
+                            isClosable: true,
+                        })
+                        setContent("");
+                        setIsModalOpen(false);
+                        getData();
+                    }
+                    console.log(res)
+                })
         };
         const handleCancel = () => {
             setIsModalOpen(false);
@@ -272,41 +268,44 @@ function UncheckList() {
     const columns = [
         {
             title: '科室',
-            dataIndex: 'aaname',
-            key: 'aaname',
-            ...getColumnSearchProps('aaname'),
-            sorter: (a, b) => a.aaname.localeCompare(b.aaname),
+            dataIndex: 'department',
+            key: 'department',
+            ...getColumnSearchProps('department'),
+            sorter: (a, b) => a.department.localeCompare(b.department),
             sortDirections: ['descend', 'ascend'],
         },
         {
             title: '申请人',
-            dataIndex: 'dname',
-            key: 'dname',
-            ...getColumnSearchProps('dname'),
-            sorter: (a, b) => a.dname.localeCompare(b.dname),
+            dataIndex: 'doctorName',
+            key: 'doctorName',
+            ...getColumnSearchProps('doctorName'),
+            sorter: (a, b) => a.doctorName.localeCompare(b.doctorName),
             sortDirections: ['descend', 'ascend'],
             width:180
         },
         {
             title: '请假时间',
-            dataIndex: 'aaemail',
-            key: 'aaemail',
-            ...getColumnSearchProps('aaemail'),
+            dataIndex: 'commitTime',
+            key: 'commitTime',
+            ...getColumnSearchProps('commitTime'),
         },
         {
             title: '请假类型',
-            dataIndex: 'aatype',
-            key: 'aatype',
-            ...getColumnSearchProps('aatype'),
-            sorter: (a, b) => a.aatype.localeCompare(b.aatype),
+            dataIndex: 'type',
+            key: 'type',
+            ...getColumnSearchProps('type'),
+            sorter: (a, b) => a.type.localeCompare(b.type),
             sortDirections: ['descend', 'ascend'],
+            render: (_, record) => (
+                <Text>{record.type === 1 ? "病假":"事假"}</Text>
+            ),
         },
         {
             title: '申请时间',
-            dataIndex: 'aalastUpdateTime',
-            key: 'aalastUpdateTime',
-            ...getColumnSearchProps('aalastUpdateTime'),
-            sorter: (a, b) => a.aalastUpdateTime.localeCompare(b.aalastUpdateTime),
+            dataIndex: 'commitTime',
+            key: 'commitTime',
+            ...getColumnSearchProps('commitTime'),
+            sorter: (a, b) => a.commitTime.localeCompare(b.commitTime),
             sortDirections: ['descend', 'ascend'],
         },
         {
@@ -315,17 +314,20 @@ function UncheckList() {
             render: (_, record) => (
                 <Space size="middle">
                     <Detail A={record} />
-                    <Dialogue type={1} AAID={record.aaid}></Dialogue>
-                    <Dialogue type={2} AAID={record.aaid}></Dialogue>
+                    <Dialogue type={1} appID={record.id}></Dialogue>
+                    <Dialogue type={2} appID={record.id}></Dialogue>
                 </Space>
             ),
         },
     ];
 
     return (
+        <>{data !== undefined &&
         <div>
             <Row>
-                <Col span={18}><div className='count'>未审核申请共{data.length}条</div></Col>
+                <Col span={18}>
+                    <div className='count'>未审核申请共{data.length}条</div>
+                </Col>
                 <Col span={6}>
 
                 </Col>
@@ -336,42 +338,34 @@ function UncheckList() {
                    }}
             ></Table>
         </div>
+        }</>
     )
 }
 
 function CheckList() {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     var token = localStorage.getItem("userToken")
     const toast = useToast();
-    // useEffect(() => {
-    //   const getData = ()=>{
-    //     axios({
-    //       method: "post",
-    //       url:"/manage/checkedlist",
-    //       headers: {
-    //         'token': token
-    //       }
-    //     })
-    //     .then(res => {
-    //         console.log(res.data)
-    //         let a = res.data.data
-    //         for(let i in a){
-    //           let t = a[i]
-    //           for(let j in t){
-    //             if(!t[j]){
-    //               t[j] = 'none'
-    //             }
-    //           }
-    //         }
-    //         setData(a)
-    //       }
-    //     )
-    //   }
-    //   getData()
-    // }, [])
+    useEffect(() => {
+      const getData = ()=>{
+        axios({
+          method: "post",
+          url:"/admin/getAllLeave/",
+          // headers: {
+          //   'token': token
+          // }
+        })
+            .then(res => {
+                console.log(res.data.data.appList);
+                setData(res.data.data.appList);
+                console.log(data);
+            })
+      }
+      getData()
+    }, [])
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -465,31 +459,31 @@ function CheckList() {
                        title='请假申请详情' width={'50vw'} onCancel={handleCancel}>
                     <div className='detailForm'>
                         <Row>
-                            <Card title={props.A.aaname+'——'+props.A.dname+' 工号:'+props.A.docid} style={{width:'45vw'}}>
+                            <Card title={props.A.department+'——'+props.A.doctorName+' 工号:'+props.A.docid} style={{width:'45vw'}}>
                                 <Form labelCol={{span:8}}>
                                     <Form.Item label='请假时间'>
-                                        <div>{props.A.aaemail}</div>
+                                        <div>{props.A.commitTime}</div>
                                     </Form.Item>
                                     <Form.Item label='申请时间'>
-                                        <div>{props.A.aalastUpdateTime}</div>
+                                        <div>{props.A.commitTime}</div>
                                     </Form.Item>
                                     <Form.Item label='审核时间'>
-                                        <div>{props.A.aaTime}</div>
+                                        <div>{props.A.verifyTime}</div>
                                     </Form.Item>
                                     <Form.Item label='联系方式'>
                                         <div>{props.A.doctel}</div>
                                     </Form.Item>
                                     <Form.Item label='请假类型'>
-                                        <div>{props.A.aatype}</div>
+                                        <div>{props.A.type}</div>
                                     </Form.Item>
                                     <Form.Item label='请假理由'>
-                                        <div>{props.A.dreason}</div>
+                                        <div>{props.A.reason}</div>
                                     </Form.Item>
                                     <Form.Item label='审核结果'>
-                                        <div>{props.A.aaccept}</div>
+                                        <div>{props.A.state}</div>
                                     </Form.Item>
                                     <Form.Item label='审核意见'>
-                                        <div>{props.A.aadesc}</div>
+                                        <div>{props.A.verifyComment}</div>
                                     </Form.Item>
                                 </Form>
                             </Card>
@@ -499,83 +493,86 @@ function CheckList() {
             </>
         )
     }
-    const temp_data = [
-        {
-            key: '1',
-            aaid: '1',
-            dname: '申请人',
-            aaname: '科室',
-            aaemail: '请假时间',
-            aatype: '请假类型(事假/病假)',
-            aalastUpdateTime: '申请时间',
-            dreason: '请假原因',
-            docid: '工号',
-            doctel: '联系方式',
-            aaTime: '审核时间',
-            aaccept: '1',
-            aadesc: '审核意见',
-        },
-    ];
-
-
-    useEffect(() => {
-        setData(temp_data)
-    }, [])
+    // const temp_data = [
+    //     {
+    //         key: '1',
+    //         aaid: '1',
+    //         dname: '申请人',
+    //         aaname: '科室',
+    //         aaemail: '请假时间',
+    //         aatype: '请假类型(事假/病假)',
+    //         aalastUpdateTime: '申请时间',
+    //         dreason: '请假原因',
+    //         docid: '工号',
+    //         doctel: '联系方式',
+    //         aaTime: '审核时间',
+    //         aaccept: '1',
+    //         aadesc: '审核意见',
+    //     },
+    // ];
+    //
+    //
+    // useEffect(() => {
+    //     setData(temp_data)
+    // }, [])
 
     const columns = [
         {
             title: '科室',
-            dataIndex: 'aaname',
-            key: 'aaname',
-            ...getColumnSearchProps('aaname'),
-            sorter: (a, b) => a.aaname.localeCompare(b.aaname),
+            dataIndex: 'department',
+            key: 'department',
+            ...getColumnSearchProps('department'),
+            sorter: (a, b) => a.department.localeCompare(b.department),
             sortDirections: ['descend', 'ascend'],
         },
         {
             title: '申请人',
-            dataIndex: 'dname',
-            key: 'dname',
-            ...getColumnSearchProps('dname'),
-            sorter: (a, b) => a.dname.localeCompare(b.dname),
+            dataIndex: 'doctorName',
+            key: 'doctorName',
+            ...getColumnSearchProps('doctorName'),
+            sorter: (a, b) => a.doctorName.localeCompare(b.doctorName),
             sortDirections: ['descend', 'ascend'],
             width:180
         },
         {
             title: '请假时间',
-            dataIndex: 'aaemail',
-            key: 'aaemail',
-            ...getColumnSearchProps('aaemail'),
+            dataIndex: 'commitTime',
+            key: 'commitTime',
+            ...getColumnSearchProps('commitTime'),
         },
         {
             title: '请假类型',
-            dataIndex: 'aatype',
-            key: 'aatype',
-            ...getColumnSearchProps('aatype'),
-            sorter: (a, b) => a.aatype.localeCompare(b.aatype),
+            dataIndex: 'type',
+            key: 'type',
+            ...getColumnSearchProps('type'),
+            sorter: (a, b) => a.type.localeCompare(b.type),
             sortDirections: ['descend', 'ascend'],
+            render: (_, record) => (
+                <Text>{record.type === 1 ? "病假":"事假"}</Text>
+            ),
         },
         {
             title: '申请时间',
-            dataIndex: 'aalastUpdateTime',
-            key: 'aalastUpdateTime',
-            ...getColumnSearchProps('aalastUpdateTime'),
-            sorter: (a, b) => a.aalastUpdateTime.localeCompare(b.aalastUpdateTime),
+            dataIndex: 'commitTime',
+            key: 'commitTime',
+            ...getColumnSearchProps('commitTime'),
+            sorter: (a, b) => a.commitTime.localeCompare(b.commitTime),
             sortDirections: ['descend', 'ascend'],
         },
         {
             title: '审核时间',
-            dataIndex: 'aaTime',
-            key: 'aaTime',
-            ...getColumnSearchProps('aaTime'),
-            sorter: (a, b) => a.aaTime.localeCompare(b.aaTime),
+            dataIndex: 'verifyTime',
+            key: 'verifyTime',
+            ...getColumnSearchProps('verifyTime'),
+            sorter: (a, b) => a.verifyTime.localeCompare(b.verifyTime),
             sortDirections: ['descend', 'ascend'],
         },
         {
             title: '审核结果',
-            dataIndex: 'aaccept',
-            key: 'aaccept',
+            dataIndex: 'state',
+            key: 'state',
             render: (_, record)=>(
-                record.aaccept == 1 && <Tag color='green'>通过</Tag> || record.aaccept == 2 && <Tag color='red'>拒绝</Tag>
+                record.state == 1 && <Tag color='green'>通过</Tag> || record.state == 2 && <Tag color='red'>拒绝</Tag>
             )
         },
         {
@@ -588,18 +585,22 @@ function CheckList() {
     ];
 
     return (
-        <div>
-            <Row>
-                <Col span={18}><div className='count'>已审核申请共{data.length}条</div></Col>
-                <Col span={6}>
-                </Col>
-            </Row>
-            <Table dataSource={data} columns={columns} rowKey="aaid"
-                   pagination={{
-                       pageSize: 8,
-                   }}
-            ></Table>
-        </div>
+        <>{data !== undefined &&
+            <div>
+                <Row>
+                    <Col span={18}>
+                        <div className='count'>已审核申请共{data.length}条</div>
+                    </Col>
+                    <Col span={6}>
+                    </Col>
+                </Row>
+                <Table dataSource={data} columns={columns} rowKey="aaid"
+                       pagination={{
+                           pageSize: 8,
+                       }}
+                ></Table>
+            </div>
+        }</>
     )
 }
 
