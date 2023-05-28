@@ -1,7 +1,9 @@
 import {Button,Layout,Menu, Breadcrumb,message} from 'antd'
 import { List, Avatar } from 'antd';
 import axios from 'axios';
-import { useLocation, useNavigate,Link,Route } from 'react-router-dom';
+import { useLocation, useNavigate,Link,Route, Navigate } from 'react-router-dom';
+import { useState ,useEffect} from 'react';
+
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -26,11 +28,14 @@ const data = [
   ];
 
 function CheckProgress(){
-    const nagivate = useNavigate()
+    const navigate = useNavigate()
     const location = useLocation()
 
-    let leavelist=[]
-    let shiftlist=[]
+    const [leavelist , setleavelist] =useState()
+    const [shiftlist , setshiftlist] = useState()
+
+    const [title , settitle] = useState()
+    const [state, setstate] = useState()
 
     const date = new Date()
     var year = date.getFullYear();
@@ -40,10 +45,13 @@ function CheckProgress(){
     day = (day < 10) ? ("0" + day) : day;
     var today = year + "-" + month + "-" + day;
     
-    axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
+
+    useEffect(() => {
+
+      axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
         {
             //doctorID需要从header获取
-            doctorID:0,
+            doctorID:1,
             date:today
         }
     ))
@@ -53,21 +61,25 @@ function CheckProgress(){
             message.error(res.data.msg)
         }
         else if(res.data.code ==0 ){
-            shiftlist = res.data.data.shiftList
+            setshiftlist(res.data.data.shiftList)
         }
     })
     axios.post('/treatment/getDocAllLeave/',JSON.stringify({
       //从header拿
-      doctorID:0
+      doctorID:1
     }))
     .then(res=>{
+      console.log(res)
       if(res.data.code == 0){
-        leavelist = res.data.data.leeaveList
+        setleavelist(res.data.data.leaveList)
+        console.log(leavelist)
       }
       else{
         message.error(res.data.msg)
       }
     })
+
+  }, []);
 
     function mixdate(date,time){
       if(time == 0){
@@ -79,12 +91,16 @@ function CheckProgress(){
     }
 
     function getdate(temshiftID){
+      console.log(temshiftID)
+      console.log(typeof(temshiftID))
+      console.log(shiftlist)
       for(let i=0;i<shiftlist.length;i++){
-        if(temshiftID == shiftlist[i].id){
+        if(temshiftID === shiftlist[i].id){
           return mixdate(shiftlist[i].date,shiftlist[i].time)
         }
         else{
-          return ''
+          console.log('return null')
+          return 'default'
         }
       }
     }
@@ -129,7 +145,18 @@ function CheckProgress(){
                         <div>
                             {getstate(item.state)}
                         </div>
-                        <Button onClick={()=>{nagivate('/doctorMain/leaveDetail',{ state: { type:item.type,title:getdate(item.doctorShiftID),state:getstate(item.state) ,description:item.reason}})}}>查看详情</Button>
+                        <Button onClick={()=>{
+                          var temtitle = getdate(item.doctorShiftID);
+                          var temstate = getstate(item.state);
+                          let temtype='';
+                          if(item.type == 0 ){
+                            temtype = '事假'
+                          }
+                          else{
+                            temtype = '病假'
+                          };
+                          navigate('/doctorMain/leaveDetail',{state:{title:temtitle,state:temstate,description:item.reason,type:temtype}})}}>查看详情</Button>
+                        {/* <Button onClick={()=>{settitle(getdate(item.doctorShiftID));setstate(getstate(item.state));navigate('/doctorMain/leaveDetail',{state:{title:title,state:state,type:item.type,description:item.reason}})}}>查看详情</Button> */}
                     </List.Item>
                     )}
                 />

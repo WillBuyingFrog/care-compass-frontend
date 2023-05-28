@@ -2,6 +2,7 @@ import {Button,Layout,Menu, Breadcrumb,message} from 'antd'
 import { useLocation, useNavigate,Link,Route } from 'react-router-dom';
 import { Card, Col, Row } from 'antd';
 import axios from 'axios';
+import { useState ,useEffect} from 'react';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -24,22 +25,43 @@ function CheckSchedule(){
     day = (day < 10) ? ("0" + day) : day;
     var today = year + "-" + month + "-" + day;
     console.log(typeof(today))
-    axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
-        {
-            //doctorID需要从header获取
-            doctorID:0,
-            date:today
-        }
-    ))
-    .then(res=>{
-        console.log(res)
-        if(res.data.code === 1){
-            error(res.data.msg)
-        }
-        else if(res.data.code ==0 ){
-            shiftlist = res.data.data.shiftList
-        }
-    })
+    
+    useEffect(() => {
+
+        axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
+            {
+                //doctorID需要从header获取
+                doctorID:1,
+                date:today
+            }
+        ))
+        .then(res=>{
+            console.log(res)
+            if(res.data.code === 1){
+                error(res.data.msg)
+            }
+            else if(res.data.code ==0 ){
+                shiftlist = res.data.data.shiftList
+                var temcards = shiftlist.map((item,index)=>{
+    
+                    return (
+                        <Col span={6}>
+                                        <Card bordered={true}>
+                                        <span style={{paddingTop:-110}}>{mixdate(item.date,item.time)}</span>
+                                        <br/>
+                                        <span style={{paddingTop:-110}}>当前患者人数： {item.num}人</span>
+                                        <div style={{textAlign:'center',marginTop:10}}>
+                                            <Button onClick={()=>nagivate('/doctorMain/patientAppointment',{state:{shiftlist:item,date:item.date,time:item.time}})}>查看详情</Button>
+                                        </div>
+                                        </Card>
+                                    </Col>
+                    )
+                })
+                setcards(temcards)
+            }
+        })
+
+    }, []);
 
     function mixdate(date,time){
         if(time == 0){
@@ -50,21 +72,7 @@ function CheckSchedule(){
         }
     }
 
-    var cards = shiftlist.map((item,index)=>{
-
-        return (
-            <Col span={6}>
-                            <Card bordered={true}>
-                            <span style={{paddingTop:-110}}>{mixdate(item.date,item.time)}</span>
-                            <br/>
-                            <span style={{paddingTop:-110}}>当前患者人数： {item.num}人</span>
-                            <div style={{textAlign:'center',marginTop:10}}>
-                                <Button onClick={nagivate('/doctorMain/patientAppointment',{state:{shiftlist:item,date:item.date,time:item.time}})}>查看详情</Button>
-                            </div>
-                            </Card>
-                        </Col>
-        )
-    })
+    const [cards,setcards] = useState()
 
 
     return(

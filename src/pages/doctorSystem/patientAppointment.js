@@ -2,7 +2,7 @@ import {Button,Layout,Menu, Breadcrumb,Select,message} from 'antd'
 import { useLocation, useNavigate ,Outlet} from 'react-router-dom';
 import { Card, Col, Row ,Icon} from 'antd';
 import { Center } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import axios from 'axios';
 
 const { SubMenu } = Menu;
@@ -36,15 +36,16 @@ function splitdate(temmixdate){
 function PatientAppointment(){
     const nagivate = useNavigate()
     const location = useLocation()
+    // const useEffect = useEffect()
 
     let shiftlist=[]
     //检查有无date和time
-    console.log(location.state)
+    // console.log(location.state)
     if(location.state !== null){
         shiftlist = location.state.shiftlist
     }
 
-    console.log(splitdate('2023-05-21 上午'))
+    // console.log(splitdate('2023-05-21 上午'))
     let nowmixdate=''
     let backdate=''
     let patientlist=[
@@ -70,6 +71,7 @@ function PatientAppointment(){
         //     isEnd:0
         // }
     ]
+    const [options, setoptions] = useState([]);
 
 
     const date = new Date()
@@ -80,52 +82,42 @@ function PatientAppointment(){
     day = (day < 10) ? ("0" + day) : day;
     var today = year + "-" + month + "-" + day;
 
-    axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
-        {
-            //doctorID需要从header获取
-            doctorID:0,
-            date:today
-        }
-    ))
-    .then(res=>{
-        console.log(res)
-        if(res.data.code === 1){
-            error(res.data.msg)
-        }
-        else if(res.data.code ==0 ){
-            shiftlist = res.data.data.shiftList
-        }
-    })
+    useEffect(() => {
 
-    var options =  shiftlist.map((item,index)=>{
-        return (
-            <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
-        )
-    })
-    var cards = patientlist.map((item,index)=>{
-        return (
-            <Col span={6} >
-                            <Card bordered={true}>
-                            <span style={{paddingTop:-110}}>{item.name}</span>
-                            <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
-                            <br/>
-                            <span style={{paddingTop:-110}}>预约时间:8:30-8:50</span>
-                            <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
-                            <br/>
-                            <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
-                            <div style={{textAlign:'center',marginTop:10}}>
-                                <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
-                            </div>
-                            </Card>
-                        </Col>
-        )
-    })
+        axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
+            {
+                //doctorID需要从header获取
+                doctorID:1,
+                date:today
+            }
+        ))
+        .then(res=>{
+            console.log(res)
+            if(res.data.code === 1){
+                error(res.data.msg)
+            }
+            else if(res.data.code ==0 ){
+                shiftlist = res.data.data.shiftList
+                let temoptions =  shiftlist.map((item,index)=>{
+                    return (
+                        <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
+                    )
+                })
+                setoptions(temoptions)
+            }
+        })
+
+    }, []);
+
+
+    const [cards,setcards] = useState([])
+    
     if(location.state !== null){
         backdate = location.state.date
         nowmixdate=mixdate(location.state.date,location.state.time)
         //初始渲染时，获取对应时间病人信息
         axios.post('/treatment/getPatientList/',JSON.stringify({
-            doctorID:0,
+            doctorID:1,
             date:splitdate(nowmixdate).date,
             time:splitdate(nowmixdate).time
         }))
@@ -157,18 +149,39 @@ function PatientAppointment(){
         nowmixdate=value
         console.log(nowmixdate)
         axios.post('/treatment/getPatientList/',JSON.stringify({
-            doctorID:0,
+            doctorID:1,
             date:splitdate(nowmixdate).date,
             time:splitdate(nowmixdate).time
         }))
         .then(res=>{
+            console.log(res)
             if(res.data.code === 0){
                 patientlist=res.data.data.patientList
+                let temcards = patientlist.map((item,index)=>{
+                    return (
+                        <Col span={6} >
+                                        <Card bordered={true}>
+                                        <span style={{paddingTop:-110}}>{item.name}</span>
+                                        <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
+                                        <br/>
+                                        <span style={{paddingTop:-110}}>预约时间:8:30-8:50</span>
+                                        <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
+                                        <br/>
+                                        <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
+                                        <div style={{textAlign:'center',marginTop:10}}>
+                                            <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
+                                        </div>
+                                        </Card>
+                                    </Col>
+                    )
+                })
+                setcards(temcards)
             }
             else{
                 error(res.data.msg)
             }
         })
+        
       }
     console.log(location.state)
     return(
