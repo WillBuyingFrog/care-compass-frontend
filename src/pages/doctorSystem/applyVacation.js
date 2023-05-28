@@ -6,6 +6,7 @@ import axios from 'axios'
 
 import PicturesWall from './pictureWall';
 import MyRadio from './myradio';
+import { useState } from 'react';
 
 const { SubMenu } = Menu;
 const { Option } = Select;
@@ -18,8 +19,8 @@ function ApplyVacation(){
 
     let type=0
     let reason=''
-    let shiftlist=[]
-    let shiftID=0
+    const [shiftlist,setshiftlist] = useState()
+    const [shiftID,setshiftID] = useState()
 
 
     const date = new Date()
@@ -33,17 +34,23 @@ function ApplyVacation(){
     axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
         {
             //doctorID需要从header获取
-            doctorID:0,
+            doctorID:1,
             date:today
         }
     ))
     .then(res=>{
-        console.log(res)
+        // console.log(res)
         if(res.data.code === 1){
             error(res.data.msg)
         }
         else if(res.data.code == 0 ){
-            shiftlist = res.data.data.shiftList
+            setshiftlist(res.data.data.shiftList)
+            var temoptions =  res.data.data.shiftList.map((item,index)=>{
+                return (
+                    <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
+                )
+            })
+            setoptions(temoptions)
         }
     })
 
@@ -59,6 +66,7 @@ function ApplyVacation(){
                 reason:reason
             }
         )
+        console.log(senddata)
         axios.post('/treatment/applyLeave/',senddata)
         .then(res=>{
             console.log(success)
@@ -97,10 +105,12 @@ function ApplyVacation(){
 
     function handleChange(value) {
         console.log(`selected ${value}`);
-        let temtime=splitdate(value).time
+        let temdate=splitdate(value).date
+        console.log(shiftlist)
+        console.log(typeof(temdate))
         for(let i=0;i<shiftlist.length;i++){
-            if(temtime == shiftlist[i].time){
-                shiftID=shiftlist[i].id
+            if(temdate == shiftlist[i].date){
+                setshiftID(shiftlist[i].id)
             }
         }
       }
@@ -119,11 +129,8 @@ function ApplyVacation(){
         }
     }
 
-    var options =  shiftlist.map((item,index)=>{
-        return (
-            <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
-        )
-    })
+    const [options,setoptions] = useState()
+
 
     return(
         <Layout style={{ padding: '0 24px 24px' }}>

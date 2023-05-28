@@ -1,0 +1,85 @@
+Date : 2023-05-26 20:32:11
+Directory : c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend
+Total : 39 files,  3908 codes, 431 comments, 411 blanks, all 4750 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         30 |      3,446 |        388 |        376 |      4,210 |
+| CSS        |          4 |        362 |         20 |         29 |        411 |
+| JSON       |          2 |         79 |          0 |          2 |         81 |
+| HTML       |          1 |         18 |         23 |          1 |         42 |
+| Markdown   |          1 |          2 |          0 |          3 |          5 |
+| XML        |          1 |          1 |          0 |          0 |          1 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                   | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                      |         39 |      3,908 |        431 |        411 |      4,750 |
+| . (Files)                                                                                              |          2 |         56 |          0 |          4 |         60 |
+| public                                                                                                 |          2 |         43 |         23 |          2 |         68 |
+| src                                                                                                    |         35 |      3,809 |        408 |        405 |      4,622 |
+| src (Files)                                                                                            |          2 |         90 |          7 |         10 |        107 |
+| src\assets                                                                                             |          1 |          1 |          0 |          0 |          1 |
+| src\assets\images                                                                                      |          1 |          1 |          0 |          0 |          1 |
+| src\components                                                                                         |          2 |        180 |          9 |         23 |        212 |
+| src\components\header                                                                                  |          2 |        180 |          9 |         23 |        212 |
+| src\contexts                                                                                           |          1 |          5 |          0 |          3 |          8 |
+| src\pages                                                                                              |         28 |      3,464 |        388 |        361 |      4,213 |
+| src\pages\doctorSystem                                                                                 |         15 |      1,373 |        313 |        154 |      1,840 |
+| src\pages\doctorSystem (Files)                                                                         |         11 |      1,124 |        284 |        120 |      1,528 |
+| src\pages\doctorSystem\list                                                                            |          2 |        147 |          3 |         18 |        168 |
+| src\pages\doctorSystem\select                                                                          |          2 |        102 |         26 |         16 |        144 |
+| src\pages\landing                                                                                      |          7 |        653 |          0 |         87 |        740 |
+| src\pages\user                                                                                         |          6 |      1,438 |         75 |        120 |      1,633 |
+| src\routes                                                                                             |          1 |         69 |          4 |          8 |         81 |
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                               | language   | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\README.md                                         | Markdown   |          2 |          0 |          3 |          5 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\package.json                                      | JSON       |         54 |          0 |          1 |         55 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\public\index.html                                 | HTML       |         18 |         23 |          1 |         42 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\public\manifest.json                              | JSON       |         25 |          0 |          1 |         26 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\App.js                                        | JavaScript |         73 |          2 |          7 |         82 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\assets\images\undraw_connected_world_wuay.svg | XML        |          1 |          0 |          0 |          1 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\components\header\header.css                  | CSS        |         15 |          1 |          2 |         18 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\components\header\header.js                   | JavaScript |        165 |          8 |         21 |        194 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\contexts\tokenContext.js                      | JavaScript |          5 |          0 |          3 |          8 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\index.js                                      | JavaScript |         17 |          5 |          3 |         25 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\applyVacation.js           | JavaScript |        157 |          5 |         19 |        181 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\checkProgress.js           | JavaScript |        129 |          2 |         10 |        141 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\checkSchedule.js           | JavaScript |         91 |         63 |         10 |        164 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\doctorMain.js              | JavaScript |         47 |          8 |          4 |         59 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\historicalRecord.js        | JavaScript |         90 |         51 |         10 |        151 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\leaveDetail.js             | JavaScript |         63 |          2 |          4 |         69 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\list\inspectList.js        | JavaScript |         70 |          2 |          8 |         80 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\list\prescriptionList.js   | JavaScript |         77 |          1 |         10 |         88 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\myradio.js                 | JavaScript |         31 |          0 |          5 |         36 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\patientAppointment.js      | JavaScript |        168 |         89 |         15 |        272 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\patientHistory.js          | JavaScript |         75 |          0 |          8 |         83 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\pictureWall.js             | JavaScript |         54 |          0 |         11 |         65 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\select\myselect.js         | JavaScript |         51 |         13 |          8 |         72 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\select\myselect2.js        | JavaScript |         51 |         13 |          8 |         72 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\doctorSystem\visitInterface.js          | JavaScript |        219 |         64 |         24 |        307 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\landing\conferences.js                  | JavaScript |         75 |          0 |          7 |         82 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\landing\homepage.css                    | CSS        |        116 |          0 |         14 |        130 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\landing\homepage.js                     | JavaScript |         76 |          0 |          3 |         79 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\landing\paper.js                        | JavaScript |         82 |          0 |          5 |         87 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\landing\recommend-conferences-card.js   | JavaScript |        107 |          0 |         22 |        129 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\landing\recommend-journals-card.js      | JavaScript |        107 |          0 |         21 |        128 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\landing\recommend-papers-card.js        | JavaScript |         90 |          0 |         15 |        105 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\user\findPassword.css                   | CSS        |         79 |          4 |          5 |         88 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\user\findPassword.js                    | JavaScript |        410 |          6 |         36 |        452 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\user\loginAndRegister.css               | CSS        |        152 |         15 |          8 |        175 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\user\loginAndRegister.js                | JavaScript |        527 |         50 |         35 |        612 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\user\recover-password.js                | JavaScript |        128 |          0 |         18 |        146 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\pages\user\reset-password.js                  | JavaScript |        142 |          0 |         18 |        160 |
+| c:\Users\w1305\Desktop\软工_预约系统\care-compass-frontend\src\routes\default_router.js                      | JavaScript |         69 |          4 |          8 |         81 |
+| Total                                                                                                  |            |      3,908 |        431 |        411 |      4,750 |
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
