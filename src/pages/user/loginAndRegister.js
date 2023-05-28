@@ -37,9 +37,10 @@ async function loginUser(username, password) {
     await axios.post('/login/', formData)
         .then(res => {
             console.log(res.data);
-            if(res.data.code === 200)
-                message.success('登录成功')
-            else
+            if(res.data.code === 200){
+                message.success('登录成功');
+                localStorage.setItem('userID', res.data.userID);
+            } else
                 message.error(res.data.message)
             status = res.data.msg
             ret = res.data
