@@ -67,7 +67,7 @@ const default_router = createBrowserRouter([
         element: <Portal />
     },
     {
-        path: 'editDoctorPortal',
+        path: '/editDoctorPortal',
         element: <EditPortal />
     },
     {

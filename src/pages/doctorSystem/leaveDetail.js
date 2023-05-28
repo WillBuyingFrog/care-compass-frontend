@@ -46,7 +46,7 @@ function LeaveDetail(){
                     <Radio value={'1'}>事假</Radio>
                     <Radio value={'2'}>病假</Radio>
                 </Radio.Group> */}
-                <MyRadio msg1={location.state.type} disabled/>
+                <MyRadio msg1={location.state.type} msg={1}/>
                 <br/>
                 <br/>
                 <span>请说明请假理由：</span>
@@ -54,7 +54,7 @@ function LeaveDetail(){
                 <br/>
                 <br/>
                 <span>点击添加图片：</span>
-                <PicturesWall/>
+                <PicturesWall disabled/>
                 <br/>
                 <br/>
                 <br/>

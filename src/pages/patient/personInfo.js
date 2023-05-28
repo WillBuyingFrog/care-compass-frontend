@@ -23,13 +23,18 @@ function PersonInfo(props){
     useEffect(() => {
         const getPersonalInfo = async () => {
             try {
+                setPatientID(localStorage.getItem('userID'));
                 let response = await axios.post('/patient/defaultedAppointmentsCheck/', {
-                    patientID: patientID
-                });
+                    uid: localStorage.getItem('userID')
+                }, {
+                        headers: {
+                            token: localStorage.getItem('userToken')
+                        }
+                    });
                 setIsDefaulted(response.data.isDefaulted);
                 console.log(response.data.isDefaulted);
                 response = await axios.post('/patient/info/', {
-                    UserID: patientID
+                    uid: localStorage.getItem('userID')
                 });
                 if (response.status === 200) {
                     setPersonalInfo(response.data.content);

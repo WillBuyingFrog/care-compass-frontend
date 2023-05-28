@@ -44,7 +44,6 @@ function PayBill(props) {
                 billID: billID,
                 billType: billInfo.billType
             });
-            // TODO 和后端沟通，支付成功后返回的code是多少
             if (true) {
             // if(response.code === 200) {
                 message.success("支付成功！跳转中...");

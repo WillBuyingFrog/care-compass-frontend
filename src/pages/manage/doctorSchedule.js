@@ -5,7 +5,7 @@ import 'antd/dist/antd.variable.min.css';
 import './doctorSchedule.css';
 import './manage.css';
 import { Avatar } from '@chakra-ui/react'
-import {Card, Row, Col, Badge, Calendar, ConfigProvider, Divider, Steps, Typography, Button, Alert, Drawer, Space, Form, Input, Popconfirm, Table} from 'antd';
+import {Card, Row, Col, Badge, Calendar, ConfigProvider, Divider, Steps, Typography, Button, Alert, Drawer, Space, Form, Input, Popconfirm, Table, Modal, Radio, Select, InputNumber} from 'antd';
 import * as echarts from 'echarts'
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import {Link, useLocation} from 'react-router-dom'
@@ -117,43 +117,45 @@ const EditableCell = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-const ScheduleList = () => {
-    const [dataSource, setDataSource] = useState([
-        {
-            key: '0',
-            name: 'Edward King 0',
-            age: '32',
-            address: 'London, Park Lane no. 0',
-        },
-        {
-            key: '1',
-            name: 'Edward King 1',
-            age: '32',
-            address: 'London, Park Lane no. 1',
-        },
-    ]);
-    const [count, setCount] = useState(2);
+function ScheduleList(props) {
+    const [dataSource, setDataSource] = useState(props.dayData);
+    const [count, setCount] = useState(props.dayData.length);
+    const [showModal, setShowModal] = useState(false);
+    const [doctorList, setDoctorList] = useState(props.doctors);
+    console.log(doctorList);
+    console.log(dataSource);
+    console.log(count);
+    console.log(props.dayData);
+    console.log(props.date);
+    useEffect(() => {
+        setDataSource(props.dayData);
+        setCount(props.dayData.length);
+    }, [props.dayData]);
     const handleDelete = (key) => {
-        const newData = dataSource.filter((item) => item.key !== key);
+        const newData = dataSource.filter((item) => item.shiftID !== key);
+        console.log(newData);
         setDataSource(newData);
     };
     const defaultColumns = [
         {
             title: '姓名',
-            dataIndex: 'name',
+            dataIndex: 'doctorName',
             width: '20%',
         },
         {
             title: '工号',
-            dataIndex: 'age',
+            dataIndex: 'doctorID',
         },
         {
             title: '时间段',
-            dataIndex: 'age',
+            dataIndex: 'time',
+            render: (_, record) =>
+                <Text>{record.time === 0 ? '上午':'下午'}</Text>
+
         },
         {
             title: '放号量',
-            dataIndex: 'address',
+            dataIndex: 'total',
             editable: true,
         },
         {
@@ -161,22 +163,20 @@ const ScheduleList = () => {
             dataIndex: 'operation',
             render: (_, record) =>
                 dataSource.length >= 1 ? (
-                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.shiftID)}>
                         <a>删除排班</a>
                     </Popconfirm>
                 ) : null,
         },
     ];
-    const handleAdd = () => {
-        const newData = {
-            key: count,
-            name: `Edward King ${count}`,
-            age: '32',
-            address: `London, Park Lane no. ${count}`,
-        };
-        setDataSource([...dataSource, newData]);
-        setCount(count + 1);
-    };
+    const handleClickAdd = () => {
+        setShowModal(true);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+
     const handleSave = (row) => {
         const newData = [...dataSource];
         const index = newData.findIndex((item) => row.key === item.key);
@@ -193,6 +193,7 @@ const ScheduleList = () => {
             cell: EditableCell,
         },
     };
+
     const columns = defaultColumns.map((col) => {
         if (!col.editable) {
             return col;
@@ -208,10 +209,38 @@ const ScheduleList = () => {
             }),
         };
     });
+    function findById(array, id) {
+        // 使用 Array.prototype.find() 方法查找特定对象
+        return array.find(function(element) {
+            return element.DoctorID === id;
+        });
+    }
+
+    const [form] = Form.useForm();
+    const AddPeriod = Form.useWatch('period', form);
+    const AddDoctor = Form.useWatch('doctor', form);
+    const AddAmount = Form.useWatch('amount', form);
+
+    const handleAdd = () => {
+        const newData = {
+            doctorID: AddDoctor,
+            doctorName: doctorList.find(function(element) {return element.doctorID === AddDoctor}).doctorName,
+            time: AddPeriod,
+            total: AddAmount,
+        };
+        console.log(newData);
+        console.log(AddPeriod);
+        console.log(AddDoctor);
+        console.log(AddAmount);
+        setDataSource([...dataSource, newData]);
+        console.log(dataSource);
+        setCount(count + 1);
+        setShowModal(false);
+    };
     return (
         <div>
             <Button
-                onClick={handleAdd}
+                onClick={handleClickAdd}
                 type="primary"
                 style={{
                     marginBottom: 16,
@@ -226,52 +255,44 @@ const ScheduleList = () => {
                 dataSource={dataSource}
                 columns={columns}
             />
+            <Modal
+                title="添加排班信息"
+                open={showModal}
+                onOk={handleAdd}
+                onCancel={handleCancel}
+            >
+                <Form
+                    form={form}
+                    initialValues={{}}
+                    labelCol={{
+                        span: 4,
+                    }}
+                    wrapperCol={{
+                        span: 14,
+                    }}
+                    layout="horizontal"
+                >
+                    <Form.Item label="时间段" name="period">
+                        <Radio.Group>
+                            <Radio value={0}> 上午 </Radio>
+                            <Radio value={1}> 下午 </Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item label="医生" name="doctor">
+                        <Select>
+                            {doctorList.map((item) => (
+                                <Select.Option value={item.doctorID}>{item.doctorName}</Select.Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="放号量" name="amount">
+                        <InputNumber min={1}/>
+                    </Form.Item>
+
+                </Form>
+            </Modal>
         </div>
     );
-};
-
-const getListData = (value) => {
-    let listData;
-    switch (value.date()) {
-        case 8:
-            listData = [
-                {
-                    type: 'warning',
-                    content: 'This is warning event.',
-                },
-                {
-                    type: 'success',
-                    content: 'This is usual event.',
-                },
-            ];
-            break;
-        case 10:
-            listData = [
-                {
-                    type: 'warning',
-                    content: 'This is warning event.',
-                },
-                {
-                    type: 'success',
-                    content: 'This is usual event.',
-                },
-            ];
-            break;
-        case 15:
-            listData = [
-                {
-                    type: 'warning',
-                    content: 'This is warning event',
-                },
-                {
-                    type: 'success',
-                    content: 'This is very long usual event。。....',
-                },
-            ];
-            break;
-        default:
-    }
-    return listData || [];
 };
 
 // 排班日历
@@ -286,7 +307,7 @@ function WorkCalendar(props){
     const onSubmit = () => {
         setOpen(false);
     }
-    const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const nowTime = moment().format('YYYY-MM-DD');
     const nextMonth1st = moment().add(1, 'months').format('YYYY-MM-01');
     // const [value, setValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
     // const [selectedValue, setSelectedValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
@@ -295,22 +316,42 @@ function WorkCalendar(props){
     const [dID, setDID] = useState();
     const [dName, setDName] = useState();
     const [monthData, setMonthData] = useState();
+    const [dayData, setDayData] = useState();
+    const [doctors, setDoctors] = useState();
 
     const getDateData = (departmentID, date) => {
         axios({
             method: "post",
-            url: "https://mock.apifox.cn/m2/2632066-0-default/83991021",
+            url: "/admin/getOneDayShift/",
             data: {
+                departmentID: props.dID,
+                date: date
             },
-            headers: {
-                token: localStorage.getItem("userToken")
-            }
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
         })
             .then(res => {
-                // setMonthData(res.data.data.ShiftList);
+                // console.log(res.data.data);
+                setDayData(res.data.data.shiftList);
+                console.log(dayData);
+            })
+    }
+    const getDoctors = () => {
+        axios({
+            method: "post",
+            url: "/admin/getOneDepartmentDoc/",
+            data: {
+                departmentID: props.dID,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
                 console.log(res.data.data);
-                console.log(res.data.data.ShiftList);
-                // console.log(monthData);
+                setDoctors(res.data.data.doctorList);
+                console.log(doctors);
             })
     }
 
@@ -326,68 +367,101 @@ function WorkCalendar(props){
         setValue(newValue);
     };
 
+    const getListData = (value) => {
+        // console.log(value);
+        // console.log(monthData);
+        // const monthData2 = monthData.shiftList;
+        // console.log(selectedValue);
+        // console.log(value.month());
+        // console.log(selectedValue.month());
+        // console.log(value.date());
+        // console.log(selectedValue.date());
+        // console.log(monthData2);
+        let listData = [];
+        if (value.month() !== selectedValue.month()) {
+            listData = [];
+            return listData;
+        }
+        if (monthData !== undefined) {
+            listData = monthData[value.date()-1];
+        }
+        return listData || [];
+    };
+
     const getMonthData = () => {
         axios({
             method: "post",
-            url: "https://mock.apifox.cn/m2/2632066-0-default/83991021",
+            url: "/admin/getDepartAllShift/",
             data: {
+                departmentID: props.dID,
+                date: selectedValue.format('YYYY-MM-DD').toString(),
             },
-            headers: {
-                token: localStorage.getItem("userToken")
-            }
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
         })
             .then(res => {
-                setMonthData(res.data.data.ShiftList);
-                console.log(res.data.data);
-                console.log(res.data.data.ShiftList);
-                console.log(monthData);
+                // console.log(res);
+                // console.log(res.data);
+                // console.log(res.data.data);
+                // console.log(res.data.data.shiftList);
+                setMonthData(res.data.data.shiftList);
+                // console.log(res.data.data.shiftList[3]);
+                // console.log(monthData);
             })
     }
 
     useEffect(() => {
-        console.log(props.dID);
-        console.log(props.dName)
-        setDID(props.dID);
-        setDName(props.dName);
+        // console.log(props.dID);
+        // console.log(props.dName)
+        // setDID(props.dID);
+        // setDName(props.dName);
         getMonthData();
-
+        getDoctors();
     }, []);
 
     const dateCellRender = (value) => {
+        // const listData = monthData;
+        // console.log(value.date());
+        // console.log(monthData);
+        // console.log(monthData[value.date()]);
         const listData = getListData(value);
+        // const listData = [];
         return (
-            <ul className="events">
-                {listData.map((item) => (
-                    <li key={item.type}>
-                        <Badge status={item.type} text={item.content} />
-                    </li>
-                ))}
-            </ul>
+            <div>
+                {listData !== undefined &&
+                    <ul className="events">
+                        {listData.map((item) => (
+                            <li key={item.type}>
+                                <Badge status={item.type} text={item.content}/>
+                            </li>
+                        ))}
+                    </ul>
+                }
+            </div>
         );
     };
     return (
         <>
             {/*<Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />*/}
-            <Calendar dateCellRender={dateCellRender} value={value} onSelect={onSelect} onPanelChange={onPanelChange}/>;
-            <Drawer
-                title={`${dName} ${selectedValue?.format('YYYY-MM-DD')}排班情况`}
-                width={'70vw'}
-                onClose={onClose}
-                open={open}
-                bodyStyle={{
-                    paddingBottom: 80,
-                }}
-                extra={
-                    <Space>
-                        <Button onClick={onClose}>取消</Button>
-                        <Button onClick={onSubmit} type="primary">
-                            提交
-                        </Button>
-                    </Space>
-                }
-            >
-                <ScheduleList />
-            </Drawer>
+            {/*{monthData !== undefined &&*/}
+                <Calendar dateCellRender={dateCellRender} value={value} onSelect={onSelect}
+                          onPanelChange={onPanelChange}/>
+            {/*}*/}
+            {dayData !== undefined &&
+                <Drawer
+                    title={`${props.dName} ${selectedValue?.format('YYYY-MM-DD')}排班情况`}
+                    width={'70vw'}
+                    onClose={onClose}
+                    open={open}
+                    bodyStyle={{
+                        paddingBottom: 80,
+                    }}
+
+                >
+                    <ScheduleList dayData={dayData} date={selectedValue} doctors={doctors}/>
+                </Drawer>
+            }
         </>
     );
 };
@@ -408,11 +482,8 @@ function DoctorSchedule(){
     const chooseDepartmentFinish = (dID, dName) => {
         setDepartmentID(dID);
         setDepartmentName(dName);
-        console.log(departmentID);
-        console.log(departmentName);
-        // while (department !== undefined) {
-        //     next();
-        // }
+        // console.log(departmentID);
+        // console.log(departmentName);
         next();
     }
     const returnToChooseDepartment = () => {
@@ -431,18 +502,19 @@ function DoctorSchedule(){
     const getDepartments = () => {
         axios({
             method: "post",
-            url: "https://mock.apifox.cn/m2/2632066-0-default/83726813",
+            url: "/admin/getAllDepartment/",
             data: {
             },
-            headers: {
-                token: localStorage.getItem("userToken")
-            }
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
         })
             .then(res => {
+                // console.log(res)
                 setDepartmentList(res.data.data.departmentList);
-                console.log(res.data.data);
-                console.log(res.data.data.departmentList);
-                console.log(departmentList);
+                // console.log(res.data.data);
+                // console.log(res.data.data.departmentList);
+                // console.log(departmentList);
             })
     }
     useEffect(() => {
