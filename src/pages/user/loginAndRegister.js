@@ -124,10 +124,13 @@ function LoginAndRegister () {
                 setTimeout(function () {
                     navigate("/patient/personInfo");
                 }, 1000);
-            }
-            else{
+            }else if(data.type === 2){
                 setTimeout(function () {
-                    navigate("/");
+                    navigate("/doctorMain");
+                }, 1000);
+            } else{
+                setTimeout(function () {
+                    navigate("/manage/doctorSchedule");
                 }, 1000);
             }
 

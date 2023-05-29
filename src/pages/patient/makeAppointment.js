@@ -125,6 +125,11 @@ function MakeAppointment() {
         // 首先，发送POST请求以新建预约挂号记录
         // 然后，发送POST请求以新建预约挂号账单
         // 最后，跳转到支付页面
+
+        let customHeaders = {
+            token: localStorage.getItem('userToken')
+        }
+
         setConfirmDrawerButtonText("正在创建预约挂号记录和账单...");
         setConfirmDrawerButtonDisabled(true);
         console.log(getAppointmentDateText(selectedPeriod));
@@ -136,22 +141,18 @@ function MakeAppointment() {
                 doctorID: selectedDoctor.doctorID
             },
             {
-                headers: {
-                    token: localStorage.getItem('userToken')
-                }
+                headers: customHeaders
             });
         const newAppointmentID = createAppointmentResponse.data.appointmentID;
         console.log("newAppointmentID", newAppointmentID);
         const createBillResponse = await axios.post(
             '/patient/bill/create/',
             {
-                billType: 'appointment', 
+                billType: 'appointment',
                 billPrice: selectedPeriod % 2 === 0 ? selectedDoctor.afternoonPrice : selectedDoctor.morningPrice,
                 typeID: newAppointmentID
             },{
-                headers: {
-                    token: localStorage.getItem('userToken')
-                }
+                headers: customHeaders
             });
         const newBillID = createBillResponse.data.billID;
         console.log("newBillID", newBillID);

@@ -22,22 +22,27 @@ function PersonInfo(props){
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const getPersonalInfo = async () => {
+
+            let customHeaders = {
+                token: localStorage.getItem('userToken')
+            }
+
             try {
                 setPatientID(localStorage.getItem('userID'));
                 let response = await axios.post('/patient/defaultedAppointmentsCheck/', {
-                    uid: localStorage.getItem('userID')
+                    UserID: localStorage.getItem('userID')
                 }, {
-                        headers: {
-                            token: localStorage.getItem('userToken')
-                        }
+                        headers: customHeaders
                     });
                 setIsDefaulted(response.data.isDefaulted);
                 console.log(response.data.isDefaulted);
                 response = await axios.post('/patient/info/', {
-                    uid: localStorage.getItem('userID')
+                    UserID: localStorage.getItem('userID')
+                }, {
+                    headers: customHeaders
                 });
                 if (response.status === 200) {
-                    setPersonalInfo(response.data.content);
+                    setPersonalInfo(response.data);
                     setLoading(false);
                 }
             } catch (error) {
@@ -119,21 +124,21 @@ function PersonInfo(props){
                                                             color: '#4A5568',
                                                         }}
                                                     >
-                                                        {personalInfo.UserName}
+                                                        {personalInfo.name}
                                                     </Title>
                                                     <Paragraph>
                                                         <Space>
                                                             <HomeOutlined style={{color :'#4A5568'}}/>
                                                         </Space>
                                                         <Text>
-                                                            （这里显示电话号码）{personalInfo.PhoneNumber}
+                                                            {personalInfo.phone}
                                                         </Text>
                                                     </Paragraph>
                                                     <Paragraph>
                                                         <Space>
                                                             <BulbOutlined style={{color :'#4A5568'}} />
                                                         </Space>
-                                                        <Text style={{color :'#4A5568'}}>（这里显示身份证号）{personalInfo.OfficialID}</Text>
+                                                        <Text style={{color :'#4A5568'}}>{personalInfo.officialID}</Text>
                                                     </Paragraph>
                                                 </Typography>
                                             </Col>

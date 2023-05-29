@@ -61,8 +61,15 @@ function MyBills(props){
     // 使用axios的post请求获取所有账单
     // 不需要参数，因为已经使用了token
     useEffect( () => {
+
+        let customHeaders = {
+            token: localStorage.getItem('userToken')
+        }
+
         const getBills = async () => {
-            const billResponse = await axios.post('/patient/bill/get/');
+            const billResponse = await axios.post('/patient/bill/get/', {}, {
+                headers: customHeaders
+            });
             setRawBills(billResponse.data);
             // 存储处理后的不同类型账单记录的临时变量
             let temp = [];
