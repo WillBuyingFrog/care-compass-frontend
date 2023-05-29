@@ -230,7 +230,7 @@ function MedicineList(props) {
             // }
         })
             .then(res => {
-                console.log(res.data.data.prescriptionList);
+                // console.log(res.data.data.prescriptionList);
                 setMediList(res.data.data.prescriptionList);
                 // console.log(data);
             })
@@ -252,7 +252,7 @@ function MedicineList(props) {
             // }
         })
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 // setDoctors(res.data.data.doctorList);
                 // console.log(doctors);
                 getMediData();

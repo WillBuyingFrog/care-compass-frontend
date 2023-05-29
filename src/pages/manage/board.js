@@ -56,10 +56,9 @@ const onChange = (key) => {
     console.log(key);
 };
 
-
 function AnnouncementList(props) {
 
-    const [mediList, setMediList] = useState(props.MediList);
+    const [AList, setAList] = useState(props.AList);
     const [showModal, setShowModal] = useState(false);
 
     const [searchText, setSearchText] = useState('');
@@ -144,25 +143,25 @@ function AnnouncementList(props) {
 
     const columns = [
         {
-            title: '批准文号',
-            dataIndex: 'approval_number',
-            key: 'approval_number',
-            sorter: (a, b) => a.approval_number.localeCompare(b.approval_number),
+            title: '标题',
+            dataIndex: 'title',
+            key: 'title',
+            sorter: (a, b) => a.title.localeCompare(b.title),
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.approval_number}</Text>
+                <Text>{record.title}</Text>
             ),
         },
         {
-            title: '药品名称',
-            dataIndex: 'name',
-            key: 'name',
-            ...getColumnSearchProps('name'),
+            title: '时间',
+            dataIndex: 'time',
+            key: 'time',
+            ...getColumnSearchProps('time'),
             render: (_, record) => (
-                <Tooltip label={record.name} aria-label='A tooltip'>
+                <Tooltip label={record.time} aria-label='A tooltip'>
                     <Text>
-                        {record.name}
+                        {record.time}
                     </Text>
                 </Tooltip>
             ),
@@ -170,31 +169,22 @@ function AnnouncementList(props) {
             width: 400
         },
         {
-            title: '生产单位',
-            dataIndex: 'production_unit',
-            key: 'production_unit',
-            width: 150,
-            render: (_, record) => (
-                <Text>{record.production_unit}</Text>
-            ),
-        },{
-            title: '价格',
-            dataIndex: 'price',
-            key: 'price',
-            sorter: (a, b) => a.price - b.price,
-            sortDirections: ['descend', 'ascend'],
-            width: 200,
-            render:(_,record) =>(
-                <Text>{record.price}</Text>
-            )
+            title: '操作',
+            dataIndex: 'operation',
+            render: (_, record) =>
+                record.length >= 1 ? (
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.announcementID)}>
+                        <a>删除</a>
+                    </Popconfirm>
+                ) : null,
         },
     ];
 
     const [form] = Form.useForm();
-    const AddApproval = Form.useWatch('approval', form);
-    const AddName = Form.useWatch('name', form);
-    const AddPrice = Form.useWatch('price', form);
-    const AddProduction = Form.useWatch('production', form);
+    const AddTitle = Form.useWatch('title', form);
+    const AddContent = Form.useWatch('content', form);
+    const nowTime = moment().format('YYYY-MM-DD');
+    const AddType = 0;
 
     const handleClickAdd = () => {
         setShowModal(true);
@@ -204,31 +194,42 @@ function AnnouncementList(props) {
         setShowModal(false);
     }
 
-    const getMediData = ()=>{
+    const getAllData = ()=>{
         axios({
             method: "post",
-            url:'/admin/listAllPrescription/',
+            url:'/admin/allAnnouncement/',
             // headers: {
             //   'token': token
             // }
         })
             .then(res => {
-                console.log(res.data.data.prescriptionList);
-                setMediList(res.data.data.prescriptionList);
+                console.log(res.data.data.announcementList);
+                getAData(res.data.data.announcementList);
                 // console.log(data);
             })
+    }
+
+    const getAData = (data)=>{
+        let ret = [];
+        for(let i = 0; i < data.length; i++){
+            if(data[i].type === 0){
+                ret.push(data[i]);
+            }
+        }
+        setAList(ret);
+        console.log(AList);
     }
 
     const handleAdd = () => {
         setShowModal(false);
         axios({
             method: "post",
-            url: "/admin/createPrescription/",
+            url: "/admin/addAnnouncement/",
             data: {
-                approval_number: AddApproval,
-                name: AddName,
-                price: AddPrice,
-                production_unit: AddProduction,
+                title: AddTitle,
+                content: AddContent,
+                type: AddType,
+                time: nowTime,
             },
             // headers: {
             //     token: localStorage.getItem("userToken")
@@ -238,9 +239,25 @@ function AnnouncementList(props) {
                 console.log(res.data);
                 // setDoctors(res.data.data.doctorList);
                 // console.log(doctors);
-                getMediData();
+                getAllData();
             })
     }
+    const handleDelete = (key) => {
+        axios({
+            method: "post",
+            url: "/admin/deleteAnnouncement",
+            data: {
+                id: key,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                getAllData();
+            })
+    };
 
     return (
         <div
@@ -258,7 +275,7 @@ function AnnouncementList(props) {
                     marginBottom: 16,
                 }}
             >
-                添加药品
+                添加公告
             </Button>
             <Box css={{
                 height: 450,
@@ -275,14 +292,14 @@ function AnnouncementList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={mediList} columns={columns}
+                <Table dataSource={AList} columns={columns}
                        pagination={false}
                        className='medicineList'
                        rowKey={(record) => record.id}
                 >
                 </Table>
                 <Modal
-                    title="添加药品"
+                    title="添加公告"
                     open={showModal}
                     onOk={handleAdd}
                     onCancel={handleCancel}
@@ -298,17 +315,11 @@ function AnnouncementList(props) {
                         }}
                         layout="horizontal"
                     >
-                        <Form.Item label="批准文号" name="approval">
+                        <Form.Item label="标题" name="title">
                             <Input />
                         </Form.Item>
-                        <Form.Item label="药品名称" name="name">
-                            <Input />
-                        </Form.Item>
-                        <Form.Item label="单价" name="price">
-                            <InputNumber min={1}/>
-                        </Form.Item>
-                        <Form.Item label="生产厂家" name="production">
-                            <Input />
+                        <Form.Item label="内容" name="content">
+                            <Input.TextArea />
                         </Form.Item>
                     </Form>
                 </Modal>
@@ -317,15 +328,10 @@ function AnnouncementList(props) {
     );
 }
 
-
 function PassageList(props) {
-    const [examList, setExamList] = useState(props.ExamList);
+
+    const [PList, setPList] = useState(props.PList);
     const [showModal, setShowModal] = useState(false);
-    const [form] = Form.useForm();
-    const AddName = Form.useWatch('name', form);
-    const AddPrice = Form.useWatch('price', form);
-    const AddDepartmentID = Form.useWatch('departmentID', form);
-    const AddDetail = Form.useWatch('detail', form);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -409,58 +415,49 @@ function PassageList(props) {
 
     const columns = [
         {
-            title: '科室',
-            dataIndex: 'department',
-            key: 'department',
-            sorter: (a, b) => a.department.localeCompare(b.department),
+            title: '标题',
+            dataIndex: 'title',
+            key: 'title',
+            sorter: (a, b) => a.title.localeCompare(b.title),
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.department}</Text>
+                <Text>{record.title}</Text>
             ),
         },
         {
-            title: '项目',
-            dataIndex: 'name',
-            key: 'name',
-            ...getColumnSearchProps('name'),
-            sorter: (a, b) => a.name.localeCompare(b.name),
-            sortDirections: ['descend', 'ascend'],
+            title: '时间',
+            dataIndex: 'time',
+            key: 'time',
+            ...getColumnSearchProps('time'),
             render: (_, record) => (
-                <Text>
-                    {record.name}
-                </Text>
+                <Tooltip label={record.time} aria-label='A tooltip'>
+                    <Text>
+                        {record.time}
+                    </Text>
+                </Tooltip>
             ),
             ellipsis: true,
             width: 400
         },
         {
-            title: '价格',
-            dataIndex: 'price',
-            key: 'price',
-            sorter: (a, b) => a.price - b.price,
-            sortDirections: ['descend', 'ascend'],
-            width: 200,
-            render:(_,record) =>(
-                <Text>{record.price}</Text>
-            )
+            title: '操作',
+            dataIndex: 'operation',
+            render: (_, record) =>
+                record.length >= 1 ? (
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.announcementID)}>
+                        <a>删除</a>
+                    </Popconfirm>
+                ) : null,
         },
     ];
 
-    const getExamData = ()=>{
-        axios({
-            method: "post",
-            url:'/admin/listAllInspection/',
-            // headers: {
-            //   'token': token
-            // }
-        })
-            .then(res => {
-                console.log(res.data.data.inspectionList);
-                setExamList(res.data.data.inspectionList);
-                // console.log(data);
-            })
-    }
+    const [form] = Form.useForm();
+    const AddTitle = Form.useWatch('title', form);
+    const AddContent = Form.useWatch('content', form);
+    const nowTime = moment().format('YYYY-MM-DD');
+    const AddType = 1;
+
     const handleClickAdd = () => {
         setShowModal(true);
     }
@@ -469,16 +466,42 @@ function PassageList(props) {
         setShowModal(false);
     }
 
+    const getAllData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/allAnnouncement/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.announcementList);
+                getPData(res.data.data.announcementList);
+                // console.log(data);
+            })
+    }
+
+    const getPData = (data)=>{
+        let ret = [];
+        for(let i = 0; i < data.length; i++){
+            if(data[i].type === 1){
+                ret.push(data[i]);
+            }
+        }
+        setPList(ret);
+        console.log(PList);
+    }
+
     const handleAdd = () => {
         setShowModal(false);
         axios({
             method: "post",
-            url: "/admin/createInspection/",
+            url: "/admin/addAnnouncement/",
             data: {
-                name: AddName,
-                departmentID: AddDepartmentID,
-                price: AddPrice,
-                detail: AddDetail,
+                title: AddTitle,
+                content: AddContent,
+                type: AddType,
+                time: nowTime,
             },
             // headers: {
             //     token: localStorage.getItem("userToken")
@@ -488,9 +511,25 @@ function PassageList(props) {
                 console.log(res.data);
                 // setDoctors(res.data.data.doctorList);
                 // console.log(doctors);
-                getExamData();
+                getAllData();
             })
     }
+    const handleDelete = (key) => {
+        axios({
+            method: "post",
+            url: "/admin/deleteAnnouncement",
+            data: {
+                id: key,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                getAllData();
+            })
+    };
 
     return (
         <div
@@ -501,6 +540,15 @@ function PassageList(props) {
                 border: 'none',
             }}
         >
+            <Button
+                onClick={handleClickAdd}
+                type="primary"
+                style={{
+                    marginBottom: 16,
+                }}
+            >
+                添加文章
+            </Button>
             <Box css={{
                 height: 450,
                 overflow: 'auto',
@@ -516,23 +564,14 @@ function PassageList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Button
-                    onClick={handleClickAdd}
-                    type="primary"
-                    style={{
-                        marginBottom: 16,
-                    }}
-                >
-                    添加检查项目
-                </Button>
-                <Table dataSource={examList} columns={columns}
+                <Table dataSource={PList} columns={columns}
                        pagination={false}
                        className='medicineList'
                        rowKey={(record) => record.id}
                 >
                 </Table>
                 <Modal
-                    title="添加检查项目"
+                    title="添加文章"
                     open={showModal}
                     onOk={handleAdd}
                     onCancel={handleCancel}
@@ -548,20 +587,10 @@ function PassageList(props) {
                         }}
                         layout="horizontal"
                     >
-                        <Form.Item label="项目名称" name="name">
+                        <Form.Item label="标题" name="title">
                             <Input />
                         </Form.Item>
-                        <Form.Item label="所属科室" name="departmentID">
-                            <Select>
-                                {props.departmentList.map((item) => (
-                                    <Select.Option value={item.departmentID}>{item.departmentName}</Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                        <Form.Item label="项目价格" name="price">
-                            <InputNumber min={1}/>
-                        </Form.Item>
-                        <Form.Item label="详情" name="detail">
+                        <Form.Item label="内容" name="content">
                             <Input.TextArea />
                         </Form.Item>
                     </Form>
@@ -572,44 +601,51 @@ function PassageList(props) {
 }
 
 function Board(){
-    const [mediList, setMediList] = useState();
-    const [examList, setExamList] = useState();
-    const [departmentList, setDepartmentList] = useState();
-    const getAnnouncementData = ()=>{
+    const [allList, setAllList] = useState();
+    const [AList, setAList] = useState();
+    const [PList, setPList] = useState();
+    const getAllData = ()=>{
         axios({
             method: "post",
-            url:'/admin/listAllPrescription/',
+            url:'/admin/allAnnouncement/',
+            data: {
+                type: 0,
+            }
             // headers: {
             //   'token': token
             // }
         })
             .then(res => {
-                console.log(res.data.data.prescriptionList);
-                setMediList(res.data.data.prescriptionList);
+                console.log(res.data);
+                setAllList(res.data.data.announcementList);
+                getAData(res.data.data.announcementList);
+                getPData(res.data.data.announcementList);
                 // console.log(data);
             })
     }
-    const getExamData = ()=>{
-        axios({
-            method: "post",
-            url:'/admin/listAllInspection/',
-            // headers: {
-            //   'token': token
-            // }
-        })
-            .then(res => {
-                console.log(res.data.data.inspectionList);
-                setExamList(res.data.data.inspectionList);
-                // console.log(data);
-            })
+    const getAData = (data)=>{
+        let ret = [];
+        for(let i = 0; i < data.length; i++){
+            if(data[i].type === 0){
+                ret.push(data[i]);
+            }
+        }
+        setAList(ret);
+        console.log(AList);
+    }
+    const getPData = (data)=>{
+        let ret = [];
+        for(let i = 0; i < data.length; i++){
+            if(data[i].type === 1){
+                ret.push(data[i]);
+            }
+        }
+        setPList(ret);
+        console.log(PList);
     }
     useEffect(()=>{
-        getAnnouncementData();
-        // getPassageData();
+        getAllData();
     },[])
-
-    let AList = undefined;
-    let PList = undefined;
 
     return(
         <div className='manageCard'>
