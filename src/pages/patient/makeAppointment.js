@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import 'antd/dist/antd.min.css';
 import axios from 'axios';
-import {Col, Drawer, Layout, Row, Typography, Input, Button} from "antd";
+import {Col, Drawer, Layout, Row, Typography, Input, Button, message} from "antd";
 import MyHeader from "../../components/header/header";
 import PatientSidebar from "./patientSidebar";
 import SelectDepartment from "./steps/selectDepartment";
@@ -58,9 +58,15 @@ function MakeAppointment() {
         let appointmentDay = new Date(today.getTime() + (24 * 60 * 60 * 1000) * Math.floor((periodKey + 1) / 2));
         let periodText = "";
         if (appointmentDay.getMonth() + 1 >= 10) {
-            periodText = (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
+            periodText = (appointmentDay.getMonth() + 1).toString();
         } else {
-            periodText = "0" + (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
+            periodText = "0" + (appointmentDay.getMonth() + 1).toString();
+        }
+
+        if (appointmentDay.getDate() + 1 >= 10) {
+            periodText = periodText + '-' + appointmentDay.getDate().toString();
+        } else {
+            periodText = periodText + '-0' + appointmentDay.getDate().toString();
         }
         // let periodText = (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
         periodText = appointmentDay.getFullYear().toString() + "-" + periodText;
@@ -137,12 +143,20 @@ function MakeAppointment() {
             '/patient/appointment/create/',
             {
                 date: getAppointmentDateText(selectedPeriod),
-                time: selectedPeriod % 2,
+                time: 1 - (selectedPeriod % 2), // 偶数为下午，奇数为上午
                 doctorID: selectedDoctor.doctorID
             },
             {
                 headers: customHeaders
             });
+        if (createAppointmentResponse.data.code === 400) {
+            // 出错
+            console.log("hello!")
+            message.warning(createAppointmentResponse.data.msg);
+            setConfirmDrawerButtonText("信息无误，前往支付");
+            setConfirmDrawerButtonDisabled(false);
+            return;
+        }
         const newAppointmentID = createAppointmentResponse.data.appointmentID;
         console.log("newAppointmentID", newAppointmentID);
         const createBillResponse = await axios.post(

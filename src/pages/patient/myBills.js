@@ -67,7 +67,9 @@ function MyBills(props){
         }
 
         const getBills = async () => {
-            const billResponse = await axios.post('/patient/bill/get/', {}, {
+            const billResponse = await axios.post('/patient/bill/get/', {
+                UserID: patientID
+            }, {
                 headers: customHeaders
             });
             setRawBills(billResponse.data);
