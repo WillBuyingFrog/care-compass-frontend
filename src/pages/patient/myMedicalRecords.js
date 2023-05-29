@@ -46,8 +46,14 @@ function MyMedicalRecords(){
 
     useEffect(() => {
         const getRawMedicalRecords = async () => {
-            const response = await axios.post('/patient/consultation/list/');
 
+            let customHeaders = {
+                token: localStorage.getItem('userToken')
+            }
+
+            const response = await axios.post('/patient/consultation/list/',{}, {
+                headers: customHeaders
+            });
             setRawMedicalRecords(response.data);
             setMedicalRecords(parseRawMedicalRecords(response.data));
         }

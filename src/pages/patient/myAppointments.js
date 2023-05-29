@@ -34,8 +34,13 @@ function MyAppointments() {
     const [rawAppointments, setRawAppointments] = useState([]);
     const [appointments, setAppointments] = useState([]);
 
+    let customHeaders = {
+        token: localStorage.getItem('userToken')
+    }
     const getRawAppointments = async () => {
-        const res = await axios.post('/patient/appointment/list/');
+        const res = await axios.post('/patient/appointment/list/',{},{
+            headers: customHeaders
+        });
         setRawAppointments(res.data.content);
         setAppointments(processRawAppointments(res.data.content));
     }

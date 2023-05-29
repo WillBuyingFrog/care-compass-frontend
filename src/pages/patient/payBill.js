@@ -39,15 +39,21 @@ function PayBill(props) {
 
     // 用户点击“已完成支付”按钮后，向后端发送支付完成的post请求的函数
     const handlePaymentFinish = async () => {
+        let customHeaders = {
+            token: localStorage.getItem('userToken')
+        }
         try {
             const response = await axios.post('/patient/bill/pay/', {
                 billID: billID,
                 billType: billInfo.billType
-            });
+            },
+                {
+                    headers: customHeaders
+                });
             if (true) {
             // if(response.code === 200) {
                 message.success("支付成功！跳转中...");
-                navigate('/patient/myBills');
+                navigate('/patient/personInfo');
             }
         } catch (error) {
             console.log(error);
@@ -55,12 +61,19 @@ function PayBill(props) {
     }
 
     useEffect(() => {
+
+        let customHeaders = {
+            token: localStorage.getItem('userToken')
+        }
         const getBillInfo = async () => {
             try {
                 const response = await axios.post('/patient/bill/getSingle/', {
                     billID: billID
-                });
-                setBillInfo(response.data);
+                },
+                    {
+                        headers: customHeaders
+                    });
+                setBillInfo(response.data.data);
                 setLoading(false);
             } catch (error) {
                 console.log(error);

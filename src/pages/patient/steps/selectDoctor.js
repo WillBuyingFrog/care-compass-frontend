@@ -27,11 +27,11 @@ function PeriodCard(props){
 function getPeriodDoctors(doctorData, periodKey){
     switch (periodKey) {
         case 1:
-            return doctorData.lastDay;
-        case 2:
             return doctorData.today;
-        case 3:
+        case 2:
             return doctorData.tomorrow;
+        case 3:
+            return doctorData.lastDay;
         default:
             return null;
     }

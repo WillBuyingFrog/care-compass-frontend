@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import 'antd/dist/antd.min.css';
 import axios from 'axios';
-import {Col, Drawer, Layout, Row, Typography, Input, Button} from "antd";
+import {Col, Drawer, Layout, Row, Typography, Input, Button, message} from "antd";
 import MyHeader from "../../components/header/header";
 import PatientSidebar from "./patientSidebar";
 import SelectDepartment from "./steps/selectDepartment";
@@ -58,9 +58,15 @@ function MakeAppointment() {
         let appointmentDay = new Date(today.getTime() + (24 * 60 * 60 * 1000) * Math.floor((periodKey + 1) / 2));
         let periodText = "";
         if (appointmentDay.getMonth() + 1 >= 10) {
-            periodText = (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
+            periodText = (appointmentDay.getMonth() + 1).toString();
         } else {
-            periodText = "0" + (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
+            periodText = "0" + (appointmentDay.getMonth() + 1).toString();
+        }
+
+        if (appointmentDay.getDate() + 1 >= 10) {
+            periodText = periodText + '-' + appointmentDay.getDate().toString();
+        } else {
+            periodText = periodText + '-0' + appointmentDay.getDate().toString();
         }
         // let periodText = (appointmentDay.getMonth() + 1).toString() + "-" + appointmentDay.getDate().toString();
         periodText = appointmentDay.getFullYear().toString() + "-" + periodText;
@@ -125,6 +131,11 @@ function MakeAppointment() {
         // 首先，发送POST请求以新建预约挂号记录
         // 然后，发送POST请求以新建预约挂号账单
         // 最后，跳转到支付页面
+
+        let customHeaders = {
+            token: localStorage.getItem('userToken')
+        }
+
         setConfirmDrawerButtonText("正在创建预约挂号记录和账单...");
         setConfirmDrawerButtonDisabled(true);
         console.log(getAppointmentDateText(selectedPeriod));
@@ -132,26 +143,30 @@ function MakeAppointment() {
             '/patient/appointment/create/',
             {
                 date: getAppointmentDateText(selectedPeriod),
-                time: selectedPeriod % 2,
+                time: 1 - (selectedPeriod % 2), // 偶数为下午，奇数为上午
                 doctorID: selectedDoctor.doctorID
             },
             {
-                headers: {
-                    token: localStorage.getItem('userToken')
-                }
+                headers: customHeaders
             });
+        if (createAppointmentResponse.data.code === 400) {
+            // 出错
+            console.log("hello!")
+            message.warning(createAppointmentResponse.data.msg);
+            setConfirmDrawerButtonText("信息无误，前往支付");
+            setConfirmDrawerButtonDisabled(false);
+            return;
+        }
         const newAppointmentID = createAppointmentResponse.data.appointmentID;
         console.log("newAppointmentID", newAppointmentID);
         const createBillResponse = await axios.post(
             '/patient/bill/create/',
             {
-                billType: 'appointment', 
+                billType: 'appointment',
                 billPrice: selectedPeriod % 2 === 0 ? selectedDoctor.afternoonPrice : selectedDoctor.morningPrice,
                 typeID: newAppointmentID
             },{
-                headers: {
-                    token: localStorage.getItem('userToken')
-                }
+                headers: customHeaders
             });
         const newBillID = createBillResponse.data.billID;
         console.log("newBillID", newBillID);

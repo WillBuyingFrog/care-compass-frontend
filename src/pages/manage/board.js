@@ -3,6 +3,7 @@
  */
 import './board.css';
 import './manage.css';
+
 import Chart from 'react-apexcharts'
 import {
     Typography,
@@ -19,7 +20,7 @@ import {
     Skeleton,
     Table,
     Spin,
-    Image, Popconfirm
+    Image, Popconfirm, Form, Radio, Select, InputNumber, Modal, Input
 } from 'antd';
 import {
     UserOutlined,
@@ -33,7 +34,7 @@ import {
 import React, { useRef, useEffect, useState } from 'react';
 import {useLocation, useNavigate} from 'react-router-dom'
 import axios from "axios";
-import {Box, Heading, HStack, Input, Link, Progress, Tag, TagLabel, Tooltip} from "@chakra-ui/react";
+import {Box, Heading, HStack, Link, Progress, Tag, TagLabel, Tooltip} from "@chakra-ui/react";
 import {FaQuoteLeft} from "react-icons/fa";
 import { IoSchoolSharp, IoNewspaperSharp } from "react-icons/io5"
 import MyHeader from '../../components/header/header'
@@ -55,44 +56,10 @@ const onChange = (key) => {
     console.log(key);
 };
 
-const BoardList = [
-    {
-        key: '1',
-        mallowance: '胡彦斌',
-        mname: 'asdfasd',
-        mcompany: 'asdfasd',
-        mprice: 123,
-    },
-];
+function AnnouncementList(props) {
 
-const PassageList = [
-    {
-        key: '1',
-        edepartment: '胡彦斌',
-        ename: 'asdfasd',
-        eprice: 123,
-    },
-];
-
-function BoardPassageList(props) {
-
-    const [BoardList, setBoardList] = useState({});
-    const [citenum, setCitenum] = useState([]);
-    const [maxcite, setMaxcite] = useState(0);
-
-
-    const handlePaper = (url)=>{
-        window.open(url)
-    }
-
-
-    useEffect(() =>{
-        if (props.BoardList){
-            setBoardList(props.BoardList)
-        }
-        console.log(BoardList.length)
-        // getData()
-    }, [props])
+    const [AList, setAList] = useState(props.AList);
+    const [showModal, setShowModal] = useState(false);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -164,8 +131,6 @@ function BoardPassageList(props) {
             }
         },
     });
-    const [current, setCurrent]=React.useState(1);
-
 
     const htmlDecode = (input) => {
         var e = document.createElement('div');
@@ -175,36 +140,28 @@ function BoardPassageList(props) {
         console.log(ret);
         return ret;
     }
-    const [count, setCount] = useState(2);
-    const handleAdd = () => {
-
-    };
-    const handleDelete = (key) => {
-        const newData = BoardList.filter((item) => item.key !== key);
-        setBoardList(newData);
-    };
 
     const columns = [
         {
             title: '标题',
-            dataIndex: 'mallowance',
-            key: 'mallowance',
-            sorter: (a, b) => a.mallowance.localeCompare(b.mallowance),
+            dataIndex: 'title',
+            key: 'title',
+            sorter: (a, b) => a.title.localeCompare(b.title),
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.mallowance}</Text>
+                <Text>{record.title}</Text>
             ),
         },
         {
             title: '时间',
-            dataIndex: 'mname',
-            key: 'mname',
-            ...getColumnSearchProps('mname'),
+            dataIndex: 'time',
+            key: 'time',
+            ...getColumnSearchProps('time'),
             render: (_, record) => (
-                <Tooltip label={record.mname} aria-label='A tooltip'>
+                <Tooltip label={record.time} aria-label='A tooltip'>
                     <Text>
-                        {record.mname.replace(/<[^>]*>/g, '')}
+                        {record.time}
                     </Text>
                 </Tooltip>
             ),
@@ -215,13 +172,92 @@ function BoardPassageList(props) {
             title: '操作',
             dataIndex: 'operation',
             render: (_, record) =>
-                BoardList.length >= 1 ? (
-                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
+                record.length >= 1 ? (
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.announcementID)}>
                         <a>删除</a>
                     </Popconfirm>
                 ) : null,
         },
     ];
+
+    const [form] = Form.useForm();
+    const AddTitle = Form.useWatch('title', form);
+    const AddContent = Form.useWatch('content', form);
+    const nowTime = moment().format('YYYY-MM-DD');
+    const AddType = 0;
+
+    const handleClickAdd = () => {
+        setShowModal(true);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+
+    const getAllData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/allAnnouncement/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.announcementList);
+                getAData(res.data.data.announcementList);
+                // console.log(data);
+            })
+    }
+
+    const getAData = (data)=>{
+        let ret = [];
+        for(let i = 0; i < data.length; i++){
+            if(data[i].type === 0){
+                ret.push(data[i]);
+            }
+        }
+        setAList(ret);
+        console.log(AList);
+    }
+
+    const handleAdd = () => {
+        setShowModal(false);
+        axios({
+            method: "post",
+            url: "/admin/addAnnouncement/",
+            data: {
+                title: AddTitle,
+                content: AddContent,
+                type: AddType,
+                time: nowTime,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+                getAllData();
+            })
+    }
+    const handleDelete = (key) => {
+        axios({
+            method: "post",
+            url: "/admin/deleteAnnouncement",
+            data: {
+                id: key,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                getAllData();
+            })
+    };
 
     return (
         <div
@@ -233,7 +269,7 @@ function BoardPassageList(props) {
             }}
         >
             <Button
-                onClick={handleAdd}
+                onClick={handleClickAdd}
                 type="primary"
                 style={{
                     marginBottom: 16,
@@ -256,79 +292,46 @@ function BoardPassageList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={props.BoardList} columns={columns}
+                <Table dataSource={AList} columns={columns}
                        pagination={false}
-                       className='boardList'
-                       rowKey={(record) => record.mid}
+                       className='medicineList'
+                       rowKey={(record) => record.id}
                 >
                 </Table>
+                <Modal
+                    title="添加公告"
+                    open={showModal}
+                    onOk={handleAdd}
+                    onCancel={handleCancel}
+                >
+                    <Form
+                        form={form}
+                        initialValues={{}}
+                        labelCol={{
+                            span: 4,
+                        }}
+                        wrapperCol={{
+                            span: 14,
+                        }}
+                        layout="horizontal"
+                    >
+                        <Form.Item label="标题" name="title">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="内容" name="content">
+                            <Input.TextArea />
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </Box>
         </div>
     );
 }
 
-function DataChart(props) {
-    React.useEffect(() => {
-        setSeries([{data:props.count,name:'数量'}])
-    },[props])
-    const [options, setOptions] = React.useState(
-        {
-            chart: {
-                type: 'bar',
-            },
-            xaxis: {
-                categories: [2018,2019,2020,2021,2022]
-            },
-            plotOptions: {
-                bar: {
-                    columnWidth: '40%',
-                    borderRadius: 6
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    type: 'vertical',
-                    gradientToColors: ['#3a3af1'],
-                    opacityFrom: 0.96,
-                    opacityTo: 0.2,
-                    stops:[0,100]
-                }
-            },
-        }
-    )
-    const [series, setSeries] = React.useState(
-        [{
-        }]
-    );
-    return(
-        <Box boxShadow='xs' rounded='md'
-             borderRadius='25px' border='2px' borderColor='gray.200'
-             className='chart'>
-            <Row>
-                {props.icon}
+function PassageList(props) {
 
-                <Heading className='chart-head'>{props.title}</Heading>
-            </Row>
-            <Chart options={options} series={series} type="bar" style={{marginTop:'0px'}}/>
-        </Box>
-    )
-}
-
-function HealthyPassageList(props) {
-
-    const [PassageList, setPassageList] = useState({});
-
-    useEffect(() =>{
-        if (props.PassageList){
-            setPassageList(props.PassageList)
-        }
-        console.log(PassageList.length)
-        // getData()
-    }, [props])
+    const [PList, setPList] = useState(props.PList);
+    const [showModal, setShowModal] = useState(false);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -400,8 +403,6 @@ function HealthyPassageList(props) {
             }
         },
     });
-    const [current, setCurrent]=React.useState(1);
-
 
     const htmlDecode = (input) => {
         var e = document.createElement('div');
@@ -411,38 +412,30 @@ function HealthyPassageList(props) {
         console.log(ret);
         return ret;
     }
-    const [count, setCount] = useState(2);
-    const handleAdd = () => {
-
-    };
-    const handleDelete = (key) => {
-        const newData = PassageList.filter((item) => item.key !== key);
-        setPassageList(newData);
-    };
 
     const columns = [
         {
             title: '标题',
-            dataIndex: 'edepartment',
-            key: 'edepartment',
-            sorter: (a, b) => a.edepartment.localeCompare(b.edepartment),
+            dataIndex: 'title',
+            key: 'title',
+            sorter: (a, b) => a.title.localeCompare(b.title),
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.edepartment}</Text>
+                <Text>{record.title}</Text>
             ),
         },
         {
             title: '时间',
-            dataIndex: 'ename',
-            key: 'ename',
-            ...getColumnSearchProps('ename'),
-            sorter: (a, b) => a.ename.localeCompare(b.ename),
-            sortDirections: ['descend', 'ascend'],
+            dataIndex: 'time',
+            key: 'time',
+            ...getColumnSearchProps('time'),
             render: (_, record) => (
-                <Text>
-                    {record.ename}
-                </Text>
+                <Tooltip label={record.time} aria-label='A tooltip'>
+                    <Text>
+                        {record.time}
+                    </Text>
+                </Tooltip>
             ),
             ellipsis: true,
             width: 400
@@ -451,13 +444,92 @@ function HealthyPassageList(props) {
             title: '操作',
             dataIndex: 'operation',
             render: (_, record) =>
-                PassageList.length >= 1 ? (
-                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
+                record.length >= 1 ? (
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.announcementID)}>
                         <a>删除</a>
                     </Popconfirm>
                 ) : null,
         },
     ];
+
+    const [form] = Form.useForm();
+    const AddTitle = Form.useWatch('title', form);
+    const AddContent = Form.useWatch('content', form);
+    const nowTime = moment().format('YYYY-MM-DD');
+    const AddType = 1;
+
+    const handleClickAdd = () => {
+        setShowModal(true);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+
+    const getAllData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/allAnnouncement/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.announcementList);
+                getPData(res.data.data.announcementList);
+                // console.log(data);
+            })
+    }
+
+    const getPData = (data)=>{
+        let ret = [];
+        for(let i = 0; i < data.length; i++){
+            if(data[i].type === 1){
+                ret.push(data[i]);
+            }
+        }
+        setPList(ret);
+        console.log(PList);
+    }
+
+    const handleAdd = () => {
+        setShowModal(false);
+        axios({
+            method: "post",
+            url: "/admin/addAnnouncement/",
+            data: {
+                title: AddTitle,
+                content: AddContent,
+                type: AddType,
+                time: nowTime,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+                getAllData();
+            })
+    }
+    const handleDelete = (key) => {
+        axios({
+            method: "post",
+            url: "/admin/deleteAnnouncement",
+            data: {
+                id: key,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                getAllData();
+            })
+    };
 
     return (
         <div
@@ -469,7 +541,7 @@ function HealthyPassageList(props) {
             }}
         >
             <Button
-                onClick={handleAdd}
+                onClick={handleClickAdd}
                 type="primary"
                 style={{
                     marginBottom: 16,
@@ -492,44 +564,114 @@ function HealthyPassageList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={props.PassageList} columns={columns}
+                <Table dataSource={PList} columns={columns}
                        pagination={false}
-                       className='boardList'
-                       rowKey={(record) => record.mid}
+                       className='medicineList'
+                       rowKey={(record) => record.id}
                 >
                 </Table>
+                <Modal
+                    title="添加文章"
+                    open={showModal}
+                    onOk={handleAdd}
+                    onCancel={handleCancel}
+                >
+                    <Form
+                        form={form}
+                        initialValues={{}}
+                        labelCol={{
+                            span: 4,
+                        }}
+                        wrapperCol={{
+                            span: 14,
+                        }}
+                        layout="horizontal"
+                    >
+                        <Form.Item label="标题" name="title">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="内容" name="content">
+                            <Input.TextArea />
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </Box>
         </div>
     );
 }
 
 function Board(){
+    const [allList, setAllList] = useState();
+    const [AList, setAList] = useState();
+    const [PList, setPList] = useState();
+    const getAllData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/allAnnouncement/',
+            data: {
+                type: 0,
+            }
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                setAllList(res.data.data.announcementList);
+                getAData(res.data.data.announcementList);
+                getPData(res.data.data.announcementList);
+                // console.log(data);
+            })
+    }
+    const getAData = (data)=>{
+        let ret = [];
+        for(let i = 0; i < data.length; i++){
+            if(data[i].type === 0){
+                ret.push(data[i]);
+            }
+        }
+        setAList(ret);
+        console.log(AList);
+    }
+    const getPData = (data)=>{
+        let ret = [];
+        for(let i = 0; i < data.length; i++){
+            if(data[i].type === 1){
+                ret.push(data[i]);
+            }
+        }
+        setPList(ret);
+        console.log(PList);
+    }
+    useEffect(()=>{
+        getAllData();
+    },[])
 
     return(
         <div className='manageCard'>
             <div>
-                <Tabs
-                    defaultActiveKey="1"
-                    onChange={onChange}
-                    items={[
-                        {
-                            label: `就医须知`,
-                            key: '1',
-                            children: <BoardPassageList
-                                BoardList={BoardList}
-                                // MediList={data.MedicineList}
-                            />,
-                        },
-                        {
-                            label: `健康科普`,
-                            key: '2',
-                            children: <HealthyPassageList
-                                PassageList={PassageList}
-                                // ExamList={data.ExaminationList}
-                            />,
-                        },
-                    ]}
-                />
+                {AList !== undefined && PList !== undefined &&
+                    <Tabs
+                        defaultActiveKey="1"
+                        onChange={onChange}
+                        items={[
+                            {
+                                label: `就医须知`,
+                                key: '1',
+                                children: <AnnouncementList
+                                    AList={AList}
+                                />,
+                            },
+                            {
+                                label: `健康科普`,
+                                key: '2',
+                                children: <PassageList
+                                    PList={PList}
+                                />,
+                            },
+                        ]}
+                    />
+                }
             </div>
         </div>
     )

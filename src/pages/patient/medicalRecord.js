@@ -32,13 +32,20 @@ function MedicalRecord(props){
                     setLoading(true);
                     return;
                 }
-                console.log("medicalRecordID: ", medicalRecordID);
+
+                let customHeaders = {
+                    token: localStorage.getItem('userToken')
+                }
+
                 const response = await axios.post('/treatment/getHistoryRecord/single/', {
                     recordID: medicalRecordID,
                     patientID: patientID
+                }, {
+                    headers: customHeaders
                 });
                 if (response.status === 200) {
-                    setMedicalRecord(response.data.data);
+                    setMedicalRecord(response.data.data.record);
+                    console.log(response.data.data.record)
                     setLoading(false);
                 }
             } catch (error) {
