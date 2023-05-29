@@ -19,7 +19,7 @@ import {
     Skeleton,
     Table,
     Spin,
-    Image, Popconfirm
+    Image, Popconfirm, Form, Radio, Select, InputNumber, Modal, Input
 } from 'antd';
 import {
     UserOutlined,
@@ -33,7 +33,7 @@ import {
 import React, { useRef, useEffect, useState } from 'react';
 import {useLocation, useNavigate} from 'react-router-dom'
 import axios from "axios";
-import {Box, Heading, HStack, Input, Link, Progress, Tag, TagLabel, Tooltip} from "@chakra-ui/react";
+import {Box, Heading, HStack, Link, Progress, Tag, TagLabel, Tooltip} from "@chakra-ui/react";
 import {FaQuoteLeft} from "react-icons/fa";
 import { IoSchoolSharp, IoNewspaperSharp } from "react-icons/io5"
 import MyHeader from '../../components/header/header'
@@ -76,23 +76,8 @@ const ExamList = [
 
 function MedicineList(props) {
 
-    const [MediList, setMediList] = useState({});
-    const [citenum, setCitenum] = useState([]);
-    const [maxcite, setMaxcite] = useState(0);
-
-
-    const handlePaper = (url)=>{
-        window.open(url)
-    }
-
-
-    useEffect(() =>{
-        if (props.MediList){
-            setMediList(props.MediList)
-        }
-        console.log(MediList.length)
-        // getData()
-    }, [props])
+    const [mediList, setMediList] = useState(props.MediList);
+    const [showModal, setShowModal] = useState(false);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -164,8 +149,6 @@ function MedicineList(props) {
             }
         },
     });
-    const [current, setCurrent]=React.useState(1);
-
 
     const htmlDecode = (input) => {
         var e = document.createElement('div');
@@ -175,33 +158,28 @@ function MedicineList(props) {
         console.log(ret);
         return ret;
     }
-    const [count, setCount] = useState(2);
-    const handleDelete = (key) => {
-        const newData = MediList.filter((item) => item.key !== key);
-        setMediList(newData);
-    };
 
     const columns = [
         {
             title: '批准文号',
-            dataIndex: 'mallowance',
-            key: 'mallowance',
-            sorter: (a, b) => a.mallowance.localeCompare(b.mallowance),
+            dataIndex: 'approval_number',
+            key: 'approval_number',
+            sorter: (a, b) => a.approval_number.localeCompare(b.approval_number),
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.mallowance}</Text>
+                <Text>{record.approval_number}</Text>
             ),
         },
         {
             title: '药品名称',
-            dataIndex: 'mname',
-            key: 'mname',
-            ...getColumnSearchProps('mname'),
+            dataIndex: 'name',
+            key: 'name',
+            ...getColumnSearchProps('name'),
             render: (_, record) => (
-                <Tooltip label={record.mname} aria-label='A tooltip'>
+                <Tooltip label={record.name} aria-label='A tooltip'>
                     <Text>
-                        {record.mname.replace(/<[^>]*>/g, '')}
+                        {record.name}
                     </Text>
                 </Tooltip>
             ),
@@ -210,34 +188,76 @@ function MedicineList(props) {
         },
         {
             title: '生产单位',
-            dataIndex: 'mcompany',
-            key: 'mcompany',
+            dataIndex: 'production_unit',
+            key: 'production_unit',
             width: 150,
             render: (_, record) => (
-                <Text>{record.mcompany}</Text>
+                <Text>{record.production_unit}</Text>
             ),
         },{
             title: '价格',
-            dataIndex: 'mprice',
-            key: 'mprice',
-            sorter: (a, b) => a.mprice - b.mprice,
+            dataIndex: 'price',
+            key: 'price',
+            sorter: (a, b) => a.price - b.price,
             sortDirections: ['descend', 'ascend'],
             width: 200,
             render:(_,record) =>(
-                <Text>{record.mprice}</Text>
+                <Text>{record.price}</Text>
             )
         },
-        {
-            title: '操作',
-            dataIndex: 'operation',
-            render: (_, record) =>
-                MediList.length >= 1 ? (
-                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
-                        <a>删除</a>
-                    </Popconfirm>
-                ) : null,
-        },
     ];
+
+    const [form] = Form.useForm();
+    const AddApproval = Form.useWatch('approval', form);
+    const AddName = Form.useWatch('name', form);
+    const AddPrice = Form.useWatch('price', form);
+    const AddProduction = Form.useWatch('production', form);
+
+    const handleClickAdd = () => {
+        setShowModal(true);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+
+    const getMediData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/listAllPrescription/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.prescriptionList);
+                setMediList(res.data.data.prescriptionList);
+                // console.log(data);
+            })
+    }
+
+    const handleAdd = () => {
+        setShowModal(false);
+        axios({
+            method: "post",
+            url: "/admin/createPrescription/",
+            data: {
+                approval_number: AddApproval,
+                name: AddName,
+                price: AddPrice,
+                production_unit: AddProduction,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+                getMediData();
+            })
+    }
 
     return (
         <div
@@ -248,6 +268,15 @@ function MedicineList(props) {
                 border: 'none',
             }}
         >
+            <Button
+                onClick={handleClickAdd}
+                type="primary"
+                style={{
+                    marginBottom: 16,
+                }}
+            >
+                添加药品
+            </Button>
             <Box css={{
                 height: 450,
                 overflow: 'auto',
@@ -263,115 +292,57 @@ function MedicineList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={props.MediList} columns={columns}
+                <Table dataSource={mediList} columns={columns}
                        pagination={false}
                        className='medicineList'
-                       rowKey={(record) => record.mid}
-                       // expandable={{
-                       //     expandedRowRender: (record) => (
-                       //         <Row >
-                       //             <Col span={15} offset={1}>
-                       //                 <Heading as='h4' size='md' mb={'10px'}>
-                       //                     <div dangerouslySetInnerHTML={{ __html: record.mname }} />
-                       //                 </Heading>
-                       //                 <Row className='expand'>
-                       //                     {
-                       //                         record.pauthorname.map((value, key) => {
-                       //                             return (
-                       //                                 <Text fontSize='sm' mr='25px' mt='5px' color='#98bcdf'>{value}, </Text>
-                       //                             );})
-                       //                     }
-                       //                 </Row>
-                       //                 <div style={{marginTop: '10px'}} dangerouslySetInnerHTML={{ __html: record.pabstract }} />
-                       //                 <Row>
-                       //                     {
-                       //                         record.pconcepts.map((value, key) => (
-                       //                             key<8? (
-                       //                                 <Tag size='sm' mt='3px' variant='subtle' bg='#627cd177' color='white' mr='20px'>
-                       //                                     <TagLabel>{value}</TagLabel>
-                       //                                 </Tag>
-                       //                             ):(<p></p>)
-                       //                         ))
-                       //                     }
-                       //                 </Row>
-                       //             </Col>
-                       //             <Col span={7} style={{marginLeft:'20px'}}>
-                       //                 <Chart options={options}
-                       //                        series={[{data:record.pcitednum.reverse(), name:'引用量'}]}
-                       //                        type="area" height={250} />
-                       //             </Col>
-                       //         </Row>
-                       //     ),
-                       // }}
+                       rowKey={(record) => record.id}
                 >
                 </Table>
+                <Modal
+                    title="添加药品"
+                    open={showModal}
+                    onOk={handleAdd}
+                    onCancel={handleCancel}
+                >
+                    <Form
+                        form={form}
+                        initialValues={{}}
+                        labelCol={{
+                            span: 4,
+                        }}
+                        wrapperCol={{
+                            span: 14,
+                        }}
+                        layout="horizontal"
+                    >
+                        <Form.Item label="批准文号" name="approval">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="药品名称" name="name">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="单价" name="price">
+                            <InputNumber min={1}/>
+                        </Form.Item>
+                        <Form.Item label="生产厂家" name="production">
+                            <Input />
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </Box>
         </div>
     );
 }
 
-function DataChart(props) {
-    React.useEffect(() => {
-        setSeries([{data:props.count,name:'数量'}])
-    },[props])
-    const [options, setOptions] = React.useState(
-        {
-            chart: {
-                type: 'bar',
-            },
-            xaxis: {
-                categories: [2018,2019,2020,2021,2022]
-            },
-            plotOptions: {
-                bar: {
-                    columnWidth: '40%',
-                    borderRadius: 6
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    type: 'vertical',
-                    gradientToColors: ['#3a3af1'],
-                    opacityFrom: 0.96,
-                    opacityTo: 0.2,
-                    stops:[0,100]
-                }
-            },
-        }
-    )
-    const [series, setSeries] = React.useState(
-        [{
-        }]
-    );
-    return(
-        <Box boxShadow='xs' rounded='md'
-             borderRadius='25px' border='2px' borderColor='gray.200'
-             className='chart'>
-            <Row>
-                {props.icon}
-
-                <Heading className='chart-head'>{props.title}</Heading>
-            </Row>
-            <Chart options={options} series={series} type="bar" style={{marginTop:'0px'}}/>
-        </Box>
-    )
-}
 
 function ExaminationList(props) {
-
-    const [ExamList, setExamList] = useState({});
-
-    useEffect(() =>{
-        if (props.ExamList){
-            setExamList(props.ExamList)
-        }
-        console.log(ExamList.length)
-        // getData()
-    }, [props])
+    const [examList, setExamList] = useState(props.ExamList);
+    const [showModal, setShowModal] = useState(false);
+    const [form] = Form.useForm();
+    const AddName = Form.useWatch('name', form);
+    const AddPrice = Form.useWatch('price', form);
+    const AddDepartmentID = Form.useWatch('departmentID', form);
+    const AddDetail = Form.useWatch('detail', form);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -443,8 +414,6 @@ function ExaminationList(props) {
             }
         },
     });
-    const [current, setCurrent]=React.useState(1);
-
 
     const htmlDecode = (input) => {
         var e = document.createElement('div');
@@ -454,34 +423,29 @@ function ExaminationList(props) {
         console.log(ret);
         return ret;
     }
-    const [count, setCount] = useState(2);
-    const handleDelete = (key) => {
-        const newData = ExamList.filter((item) => item.key !== key);
-        setExamList(newData);
-    };
 
     const columns = [
         {
             title: '科室',
-            dataIndex: 'edepartment',
-            key: 'edepartment',
-            sorter: (a, b) => a.edepartment.localeCompare(b.edepartment),
+            dataIndex: 'department',
+            key: 'department',
+            sorter: (a, b) => a.department.localeCompare(b.department),
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.edepartment}</Text>
+                <Text>{record.department}</Text>
             ),
         },
         {
             title: '项目',
-            dataIndex: 'ename',
-            key: 'ename',
-            ...getColumnSearchProps('ename'),
-            sorter: (a, b) => a.ename.localeCompare(b.ename),
+            dataIndex: 'name',
+            key: 'name',
+            ...getColumnSearchProps('name'),
+            sorter: (a, b) => a.name.localeCompare(b.name),
             sortDirections: ['descend', 'ascend'],
             render: (_, record) => (
                 <Text>
-                    {record.ename}
+                    {record.name}
                 </Text>
             ),
             ellipsis: true,
@@ -489,26 +453,61 @@ function ExaminationList(props) {
         },
         {
             title: '价格',
-            dataIndex: 'eprice',
-            key: 'eprice',
-            sorter: (a, b) => a.eprice - b.eprice,
+            dataIndex: 'price',
+            key: 'price',
+            sorter: (a, b) => a.price - b.price,
             sortDirections: ['descend', 'ascend'],
             width: 200,
             render:(_,record) =>(
-                <Text>{record.eprice}</Text>
+                <Text>{record.price}</Text>
             )
         },
-        {
-            title: '操作',
-            dataIndex: 'operation',
-            render: (_, record) =>
-                ExamList.length >= 1 ? (
-                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
-                        <a>删除</a>
-                    </Popconfirm>
-                ) : null,
-        },
     ];
+
+    const getExamData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/listAllInspection/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.inspectionList);
+                setExamList(res.data.data.inspectionList);
+                // console.log(data);
+            })
+    }
+    const handleClickAdd = () => {
+        setShowModal(true);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+
+    const handleAdd = () => {
+        setShowModal(false);
+        axios({
+            method: "post",
+            url: "/admin/createInspection/",
+            data: {
+                name: AddName,
+                departmentID: AddDepartmentID,
+                price: AddPrice,
+                detail: AddDetail,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+                getExamData();
+            })
+    }
 
     return (
         <div
@@ -534,80 +533,147 @@ function ExaminationList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={props.MediList} columns={columns}
+                <Button
+                    onClick={handleClickAdd}
+                    type="primary"
+                    style={{
+                        marginBottom: 16,
+                    }}
+                >
+                    添加检查项目
+                </Button>
+                <Table dataSource={examList} columns={columns}
                        pagination={false}
                        className='medicineList'
-                       rowKey={(record) => record.mid}
-                    // expandable={{
-                    //     expandedRowRender: (record) => (
-                    //         <Row >
-                    //             <Col span={15} offset={1}>
-                    //                 <Heading as='h4' size='md' mb={'10px'}>
-                    //                     <div dangerouslySetInnerHTML={{ __html: record.mname }} />
-                    //                 </Heading>
-                    //                 <Row className='expand'>
-                    //                     {
-                    //                         record.pauthorname.map((value, key) => {
-                    //                             return (
-                    //                                 <Text fontSize='sm' mr='25px' mt='5px' color='#98bcdf'>{value}, </Text>
-                    //                             );})
-                    //                     }
-                    //                 </Row>
-                    //                 <div style={{marginTop: '10px'}} dangerouslySetInnerHTML={{ __html: record.pabstract }} />
-                    //                 <Row>
-                    //                     {
-                    //                         record.pconcepts.map((value, key) => (
-                    //                             key<8? (
-                    //                                 <Tag size='sm' mt='3px' variant='subtle' bg='#627cd177' color='white' mr='20px'>
-                    //                                     <TagLabel>{value}</TagLabel>
-                    //                                 </Tag>
-                    //                             ):(<p></p>)
-                    //                         ))
-                    //                     }
-                    //                 </Row>
-                    //             </Col>
-                    //             <Col span={7} style={{marginLeft:'20px'}}>
-                    //                 <Chart options={options}
-                    //                        series={[{data:record.pcitednum.reverse(), name:'引用量'}]}
-                    //                        type="area" height={250} />
-                    //             </Col>
-                    //         </Row>
-                    //     ),
-                    // }}
+                       rowKey={(record) => record.id}
                 >
                 </Table>
+                <Modal
+                    title="添加检查项目"
+                    open={showModal}
+                    onOk={handleAdd}
+                    onCancel={handleCancel}
+                >
+                    <Form
+                        form={form}
+                        initialValues={{}}
+                        labelCol={{
+                            span: 4,
+                        }}
+                        wrapperCol={{
+                            span: 14,
+                        }}
+                        layout="horizontal"
+                    >
+                        <Form.Item label="项目名称" name="name">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="所属科室" name="departmentID">
+                            <Select>
+                                {props.departmentList.map((item) => (
+                                    <Select.Option value={item.departmentID}>{item.departmentName}</Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label="项目价格" name="price">
+                            <InputNumber min={1}/>
+                        </Form.Item>
+                        <Form.Item label="详情" name="detail">
+                            <Input.TextArea />
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </Box>
         </div>
     );
 }
 
 function Medicine(){
+    const [mediList, setMediList] = useState();
+    const [examList, setExamList] = useState();
+    const [departmentList, setDepartmentList] = useState();
+    const getMediData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/listAllPrescription/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.prescriptionList);
+                setMediList(res.data.data.prescriptionList);
+                // console.log(data);
+            })
+    }
+    const getDepartments = () => {
+        axios({
+            method: "post",
+            url: "/admin/getAllDepartment/",
+            data: {
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                // console.log(res)
+                setDepartmentList(res.data.data.departmentList);
+                // console.log(res.data.data);
+                // console.log(res.data.data.departmentList);
+                // console.log(departmentList);
+            })
+    }
+    const getExamData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/listAllInspection/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.inspectionList);
+                setExamList(res.data.data.inspectionList);
+                // console.log(data);
+            })
+    }
+    useEffect(()=>{
+        getMediData();
+        getExamData();
+        getDepartments();
+    },[])
+
+
 
     return(
         <div className='manageCard'>
             <div>
-                <Tabs
-                    defaultActiveKey="1"
-                    onChange={onChange}
-                    items={[
-                        {
-                            label: `药品管理`,
-                            key: '1',
-                            children: <MedicineList
-                                MediList={MediList}
-                                // MediList={data.MedicineList}
-                            />,
-                        },
-                        {
-                            label: `检查管理`,
-                            key: '2',
-                            children: <ExaminationList
-                                ExamList={ExamList}
-                                // ExamList={data.ExaminationList}
-                            />,
-                        },
-                    ]}
-                />
+                {mediList !== undefined && examList !== undefined && departmentList !== undefined &&
+                    <Tabs
+                        defaultActiveKey="1"
+                        onChange={onChange}
+                        items={[
+                            {
+                                label: `药品管理`,
+                                key: '1',
+                                children: <MedicineList
+                                    MediList={mediList}
+                                    // MediList={data.MedicineList}
+                                />,
+                            },
+                            {
+                                label: `检查管理`,
+                                key: '2',
+                                children: <ExaminationList
+                                    ExamList={examList}
+                                    departmentList={departmentList}
+                                    // ExamList={data.ExaminationList}
+                                />,
+                            },
+                        ]}
+                    />
+                }
             </div>
         </div>
     )

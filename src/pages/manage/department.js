@@ -19,7 +19,7 @@ import {
     Skeleton,
     Table,
     Spin,
-    Image
+    Image, Modal, Form, Select, Input
 } from 'antd';
 import {
     UserOutlined,
@@ -28,12 +28,12 @@ import {
     FormOutlined,
     MailOutlined,
     SolutionOutlined,
-    BarChartOutlined, RedoOutlined, BarsOutlined
+    BarChartOutlined, RedoOutlined, BarsOutlined, EditOutlined,
 } from '@ant-design/icons';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom'
 import axios from "axios";
-import {Box, Heading, HStack, Input, Link, Progress, Tag, TagLabel, Tooltip} from "@chakra-ui/react";
+import {Box, Heading, HStack, Link, Progress, Tag, TagLabel, Tooltip, useToast} from "@chakra-ui/react";
 import {FaQuoteLeft} from "react-icons/fa";
 import { IoSchoolSharp, IoNewspaperSharp } from "react-icons/io5"
 import MyHeader from '../../components/header/header'
@@ -43,56 +43,25 @@ import {ExternalLinkIcon, SearchIcon} from "@chakra-ui/icons";
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
-function separator(numb) {
-    var str = numb.toString().split(".");
-    str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return str.join(".");
-}
-
-
-// tabs callback
-const onChange = (key) => {
-    console.log(key);
-};
-
-const DList = [
-    {
-        key: '1',
-        did: 1,
-        pname: '心脏外科',
-        pdate: 123,
-        pcite: 456,
-        scheduleRegister: 1000,
-        doctors: [['doctor1',1], ['doctor2',2], ['doctor3',3]],
-        intro: '详细介绍'
-    },
-];
-
-function DepartmentList(props) {
-
-    const [DList, setDList] = useState({});
-    const [citenum, setCitenum] = useState([]);
-
-
-    useEffect(() =>{
-        if (props.DList){
-            setDList(props.DList)
-            var max = 0
-            props.DList.forEach((item)=>{
-                if(item.pcite > max){
-                    max = item.pcite
-                }
-            });
-            props.DList.forEach((item)=>{
-                item.max_cite = max
-            });
-        }
-        // getData()
-    }, [props])
-
+function Department(){
+    const [DList,setDList]=useState();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
+    const [showModal, setShowModal] = useState(false);
+    const [editDepartmentID, setEditDepartmentID] = useState();
+    const [editDepartmentName, setEditDepartmentName] = useState();
+    const toast = useToast();
+    const [content, setContent] = useState("");
+
+    const handleClickEdit = (dID, dName) => {
+        setShowModal(true);
+        console.log(showModal);
+        setEditDepartmentID(dID);
+        setEditDepartmentName(dName);
+        console.log(dID);
+        console.log(editDepartmentID);
+    }
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -160,159 +129,217 @@ function DepartmentList(props) {
             }
         },
     });
-    const [current, setCurrent]=React.useState(1);
-
-
-    const htmlDecode = (input) => {
-        var e = document.createElement('div');
-        e.innerHTML = input;
-        console.log(e.childNodes[0]);
-        let ret = e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-        console.log(ret);
-        return ret;
-    }
 
     const columns = [
         {
             title: '科室',
-            dataIndex: 'pname',
-            key: 'pname',
-            ...getColumnSearchProps('pname'),
-            sorter: (a, b) => a.pname.localeCompare(b.pname),
+            dataIndex: 'departmentName',
+            key: 'departmentName',
+            ...getColumnSearchProps('departmentName'),
+            sorter: (a, b) => a.departmentName.localeCompare(b.departmentName),
             sortDirections: ['descend', 'ascend'],
             render: (_, record) => (
-                <Text>{record.pname}</Text>
+                <Text>{record.departmentName}</Text>
             ),
             ellipsis: true,
             width: 400
         },{
             title: '医生人数',
-            dataIndex: 'pdate',
-            key: 'pdate',
-            sorter: (a, b) => a.pdate - b.pdate,
+            dataIndex: 'doctorNum',
+            key: 'doctorNum',
+            sorter: (a, b) => a.doctorNum - b.doctorNum,
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.pdate}</Text>
+                <Text>{record.doctorNum}</Text>
             ),
         },{
             title: '本月挂号量',
-            dataIndex: 'pcite',
-            key: 'pcite',
-            sorter: (a, b) => a.pcite - b.pcite,
+            dataIndex: 'already',
+            key: 'already',
+            sorter: (a, b) => a.already - b.already,
             sortDirections: ['descend', 'ascend'],
             width: 200,
             render:(_,record) =>(
                 <Row>
-                    <Text>{record.pcite}</Text>
+                    <Text>{record.already}</Text>
                     <Progress
                         style={{margin:'auto'}}
                         colorScheme='frog'
                         h='7px'
                         borderRadius='10px'
                         w='110px'
-                        value={100 * record.pcite / (record.scheduleRegister)}/>
+                        value={100 * record.already / (record.total)}/>
                 </Row>
             )
         },
         {
             title: '本月放号量',
-            dataIndex: 'scheduleRegister',
-            key: 'scheduleRegister',
-            sorter: (a, b) => a.scheduleRegister - b.scheduleRegister,
+            dataIndex: 'total',
+            key: 'total',
+            sorter: (a, b) => a.total - b.total,
             sortDirections: ['descend', 'ascend'],
             width: 200,
             render:(_,record) =>(
                 <Row>
-                    <Text>{record.scheduleRegister}</Text>
+                    <Text>{record.total}</Text>
                 </Row>
             )
         },
     ];
-    const options= {
-        chart: {
-            type: 'area',
-            zoom: {
-                enabled: false
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        colors:['#98bcdf'],
-        stroke: {
-            curve: 'smooth'
-        },
-        title: {
-            text: '引用量',
-            align: 'left'
-        },
-        xaxis: {
-            categories: [2018,2019,2020,2021,2022]
-        },
+
+
+    const handleEdit = () => {
+        axios({
+            method: 'post',
+            url: "/admin/updateDepartment/",
+            data: {
+                id: editDepartmentID,
+                name: editDepartmentName,
+                intro: content,
+            },
+            // headers: {
+            //     "Content-Type": "application/json",
+            //     'token': token
+            // }
+        })
+            .then(res => {
+                if(res.data.code === 0){
+                    toast({
+                        description: "已修改！",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                    setShowModal(false);
+                    getDepartments();
+                }
+                else{
+                    toast({
+                        description: res.data.message,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                    setShowModal(false);
+                }
+                setContent("");
+                console.log(res)
+            })
+    };
+    const handleCancel = () => {
+        setEditDepartmentID(undefined);
+        setEditDepartmentName(undefined);
+        setContent("");
+        setShowModal(false);
+    };
+
+    const getDepartments = () => {
+        axios({
+            method: "post",
+            url: "/admin/getAllDepartment/",
+            data: {
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res)
+                setDList(res.data.data.departmentList);
+                console.log(res.data.data);
+                console.log(res.data.data.departmentList);
+                console.log(DList);
+            })
     }
 
-    return (
-        <div
-            style={{
-                height: 500,
-                overflow: 'auto',
-                padding: '0',
-                border: 'none',
-            }}
-        >
-            <Box css={{
-                height: 450,
-                overflow: 'auto',
-                padding: '0 10px 0 0',
-                '&::-webkit-scrollbar': {
-                    width: '4px',
-                },
-                '&::-webkit-scrollbar-track': {
-                    width: '6px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                    background: '#cccccc',
-                    borderRadius: '24px',
-                },
-            }}>
-                <Table dataSource={props.DList} columns={columns}
-                       pagination={false}
-                       className='paperList'
-                       rowKey={(record) => record.did}
-                       expandable={{
-                           expandedRowRender: (record) => (
-                               <Row >
-                                   <Col span={15} offset={1}>
-                                       <Heading as='h4' size='md' mb={'10px'}>
-                                           <div dangerouslySetInnerHTML={{ __html: record.pname }} />
-                                       </Heading>
-                                       <Row className='expand'>
-                                           {
-                                               record.doctors.map((value, key) => {
-                                                   return (
-                                                       <Text fontSize='sm' mr='25px' mt='5px' color='#98bcdf'>{value[0]}, </Text>
-                                                   );})
-                                           }
-                                       </Row>
-                                       <div style={{marginTop: '10px'}} dangerouslySetInnerHTML={{ __html: record.intro }} />
-                                   </Col>
-                               </Row>
-                           ),
-                       }}>
-                </Table>
-            </Box>
-        </div>
-    );
-}
-
-function Department(){
+    useEffect(() => {
+        getDepartments();
+    }, [])
 
     return(
         <div className='manageCard'>
             <div>
-                {/*<DepartmentList DList={data.DList}/>*/}
-                <DepartmentList DList={DList}/>
+                {DList !== undefined &&
+                    <div
+                        style={{
+                            height: 500,
+                            overflow: 'auto',
+                            padding: '0',
+                            border: 'none',
+                        }}
+                    >
+                        <Box css={{
+                            height: 450,
+                            overflow: 'auto',
+                            padding: '0 10px 0 0',
+                            '&::-webkit-scrollbar': {
+                                width: '4px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                width: '6px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                background: '#cccccc',
+                                borderRadius: '24px',
+                            },
+                        }}>
+                            <Table dataSource={DList} columns={columns}
+                                   pagination={false}
+                                   className='departmentList'
+                                   rowKey={(record) => record.departmentID}
+                                   expandable={{
+                                       expandedRowRender: (record) => (
+                                           <Row >
+                                               <Col span={15} offset={1}>
+                                                   <Heading as='h4' size='md' mb={'10px'}>
+                                                       <Row>
+                                                           <div dangerouslySetInnerHTML={{ __html: record.departmentName }}
+                                                                style={{margin: '5px 10px 0 0'}}
+                                                           />
+                                                           <Tooltip title="编辑">
+                                                               <Button shape="circle" icon={<EditOutlined />} onClick={()=>handleClickEdit(record.departmentID, record.departmentName)}/>
+                                                           </Tooltip>
+                                                       </Row>
+                                                   </Heading>
+                                                   <Row className='expand'>
+                                                       {
+                                                           record.doctorList.map((value, key) => {
+                                                               return (
+                                                                   <Link href={"/doctorPortal?dID=" + value.doctorID} isExternal fontSize='sm' mr='25px' mt='5px' color='#98bcdf'> {`${value.doctorName}`}</Link>
+                                                               );})
+                                                       }
+                                                   </Row>
+                                                   <div style={{marginTop: '10px'}} dangerouslySetInnerHTML={{ __html: record.intro }} />
+                                                   <Modal
+                                                       title="编辑科室信息"
+                                                       open={showModal}
+                                                       onOk={handleEdit}
+                                                       onCancel={handleCancel}
+                                                   >
+                                                       <Form
+                                                           initialValues={{}}
+                                                           labelCol={{
+                                                               span: 4,
+                                                           }}
+                                                           wrapperCol={{
+                                                               span: 14,
+                                                           }}
+                                                           layout="horizontal"
+                                                       >
+                                                           <Form.Item name='EditIntro' label="科室介绍">
+                                                               <Input.TextArea placeholder={record.intro} value={content} onChange={(e) => setContent(e.target.value)}/>
+                                                           </Form.Item>
+                                                       </Form>
+                                                   </Modal>
+                                               </Col>
+                                           </Row>
+                                       ),
+                                   }}>
+                            </Table>
+                        </Box>
+                    </div>
+                }
             </div>
         </div>
     )

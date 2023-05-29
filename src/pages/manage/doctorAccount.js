@@ -35,434 +35,6 @@ const gridStyle = {
     textAlign: 'center',
 };
 
-// 排班抽屉
-const EditableContext = React.createContext(null);
-const EditableRow = ({ index, ...props }) => {
-    const [form] = Form.useForm();
-    return (
-        <Form form={form} component={false}>
-            <EditableContext.Provider value={form}>
-                <tr {...props} />
-            </EditableContext.Provider>
-        </Form>
-    );
-};
-const EditableCell = ({
-                          title,
-                          editable,
-                          children,
-                          dataIndex,
-                          record,
-                          handleSave,
-                          ...restProps
-                      }) => {
-    const [editing, setEditing] = useState(false);
-    const inputRef = useRef(null);
-    const form = useContext(EditableContext);
-    useEffect(() => {
-        if (editing) {
-            inputRef.current.focus();
-        }
-    }, [editing]);
-    const toggleEdit = () => {
-        setEditing(!editing);
-        form.setFieldsValue({
-            [dataIndex]: record[dataIndex],
-        });
-    };
-    const save = async () => {
-        try {
-            const values = await form.validateFields();
-            toggleEdit();
-            handleSave({
-                ...record,
-                ...values,
-            });
-        } catch (errInfo) {
-            console.log('Save failed:', errInfo);
-        }
-    };
-    let childNode = children;
-    if (editable) {
-        childNode = editing ? (
-            <Form.Item
-                style={{
-                    margin: 0,
-                }}
-                name={dataIndex}
-                rules={[
-                    {
-                        required: true,
-                        message: `${title} is required.`,
-                    },
-                ]}
-            >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{
-                    paddingRight: 24,
-                }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
-    }
-    return <td {...restProps}>{childNode}</td>;
-};
-
-function ScheduleList(props) {
-    const [dataSource, setDataSource] = useState(props.dayData);
-    const [count, setCount] = useState(props.dayData.length);
-    const [showModal, setShowModal] = useState(false);
-    const [doctorList, setDoctorList] = useState(props.doctors);
-    console.log(doctorList);
-    console.log(dataSource);
-    console.log(count);
-    console.log(props.dayData);
-    console.log(props.date);
-    useEffect(() => {
-        setDataSource(props.dayData);
-        setCount(props.dayData.length);
-    }, [props.dayData]);
-    const handleDelete = (key) => {
-        const newData = dataSource.filter((item) => item.shiftID !== key);
-        console.log(newData);
-        setDataSource(newData);
-    };
-    const defaultColumns = [
-        {
-            title: '姓名',
-            dataIndex: 'doctorName',
-            width: '20%',
-        },
-        {
-            title: '工号',
-            dataIndex: 'doctorID',
-        },
-        {
-            title: '时间段',
-            dataIndex: 'time',
-            render: (_, record) =>
-                <Text>{record.time === 0 ? '上午':'下午'}</Text>
-
-        },
-        {
-            title: '放号量',
-            dataIndex: 'total',
-            editable: true,
-        },
-        {
-            title: '操作',
-            dataIndex: 'operation',
-            render: (_, record) =>
-                dataSource.length >= 1 ? (
-                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.shiftID)}>
-                        <a>删除排班</a>
-                    </Popconfirm>
-                ) : null,
-        },
-    ];
-    const handleClickAdd = () => {
-        setShowModal(true);
-    }
-
-    const handleCancel = () => {
-        setShowModal(false);
-    }
-
-    const handleSave = (row) => {
-        const newData = [...dataSource];
-        const index = newData.findIndex((item) => row.key === item.key);
-        const item = newData[index];
-        newData.splice(index, 1, {
-            ...item,
-            ...row,
-        });
-        setDataSource(newData);
-    };
-    const components = {
-        body: {
-            row: EditableRow,
-            cell: EditableCell,
-        },
-    };
-
-    const columns = defaultColumns.map((col) => {
-        if (!col.editable) {
-            return col;
-        }
-        return {
-            ...col,
-            onCell: (record) => ({
-                record,
-                editable: col.editable,
-                dataIndex: col.dataIndex,
-                title: col.title,
-                handleSave,
-            }),
-        };
-    });
-    function findById(array, id) {
-        // 使用 Array.prototype.find() 方法查找特定对象
-        return array.find(function(element) {
-            return element.DoctorID === id;
-        });
-    }
-
-    const [form] = Form.useForm();
-    const AddPeriod = Form.useWatch('period', form);
-    const AddDoctor = Form.useWatch('doctor', form);
-    const AddAmount = Form.useWatch('amount', form);
-
-    const handleAdd = () => {
-        const newData = {
-            doctorID: AddDoctor,
-            doctorName: doctorList.find(function(element) {return element.doctorID === AddDoctor}).doctorName,
-            time: AddPeriod,
-            total: AddAmount,
-        };
-        console.log(newData);
-        console.log(AddPeriod);
-        console.log(AddDoctor);
-        console.log(AddAmount);
-        setDataSource([...dataSource, newData]);
-        console.log(dataSource);
-        setCount(count + 1);
-        setShowModal(false);
-    };
-    return (
-        <div>
-            <Button
-                onClick={handleClickAdd}
-                type="primary"
-                style={{
-                    marginBottom: 16,
-                }}
-            >
-                添加出诊医生
-            </Button>
-            <Table
-                components={components}
-                rowClassName={() => 'editable-row'}
-                bordered
-                dataSource={dataSource}
-                columns={columns}
-            />
-            <Modal
-                title="添加排班信息"
-                open={showModal}
-                onOk={handleAdd}
-                onCancel={handleCancel}
-            >
-                <Form
-                    form={form}
-                    initialValues={{}}
-                    labelCol={{
-                        span: 4,
-                    }}
-                    wrapperCol={{
-                        span: 14,
-                    }}
-                    layout="horizontal"
-                >
-                    <Form.Item label="时间段" name="period">
-                        <Radio.Group>
-                            <Radio value={0}> 上午 </Radio>
-                            <Radio value={1}> 下午 </Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item label="医生" name="doctor">
-                        <Select>
-                            {doctorList.map((item) => (
-                                <Select.Option value={item.doctorID}>{item.doctorName}</Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item label="放号量" name="amount">
-                        <InputNumber min={1}/>
-                    </Form.Item>
-
-                </Form>
-            </Modal>
-        </div>
-    );
-};
-
-// 排班日历
-function WorkCalendar(props){
-    const [open, setOpen] = useState(false);
-    const showDrawer = () => {
-        setOpen(true);
-    };
-    const onClose = () => {
-        setOpen(false);
-    };
-    const onSubmit = () => {
-        setOpen(false);
-    }
-    const nowTime = moment().format('YYYY-MM-DD');
-    const nextMonth1st = moment().add(1, 'months').format('YYYY-MM-01');
-    // const [value, setValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
-    // const [selectedValue, setSelectedValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
-    const [value, setValue] = useState(() => moment(nextMonth1st));
-    const [selectedValue, setSelectedValue] = useState(() => moment(nextMonth1st));
-    const [dID, setDID] = useState();
-    const [dName, setDName] = useState();
-    const [monthData, setMonthData] = useState();
-    const [dayData, setDayData] = useState();
-    const [doctors, setDoctors] = useState();
-
-    const getDateData = (departmentID, date) => {
-        axios({
-            method: "post",
-            url: "/admin/getOneDayShift/",
-            data: {
-                departmentID: props.dID,
-                date: date
-            },
-            // headers: {
-            //     token: localStorage.getItem("userToken")
-            // }
-        })
-            .then(res => {
-                // console.log(res.data.data);
-                setDayData(res.data.data.shiftList);
-                console.log(dayData);
-            })
-    }
-    const getDoctors = () => {
-        axios({
-            method: "post",
-            url: "/admin/getOneDepartmentDoc/",
-            data: {
-                departmentID: props.dID,
-            },
-            // headers: {
-            //     token: localStorage.getItem("userToken")
-            // }
-        })
-            .then(res => {
-                console.log(res.data.data);
-                setDoctors(res.data.data.doctorList);
-                console.log(doctors);
-            })
-    }
-
-    const onSelect = (newValue) => {
-        setValue(newValue);
-        setSelectedValue(newValue);
-        getDateData(dID, newValue.format('YYYY-MM-DD'));
-        showDrawer();
-        console.log(newValue.format('YYYY-MM-DD'));
-    };
-
-    const onPanelChange = (newValue) => {
-        setValue(newValue);
-    };
-
-    const getListData = (value) => {
-        // console.log(value);
-        // console.log(monthData);
-        // const monthData2 = monthData.shiftList;
-        // console.log(selectedValue);
-        // console.log(value.month());
-        // console.log(selectedValue.month());
-        // console.log(value.date());
-        // console.log(selectedValue.date());
-        // console.log(monthData2);
-        let listData = [];
-        if (value.month() !== selectedValue.month()) {
-            listData = [];
-            return listData;
-        }
-        if (monthData !== undefined) {
-            listData = monthData[value.date()-1];
-        }
-        return listData || [];
-    };
-
-    const getMonthData = () => {
-        axios({
-            method: "post",
-            url: "/admin/getDepartAllShift/",
-            data: {
-                departmentID: props.dID,
-                date: selectedValue.format('YYYY-MM-DD').toString(),
-            },
-            // headers: {
-            //     token: localStorage.getItem("userToken")
-            // }
-        })
-            .then(res => {
-                // console.log(res);
-                // console.log(res.data);
-                // console.log(res.data.data);
-                // console.log(res.data.data.shiftList);
-                setMonthData(res.data.data.shiftList);
-                // console.log(res.data.data.shiftList[3]);
-                // console.log(monthData);
-            })
-    }
-
-    useEffect(() => {
-        // console.log(props.dID);
-        // console.log(props.dName)
-        // setDID(props.dID);
-        // setDName(props.dName);
-        getMonthData();
-        getDoctors();
-    }, []);
-
-    const dateCellRender = (value) => {
-        // const listData = monthData;
-        // console.log(value.date());
-        // console.log(monthData);
-        // console.log(monthData[value.date()]);
-        const listData = getListData(value);
-        // const listData = [];
-        return (
-            <div>
-                {listData !== undefined &&
-                    <ul className="events">
-                        {listData.map((item) => (
-                            <li key={item.type}>
-                                <Badge status={item.type} text={item.content}/>
-                            </li>
-                        ))}
-                    </ul>
-                }
-            </div>
-        );
-    };
-    return (
-        <>
-            {/*<Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />*/}
-            {/*{monthData !== undefined &&*/}
-            <Calendar dateCellRender={dateCellRender} value={value} onSelect={onSelect}
-                      onPanelChange={onPanelChange}/>
-            {/*}*/}
-            {dayData !== undefined &&
-                <Drawer
-                    title={`${props.dName} ${selectedValue?.format('YYYY-MM-DD')}排班情况`}
-                    width={'70vw'}
-                    onClose={onClose}
-                    open={open}
-                    bodyStyle={{
-                        paddingBottom: 80,
-                    }}
-
-                >
-                    <ScheduleList dayData={dayData} date={selectedValue} doctors={doctors}/>
-                </Drawer>
-            }
-        </>
-    );
-};
-
 function DoctorAccount(){
 
     const [departmentID, setDepartmentID] = useState();
@@ -563,16 +135,27 @@ function DoctorAccount(){
 
 
     const [form] = Form.useForm();
-    const AddUsername = Form.useWatch('username', form);
-    const AddOfficialID = Form.useWatch('officialID', form);
-    const AddWorkID = Form.useWatch('workID', form);
-    const AddSex = Form.useWatch('sex', form);
-    const AddPhone = Form.useWatch('phone', form);
-    const AddDepartmentID = Form.useWatch('departmentID', form);
-    const AddTitle = Form.useWatch('title', form);
-    const AddArea = Form.useWatch('area', form);
-    const AddIntro = Form.useWatch('intro', form);
-    const AddPrice = Form.useWatch('price', form);
+    const addUsername = Form.useWatch('username', form);
+    const addOfficialID = Form.useWatch('officialID', form);
+    const addWorkID = Form.useWatch('workID', form);
+    const addSex = Form.useWatch('sex', form);
+    const addPhone = Form.useWatch('phone', form);
+    const addDepartmentID = Form.useWatch('departmentID', form);
+    const addTitle = Form.useWatch('title', form);
+    const addArea = Form.useWatch('area', form);
+    const addIntro = Form.useWatch('intro', form);
+    const addPrice = Form.useWatch('price', form);
+
+    // const[addUsername, setAddUsername] = useState();
+    // const [addOfficialID, setAddOfficialID] = useState();
+    // const [addWorkID, setAddWorkID] = useState();
+    // const [addSex, setAddSex] = useState();
+    // const [addPhone, setAddPhone] = useState();
+    // const [addDepartmentID, setAddDepartmentID] = useState();
+    // const [addTitle, setAddTitle] = useState();
+    // const [addArea, setAddArea] = useState();
+    // const [addIntro, setAddIntro] = useState();
+    // const [addPrice, setAddPrice] = useState();
 
     const handleAdd = () => {
         // const newData = {
@@ -587,29 +170,47 @@ function DoctorAccount(){
         //     intro: AddIntro,
         //     price: AddPrice,
         // };
-        const formData = new FormData();
-        formData.append('username', AddUsername);
-        formData.append('officialID', AddOfficialID);
-        formData.append('workID', AddWorkID);
-        formData.append('sex', AddSex);
-        formData.append('phone', AddPhone);
-        formData.append('departmentID', AddDepartmentID);
-        formData.append('title', AddTitle);
-        formData.append('area', AddArea);
-        formData.append('intro', AddIntro);
-        formData.append('price', AddPrice);
-        console.log(formData);
-        axios.post('/register/doctor/', formData)
+        // const formData = new FormData();
+        // formData.append('username', addUsername);
+        // formData.append('officialID', addOfficialID);
+        // formData.append('workID', addWorkID);
+        // formData.append('sex', addSex);
+        // formData.append('phone', addPhone);
+        // formData.append('departmentID', addDepartmentID);
+        // formData.append('title', addTitle);
+        // formData.append('area', addArea);
+        // formData.append('intro', addIntro);
+        // formData.append('price', addPrice);
+        console.log(addUsername);
+        axios({
+            method: 'post',
+            url: "/register/doctor/",
+            data: {
+                workID: addWorkID,
+                sex: addSex,
+                username: addUsername,
+                officialID: addOfficialID,
+                phone: addPhone,
+                departmentID: departmentID,
+                title: addTitle,
+                area: addArea,
+                intro: addIntro,
+                price: addPrice,
+            }
+        })
+        // axios.post('/register/doctor/', formData)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
                 // setTheDoctor(res.data.data);
                 // console.log(theDoctor);
+                getDoctors(departmentID);
             })
 
         // setDoctors([...doctors, newData]);
         // console.log(doctors);
         setShowModal(false);
+        getDoctors(departmentID);
     };
     const handleClickAdd = () => {
         setShowModal(true);
@@ -618,6 +219,9 @@ function DoctorAccount(){
     const handleCancel = () => {
         setShowModal(false);
     }
+    const validateMessages = {
+        required: '${label}是必填项!',
+    };
 
     const steps = [
         {
@@ -653,8 +257,9 @@ function DoctorAccount(){
                         <Modal
                             title="添加医生账号"
                             open={showModal}
-                            onOk={handleAdd}
+                            // onOk={handleAdd}
                             onCancel={handleCancel}
+                            footer={null}
                         >
                             <Form
                                 form={form}
@@ -666,6 +271,7 @@ function DoctorAccount(){
                                     span: 14,
                                 }}
                                 layout="horizontal"
+                                validateMessages={validateMessages}
                             >
                                 <Form.Item
                                     name='username'
@@ -678,40 +284,87 @@ function DoctorAccount(){
                                 >
                                     <Input />
                                 </Form.Item>
-                                <Form.Item label="身份证号" name="officialID">
+                                <Form.Item label="身份证号" name="officialID" rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                                     <Input />
                                 </Form.Item>
-                                <Form.Item label="工号" name="workID">
+                                <Form.Item label="工号" name="workID" rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                                     <Input />
                                 </Form.Item>
-                                <Form.Item label="性别" name="sex">
-                                    <Select>
-                                        <Select.Option value={0}>男</Select.Option>
-                                        <Select.Option value={1}>女</Select.Option>
-                                        <Select.Option value={2}>其他</Select.Option>
+                                <Form.Item label="性别" name="sex" rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
+                                    <Select >
+                                        <Select.Option value='0'>男</Select.Option>
+                                        <Select.Option value='1'>女</Select.Option>
+                                        <Select.Option value='2'>其他</Select.Option>
                                     </Select>
                                 </Form.Item>
-                                <Form.Item label="联系方式" name="phone">
+                                <Form.Item label="联系方式" name="phone" rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                                     <Input />
                                 </Form.Item>
-                                <Form.Item label="科室" name="departmentID">
-                                    <Select>
-                                        {departmentList.map((item) => (
-                                            <Select.Option value={item.departmentID}>{item.departmentName}</Select.Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item label="职称" name="title">
+                                {/*<Form.Item label="科室" name="departmentID">*/}
+                                {/*    <Select >*/}
+                                {/*        {departmentList.map((item) => (*/}
+                                {/*            <Select.Option value={`${item.departmentID}`}>{item.departmentName}</Select.Option>*/}
+                                {/*        ))}*/}
+                                {/*    </Select>*/}
+                                {/*</Form.Item>*/}
+                                <Form.Item label="职称" name="title" rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                                     <Input />
                                 </Form.Item>
-                                <Form.Item label="专业领域" name="area">
+                                <Form.Item label="专业领域" name="area" rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                                     <Input />
                                 </Form.Item>
-                                <Form.Item label="挂号费" name="price">
+                                <Form.Item label="挂号费" name="price" rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                                     <Input />
                                 </Form.Item>
-                                <Form.Item name='AddIntro' label="介绍">
+                                <Form.Item label="介绍" name='intro' rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                                     <Input.TextArea />
+                                </Form.Item>
+                                <Form.Item label="">
+                                    <Row>
+                                        <Col span={10}></Col>
+                                        <Col span={7}>
+                                            <Button onClick={handleCancel}>
+                                                取消
+                                            </Button>
+                                        </Col>
+                                        <Col span={7}>
+                                            <Button type="primary" htmlType="submit" onClick={handleAdd}>
+                                                提交
+                                            </Button>
+                                        </Col>
+                                    </Row>
                                 </Form.Item>
                             </Form>
                         </Modal>
