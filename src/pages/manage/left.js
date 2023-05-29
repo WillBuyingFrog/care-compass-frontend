@@ -20,7 +20,7 @@ function getItem(label, key, icon){
 }
 
 const items = [
-    getItem("医院概况", "info", <InfoCircleOutlined />),
+    // getItem("医院概况", "info", <InfoCircleOutlined />),
     getItem("排班管理", "doctorSchedule", <ScheduleOutlined />),
     getItem("请假审批", "doctorLeave", <AuditOutlined />),
     getItem("医生账号管理", "doctorAccount", <UserOutlined />),

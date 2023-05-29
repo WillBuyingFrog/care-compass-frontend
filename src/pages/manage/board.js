@@ -3,6 +3,7 @@
  */
 import './board.css';
 import './manage.css';
+
 import Chart from 'react-apexcharts'
 import {
     Typography,
@@ -19,7 +20,7 @@ import {
     Skeleton,
     Table,
     Spin,
-    Image, Popconfirm
+    Image, Popconfirm, Form, Radio, Select, InputNumber, Modal, Input
 } from 'antd';
 import {
     UserOutlined,
@@ -33,7 +34,7 @@ import {
 import React, { useRef, useEffect, useState } from 'react';
 import {useLocation, useNavigate} from 'react-router-dom'
 import axios from "axios";
-import {Box, Heading, HStack, Input, Link, Progress, Tag, TagLabel, Tooltip} from "@chakra-ui/react";
+import {Box, Heading, HStack, Link, Progress, Tag, TagLabel, Tooltip} from "@chakra-ui/react";
 import {FaQuoteLeft} from "react-icons/fa";
 import { IoSchoolSharp, IoNewspaperSharp } from "react-icons/io5"
 import MyHeader from '../../components/header/header'
@@ -55,44 +56,11 @@ const onChange = (key) => {
     console.log(key);
 };
 
-const BoardList = [
-    {
-        key: '1',
-        mallowance: '胡彦斌',
-        mname: 'asdfasd',
-        mcompany: 'asdfasd',
-        mprice: 123,
-    },
-];
 
-const PassageList = [
-    {
-        key: '1',
-        edepartment: '胡彦斌',
-        ename: 'asdfasd',
-        eprice: 123,
-    },
-];
+function AnnouncementList(props) {
 
-function BoardPassageList(props) {
-
-    const [BoardList, setBoardList] = useState({});
-    const [citenum, setCitenum] = useState([]);
-    const [maxcite, setMaxcite] = useState(0);
-
-
-    const handlePaper = (url)=>{
-        window.open(url)
-    }
-
-
-    useEffect(() =>{
-        if (props.BoardList){
-            setBoardList(props.BoardList)
-        }
-        console.log(BoardList.length)
-        // getData()
-    }, [props])
+    const [mediList, setMediList] = useState(props.MediList);
+    const [showModal, setShowModal] = useState(false);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -164,8 +132,6 @@ function BoardPassageList(props) {
             }
         },
     });
-    const [current, setCurrent]=React.useState(1);
-
 
     const htmlDecode = (input) => {
         var e = document.createElement('div');
@@ -175,36 +141,28 @@ function BoardPassageList(props) {
         console.log(ret);
         return ret;
     }
-    const [count, setCount] = useState(2);
-    const handleAdd = () => {
-
-    };
-    const handleDelete = (key) => {
-        const newData = BoardList.filter((item) => item.key !== key);
-        setBoardList(newData);
-    };
 
     const columns = [
         {
-            title: '标题',
-            dataIndex: 'mallowance',
-            key: 'mallowance',
-            sorter: (a, b) => a.mallowance.localeCompare(b.mallowance),
+            title: '批准文号',
+            dataIndex: 'approval_number',
+            key: 'approval_number',
+            sorter: (a, b) => a.approval_number.localeCompare(b.approval_number),
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.mallowance}</Text>
+                <Text>{record.approval_number}</Text>
             ),
         },
         {
-            title: '时间',
-            dataIndex: 'mname',
-            key: 'mname',
-            ...getColumnSearchProps('mname'),
+            title: '药品名称',
+            dataIndex: 'name',
+            key: 'name',
+            ...getColumnSearchProps('name'),
             render: (_, record) => (
-                <Tooltip label={record.mname} aria-label='A tooltip'>
+                <Tooltip label={record.name} aria-label='A tooltip'>
                     <Text>
-                        {record.mname.replace(/<[^>]*>/g, '')}
+                        {record.name}
                     </Text>
                 </Tooltip>
             ),
@@ -212,16 +170,77 @@ function BoardPassageList(props) {
             width: 400
         },
         {
-            title: '操作',
-            dataIndex: 'operation',
-            render: (_, record) =>
-                BoardList.length >= 1 ? (
-                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
-                        <a>删除</a>
-                    </Popconfirm>
-                ) : null,
+            title: '生产单位',
+            dataIndex: 'production_unit',
+            key: 'production_unit',
+            width: 150,
+            render: (_, record) => (
+                <Text>{record.production_unit}</Text>
+            ),
+        },{
+            title: '价格',
+            dataIndex: 'price',
+            key: 'price',
+            sorter: (a, b) => a.price - b.price,
+            sortDirections: ['descend', 'ascend'],
+            width: 200,
+            render:(_,record) =>(
+                <Text>{record.price}</Text>
+            )
         },
     ];
+
+    const [form] = Form.useForm();
+    const AddApproval = Form.useWatch('approval', form);
+    const AddName = Form.useWatch('name', form);
+    const AddPrice = Form.useWatch('price', form);
+    const AddProduction = Form.useWatch('production', form);
+
+    const handleClickAdd = () => {
+        setShowModal(true);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+
+    const getMediData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/listAllPrescription/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.prescriptionList);
+                setMediList(res.data.data.prescriptionList);
+                // console.log(data);
+            })
+    }
+
+    const handleAdd = () => {
+        setShowModal(false);
+        axios({
+            method: "post",
+            url: "/admin/createPrescription/",
+            data: {
+                approval_number: AddApproval,
+                name: AddName,
+                price: AddPrice,
+                production_unit: AddProduction,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+                getMediData();
+            })
+    }
 
     return (
         <div
@@ -233,13 +252,13 @@ function BoardPassageList(props) {
             }}
         >
             <Button
-                onClick={handleAdd}
+                onClick={handleClickAdd}
                 type="primary"
                 style={{
                     marginBottom: 16,
                 }}
             >
-                添加公告
+                添加药品
             </Button>
             <Box css={{
                 height: 450,
@@ -256,79 +275,57 @@ function BoardPassageList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={props.BoardList} columns={columns}
+                <Table dataSource={mediList} columns={columns}
                        pagination={false}
-                       className='boardList'
-                       rowKey={(record) => record.mid}
+                       className='medicineList'
+                       rowKey={(record) => record.id}
                 >
                 </Table>
+                <Modal
+                    title="添加药品"
+                    open={showModal}
+                    onOk={handleAdd}
+                    onCancel={handleCancel}
+                >
+                    <Form
+                        form={form}
+                        initialValues={{}}
+                        labelCol={{
+                            span: 4,
+                        }}
+                        wrapperCol={{
+                            span: 14,
+                        }}
+                        layout="horizontal"
+                    >
+                        <Form.Item label="批准文号" name="approval">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="药品名称" name="name">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="单价" name="price">
+                            <InputNumber min={1}/>
+                        </Form.Item>
+                        <Form.Item label="生产厂家" name="production">
+                            <Input />
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </Box>
         </div>
     );
 }
 
-function DataChart(props) {
-    React.useEffect(() => {
-        setSeries([{data:props.count,name:'数量'}])
-    },[props])
-    const [options, setOptions] = React.useState(
-        {
-            chart: {
-                type: 'bar',
-            },
-            xaxis: {
-                categories: [2018,2019,2020,2021,2022]
-            },
-            plotOptions: {
-                bar: {
-                    columnWidth: '40%',
-                    borderRadius: 6
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    type: 'vertical',
-                    gradientToColors: ['#3a3af1'],
-                    opacityFrom: 0.96,
-                    opacityTo: 0.2,
-                    stops:[0,100]
-                }
-            },
-        }
-    )
-    const [series, setSeries] = React.useState(
-        [{
-        }]
-    );
-    return(
-        <Box boxShadow='xs' rounded='md'
-             borderRadius='25px' border='2px' borderColor='gray.200'
-             className='chart'>
-            <Row>
-                {props.icon}
 
-                <Heading className='chart-head'>{props.title}</Heading>
-            </Row>
-            <Chart options={options} series={series} type="bar" style={{marginTop:'0px'}}/>
-        </Box>
-    )
-}
-
-function HealthyPassageList(props) {
-
-    const [PassageList, setPassageList] = useState({});
-
-    useEffect(() =>{
-        if (props.PassageList){
-            setPassageList(props.PassageList)
-        }
-        console.log(PassageList.length)
-        // getData()
-    }, [props])
+function PassageList(props) {
+    const [examList, setExamList] = useState(props.ExamList);
+    const [showModal, setShowModal] = useState(false);
+    const [form] = Form.useForm();
+    const AddName = Form.useWatch('name', form);
+    const AddPrice = Form.useWatch('price', form);
+    const AddDepartmentID = Form.useWatch('departmentID', form);
+    const AddDetail = Form.useWatch('detail', form);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -400,8 +397,6 @@ function HealthyPassageList(props) {
             }
         },
     });
-    const [current, setCurrent]=React.useState(1);
-
 
     const htmlDecode = (input) => {
         var e = document.createElement('div');
@@ -411,53 +406,91 @@ function HealthyPassageList(props) {
         console.log(ret);
         return ret;
     }
-    const [count, setCount] = useState(2);
-    const handleAdd = () => {
-
-    };
-    const handleDelete = (key) => {
-        const newData = PassageList.filter((item) => item.key !== key);
-        setPassageList(newData);
-    };
 
     const columns = [
         {
-            title: '标题',
-            dataIndex: 'edepartment',
-            key: 'edepartment',
-            sorter: (a, b) => a.edepartment.localeCompare(b.edepartment),
+            title: '科室',
+            dataIndex: 'department',
+            key: 'department',
+            sorter: (a, b) => a.department.localeCompare(b.department),
             sortDirections: ['descend', 'ascend'],
             width: 150,
             render: (_, record) => (
-                <Text>{record.edepartment}</Text>
+                <Text>{record.department}</Text>
             ),
         },
         {
-            title: '时间',
-            dataIndex: 'ename',
-            key: 'ename',
-            ...getColumnSearchProps('ename'),
-            sorter: (a, b) => a.ename.localeCompare(b.ename),
+            title: '项目',
+            dataIndex: 'name',
+            key: 'name',
+            ...getColumnSearchProps('name'),
+            sorter: (a, b) => a.name.localeCompare(b.name),
             sortDirections: ['descend', 'ascend'],
             render: (_, record) => (
                 <Text>
-                    {record.ename}
+                    {record.name}
                 </Text>
             ),
             ellipsis: true,
             width: 400
         },
         {
-            title: '操作',
-            dataIndex: 'operation',
-            render: (_, record) =>
-                PassageList.length >= 1 ? (
-                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.key)}>
-                        <a>删除</a>
-                    </Popconfirm>
-                ) : null,
+            title: '价格',
+            dataIndex: 'price',
+            key: 'price',
+            sorter: (a, b) => a.price - b.price,
+            sortDirections: ['descend', 'ascend'],
+            width: 200,
+            render:(_,record) =>(
+                <Text>{record.price}</Text>
+            )
         },
     ];
+
+    const getExamData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/listAllInspection/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.inspectionList);
+                setExamList(res.data.data.inspectionList);
+                // console.log(data);
+            })
+    }
+    const handleClickAdd = () => {
+        setShowModal(true);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+
+    const handleAdd = () => {
+        setShowModal(false);
+        axios({
+            method: "post",
+            url: "/admin/createInspection/",
+            data: {
+                name: AddName,
+                departmentID: AddDepartmentID,
+                price: AddPrice,
+                detail: AddDetail,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+                getExamData();
+            })
+    }
 
     return (
         <div
@@ -468,15 +501,6 @@ function HealthyPassageList(props) {
                 border: 'none',
             }}
         >
-            <Button
-                onClick={handleAdd}
-                type="primary"
-                style={{
-                    marginBottom: 16,
-                }}
-            >
-                添加文章
-            </Button>
             <Box css={{
                 height: 450,
                 overflow: 'auto',
@@ -492,44 +516,125 @@ function HealthyPassageList(props) {
                     borderRadius: '24px',
                 },
             }}>
-                <Table dataSource={props.PassageList} columns={columns}
+                <Button
+                    onClick={handleClickAdd}
+                    type="primary"
+                    style={{
+                        marginBottom: 16,
+                    }}
+                >
+                    添加检查项目
+                </Button>
+                <Table dataSource={examList} columns={columns}
                        pagination={false}
-                       className='boardList'
-                       rowKey={(record) => record.mid}
+                       className='medicineList'
+                       rowKey={(record) => record.id}
                 >
                 </Table>
+                <Modal
+                    title="添加检查项目"
+                    open={showModal}
+                    onOk={handleAdd}
+                    onCancel={handleCancel}
+                >
+                    <Form
+                        form={form}
+                        initialValues={{}}
+                        labelCol={{
+                            span: 4,
+                        }}
+                        wrapperCol={{
+                            span: 14,
+                        }}
+                        layout="horizontal"
+                    >
+                        <Form.Item label="项目名称" name="name">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="所属科室" name="departmentID">
+                            <Select>
+                                {props.departmentList.map((item) => (
+                                    <Select.Option value={item.departmentID}>{item.departmentName}</Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label="项目价格" name="price">
+                            <InputNumber min={1}/>
+                        </Form.Item>
+                        <Form.Item label="详情" name="detail">
+                            <Input.TextArea />
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </Box>
         </div>
     );
 }
 
 function Board(){
+    const [mediList, setMediList] = useState();
+    const [examList, setExamList] = useState();
+    const [departmentList, setDepartmentList] = useState();
+    const getAnnouncementData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/listAllPrescription/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.prescriptionList);
+                setMediList(res.data.data.prescriptionList);
+                // console.log(data);
+            })
+    }
+    const getExamData = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/listAllInspection/',
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data.data.inspectionList);
+                setExamList(res.data.data.inspectionList);
+                // console.log(data);
+            })
+    }
+    useEffect(()=>{
+        getAnnouncementData();
+        getPassageData();
+    },[])
+
+
 
     return(
         <div className='manageCard'>
             <div>
-                <Tabs
-                    defaultActiveKey="1"
-                    onChange={onChange}
-                    items={[
-                        {
-                            label: `就医须知`,
-                            key: '1',
-                            children: <BoardPassageList
-                                BoardList={BoardList}
-                                // MediList={data.MedicineList}
-                            />,
-                        },
-                        {
-                            label: `健康科普`,
-                            key: '2',
-                            children: <HealthyPassageList
-                                PassageList={PassageList}
-                                // ExamList={data.ExaminationList}
-                            />,
-                        },
-                    ]}
-                />
+                {AList !== undefined && PList !== undefined &&
+                    <Tabs
+                        defaultActiveKey="1"
+                        onChange={onChange}
+                        items={[
+                            {
+                                label: `就医须知`,
+                                key: '1',
+                                children: <AnnouncementList
+                                    AList={AList}
+                                />,
+                            },
+                            {
+                                label: `健康科普`,
+                                key: '2',
+                                children: <PassageList
+                                    PList={PList}
+                                />,
+                            },
+                        ]}
+                    />
+                }
             </div>
         </div>
     )

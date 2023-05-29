@@ -118,23 +118,57 @@ const EditableCell = ({
 };
 
 function ScheduleList(props) {
-    const [dataSource, setDataSource] = useState(props.dayData);
-    const [count, setCount] = useState(props.dayData.length);
+    const [dataSource, setDataSource] = useState();
     const [showModal, setShowModal] = useState(false);
     const [doctorList, setDoctorList] = useState(props.doctors);
-    console.log(doctorList);
-    console.log(dataSource);
-    console.log(count);
-    console.log(props.dayData);
-    console.log(props.date);
+    // console.log(doctorList);
+    // console.log(dataSource);
+    // console.log(count);
+    // console.log(props.dayData);
+    // console.log(props.date);
     useEffect(() => {
         setDataSource(props.dayData);
-        setCount(props.dayData.length);
+        // setCount(props.dayData.length);
+        // console.log(props.date.format('YYYY-MM-DD'));
     }, [props.dayData]);
+    const getDateData = () => {
+        axios({
+            method: "post",
+            url: "/admin/getOneDayShift/",
+            data: {
+                departmentID: props.dID,
+                date: props.date.format('YYYY-MM-DD')
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                setDataSource(res.data.data.shiftList);
+                console.log(dataSource);
+            })
+    }
+    const deleteOneShift = (key) => {
+        axios({
+            method: "post",
+            url: "/admin/deleteOneShift/",
+            data: {
+                shiftID: key,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+            })
+    }
     const handleDelete = (key) => {
-        const newData = dataSource.filter((item) => item.shiftID !== key);
-        console.log(newData);
-        setDataSource(newData);
+        deleteOneShift(key);
+        getDateData();
     };
     const defaultColumns = [
         {
@@ -209,12 +243,6 @@ function ScheduleList(props) {
             }),
         };
     });
-    function findById(array, id) {
-        // 使用 Array.prototype.find() 方法查找特定对象
-        return array.find(function(element) {
-            return element.DoctorID === id;
-        });
-    }
 
     const [form] = Form.useForm();
     const AddPeriod = Form.useWatch('period', form);
@@ -224,18 +252,35 @@ function ScheduleList(props) {
     const handleAdd = () => {
         const newData = {
             doctorID: AddDoctor,
-            doctorName: doctorList.find(function(element) {return element.doctorID === AddDoctor}).doctorName,
+            date: props.date.format('YYYY-MM-DD'),
             time: AddPeriod,
             total: AddAmount,
         };
-        console.log(newData);
-        console.log(AddPeriod);
-        console.log(AddDoctor);
-        console.log(AddAmount);
-        setDataSource([...dataSource, newData]);
-        console.log(dataSource);
-        setCount(count + 1);
+        // console.log(newData);
+        // console.log(AddPeriod);
+        // console.log(AddDoctor);
+        // console.log(AddAmount);
+        // console.log(props.date);
+        // setDataSource([...dataSource, newData]);
+        // console.log(dataSource);
+        // setCount(count + 1);
         setShowModal(false);
+        axios({
+            method: "post",
+            url: "/admin/createDoctorShift/",
+            data: {
+                shiftList: [newData],
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+            })
+        getDateData();
     };
     return (
         <div>
@@ -304,9 +349,7 @@ function WorkCalendar(props){
     const onClose = () => {
         setOpen(false);
     };
-    const onSubmit = () => {
-        setOpen(false);
-    }
+
     const nowTime = moment().format('YYYY-MM-DD');
     const nextMonth1st = moment().add(1, 'months').format('YYYY-MM-01');
     // const [value, setValue] = useState(() => moment().add(1, 'months').format('YYYY-MM-01'));
@@ -319,6 +362,132 @@ function WorkCalendar(props){
     const [dayData, setDayData] = useState();
     const [doctors, setDoctors] = useState();
 
+    const [showModal, setShowModal] = useState(false);
+
+    const handleDelete = (key) => {
+        axios({
+            method: "post",
+            url: "/admin/deleteOneShift/",
+            data: {
+                shiftID: key,
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                getDateData(dID, selectedValue.format('YYYY-MM-DD'));
+                getMonthData();
+            })
+    };
+
+    const defaultColumns = [
+        {
+            title: '姓名',
+            dataIndex: 'doctorName',
+            width: '20%',
+        },
+        {
+            title: '工号',
+            dataIndex: 'doctorID',
+        },
+        {
+            title: '时间段',
+            dataIndex: 'time',
+            render: (_, record) =>
+                <Text>{record.time === 0 ? '上午':'下午'}</Text>
+
+        },
+        {
+            title: '放号量',
+            dataIndex: 'total',
+            editable: true,
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            render: (_, record) =>
+                dayData.length >= 1 ? (
+                    <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.shiftID)}>
+                        <a>删除排班</a>
+                    </Popconfirm>
+                ) : null,
+        },
+    ];
+    const handleClickAdd = () => {
+        setShowModal(true);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+
+    const handleSave = (row) => {
+        const newData = [...dayData];
+        const index = newData.findIndex((item) => row.key === item.key);
+        const item = newData[index];
+        newData.splice(index, 1, {
+            ...item,
+            ...row,
+        });
+        setDayData(newData);
+    };
+    const components = {
+        body: {
+            row: EditableRow,
+            cell: EditableCell,
+        },
+    };
+
+    const columns = defaultColumns.map((col) => {
+        if (!col.editable) {
+            return col;
+        }
+        return {
+            ...col,
+            onCell: (record) => ({
+                record,
+                editable: col.editable,
+                dataIndex: col.dataIndex,
+                title: col.title,
+                handleSave,
+            }),
+        };
+    });
+
+    const [form] = Form.useForm();
+    const AddPeriod = Form.useWatch('period', form);
+    const AddDoctor = Form.useWatch('doctor', form);
+    const AddAmount = Form.useWatch('amount', form);
+
+    const handleAdd = () => {
+        const newData = {
+            doctorID: AddDoctor,
+            date: selectedValue.format('YYYY-MM-DD'),
+            time: AddPeriod,
+            total: AddAmount,
+        };
+        setShowModal(false);
+        axios({
+            method: "post",
+            url: "/admin/createDoctorShift/",
+            data: {
+                shiftList: [newData],
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                // setDoctors(res.data.data.doctorList);
+                // console.log(doctors);
+                getDateData(dID, selectedValue.format('YYYY-MM-DD'));
+                getMonthData();
+            })
+
+    };
     const getDateData = (departmentID, date) => {
         axios({
             method: "post",
@@ -337,6 +506,7 @@ function WorkCalendar(props){
                 console.log(dayData);
             })
     }
+
     const getDoctors = () => {
         axios({
             method: "post",
@@ -459,7 +629,60 @@ function WorkCalendar(props){
                     }}
 
                 >
-                    <ScheduleList dayData={dayData} date={selectedValue} doctors={doctors}/>
+                    <div>
+                        <Button
+                            onClick={handleClickAdd}
+                            type="primary"
+                            style={{
+                                marginBottom: 16,
+                            }}
+                        >
+                            添加出诊医生
+                        </Button>
+                        <Table
+                            components={components}
+                            rowClassName={() => 'editable-row'}
+                            bordered
+                            dataSource={dayData}
+                            columns={columns}
+                        />
+                        <Modal
+                            title="添加排班信息"
+                            open={showModal}
+                            onOk={handleAdd}
+                            onCancel={handleCancel}
+                        >
+                            <Form
+                                form={form}
+                                initialValues={{}}
+                                labelCol={{
+                                    span: 4,
+                                }}
+                                wrapperCol={{
+                                    span: 14,
+                                }}
+                                layout="horizontal"
+                            >
+                                <Form.Item label="时间段" name="period">
+                                    <Radio.Group>
+                                        <Radio value={0}> 上午 </Radio>
+                                        <Radio value={1}> 下午 </Radio>
+                                    </Radio.Group>
+                                </Form.Item>
+                                <Form.Item label="医生" name="doctor">
+                                    <Select>
+                                        {doctors.map((item) => (
+                                            <Select.Option value={item.doctorID}>{item.doctorName}</Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item label="放号量" name="amount">
+                                    <InputNumber min={1}/>
+                                </Form.Item>
+
+                            </Form>
+                        </Modal>
+                    </div>
                 </Drawer>
             }
         </>

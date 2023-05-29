@@ -155,7 +155,7 @@ function UncheckList() {
                        title='请假申请详情' width={'50vw'} onCancel={handleCancel}>
                     <div className='detailForm'>
                         <Row>
-                            <Card title={props.A.department+'——'+props.A.doctorName+' 工号:'+props.A.docid} style={{width:'45vw'}}>
+                            <Card title={props.A.department+'——'+props.A.doctorName+' 工号:'+props.A.workID} style={{width:'45vw'}}>
                                     <Form labelCol={{span:8}}>
                                         <Form.Item label='请假时间'>
                                             <div>{props.A.commitTime}</div>
@@ -164,7 +164,7 @@ function UncheckList() {
                                             <div>{props.A.commitTime}</div>
                                         </Form.Item>
                                         <Form.Item label='联系方式'>
-                                            <div>{props.A.doctel}</div>
+                                            <div>{props.A.phone}</div>
                                         </Form.Item>
                                         <Form.Item label='请假类型'>
                                             <div>{props.A.type === 1 ? '病假':'事假'}</div>
@@ -459,10 +459,10 @@ function CheckList() {
                        title='请假申请详情' width={'50vw'} onCancel={handleCancel}>
                     <div className='detailForm'>
                         <Row>
-                            <Card title={props.A.department+'——'+props.A.doctorName+' 工号:'+props.A.docid} style={{width:'45vw'}}>
+                            <Card title={props.A.department+'——'+props.A.doctorName+' 工号:'+props.A.workID} style={{width:'45vw'}}>
                                 <Form labelCol={{span:8}}>
                                     <Form.Item label='请假时间'>
-                                        <div>{props.A.commitTime}</div>
+                                        <div>{props.A.leaveTime} {props.A.time === 1 ? '下午':'上午'}</div>
                                     </Form.Item>
                                     <Form.Item label='申请时间'>
                                         <div>{props.A.commitTime}</div>
@@ -471,7 +471,7 @@ function CheckList() {
                                         <div>{props.A.verifyTime}</div>
                                     </Form.Item>
                                     <Form.Item label='联系方式'>
-                                        <div>{props.A.doctel}</div>
+                                        <div>{props.A.phone}</div>
                                     </Form.Item>
                                     <Form.Item label='请假类型'>
                                         <div>{props.A.type}</div>
@@ -480,7 +480,7 @@ function CheckList() {
                                         <div>{props.A.reason}</div>
                                     </Form.Item>
                                     <Form.Item label='审核结果'>
-                                        <div>{props.A.state}</div>
+                                        <div>{props.A.state === 1 ? '通过':'不通过'}</div>
                                     </Form.Item>
                                     <Form.Item label='审核意见'>
                                         <div>{props.A.verifyComment}</div>
