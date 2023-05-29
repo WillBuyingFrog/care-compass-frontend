@@ -107,7 +107,7 @@ function VisitInterface(){
         for (let i =0; i < templist.length; i++) {
             children1.push(<Option key={templist[i].id}>{templist[i].name}</Option>);
         }
-        console.log(children1)  
+        console.log(children1)
     }
 
     function handleChange2(value) {
@@ -115,7 +115,7 @@ function VisitInterface(){
     }
     function onChange(value) {
         console.log('changed', value);
-    }  
+    }
 
     const success = () => {
         console.log('data')
@@ -123,7 +123,7 @@ function VisitInterface(){
         console.log('data2')
         console.log(data2)
         axios.post('/treatment/createMedicalRecord/',JSON.stringify({
-            appointID:location.state.appointID,
+            appointID: location.state.appointID,
             description:value1,
             diagnose:value2
         }))
@@ -214,8 +214,8 @@ function VisitInterface(){
                 <Breadcrumb.Item>就诊</Breadcrumb.Item>
                 </Breadcrumb>
                 <div>
-                    <span style={{fontSize:30}}>{patientName}</span> 
-                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date }})}}>返回预约界面</Button>          
+                    <span style={{fontSize:30}}>{patientName}</span>
+                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date }})}}>返回预约界面</Button>
                 </div>
                 <Content
                 style={{

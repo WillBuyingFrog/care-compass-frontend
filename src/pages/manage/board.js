@@ -605,10 +605,11 @@ function Board(){
     }
     useEffect(()=>{
         getAnnouncementData();
-        getPassageData();
+        // getPassageData();
     },[])
 
-
+    let AList = undefined;
+    let PList = undefined;
 
     return(
         <div className='manageCard'>
