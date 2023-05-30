@@ -171,53 +171,49 @@ function AnnouncementList(props) {
         {
             title: '操作',
             dataIndex: 'operation',
-            render: (_, record) =>
-                record.length >= 1 ? (
+            render: (_, record) => (
                     <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.announcementID)}>
                         <a>删除</a>
                     </Popconfirm>
-                ) : null,
+                )
         },
     ];
 
     const [form] = Form.useForm();
     const AddTitle = Form.useWatch('title', form);
     const AddContent = Form.useWatch('content', form);
-    const nowTime = moment().format('YYYY-MM-DD');
+    // const nowTime = moment().format('YYYY-MM-DD');
     const AddType = 0;
+    const nowTime = moment().format('YYYY-MM-DD HH:MM:SS')
 
     const handleClickAdd = () => {
         setShowModal(true);
+        console.log(AList);
     }
 
     const handleCancel = () => {
         setShowModal(false);
     }
 
-    const getAllData = ()=>{
+    const getAList = ()=>{
         axios({
             method: "post",
             url:'/admin/allAnnouncement/',
+            data: {
+                type: 0,
+            }
             // headers: {
             //   'token': token
             // }
         })
             .then(res => {
-                console.log(res.data.data.announcementList);
-                getAData(res.data.data.announcementList);
+                console.log(res.data);
+                setAList(res.data.data);
+                // setAllList(res.data.data.announcementList);
+                // getAData(res.data.data.announcementList);
+                // getPData(res.data.data.announcementList);
                 // console.log(data);
             })
-    }
-
-    const getAData = (data)=>{
-        let ret = [];
-        for(let i = 0; i < data.length; i++){
-            if(data[i].type === 0){
-                ret.push(data[i]);
-            }
-        }
-        setAList(ret);
-        console.log(AList);
     }
 
     const handleAdd = () => {
@@ -229,23 +225,24 @@ function AnnouncementList(props) {
                 title: AddTitle,
                 content: AddContent,
                 type: AddType,
-                time: nowTime,
+                // time: nowTime,
             },
             // headers: {
             //     token: localStorage.getItem("userToken")
             // }
         })
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
+                // console.log(AList);
                 // setDoctors(res.data.data.doctorList);
                 // console.log(doctors);
-                getAllData();
+                getAList();
             })
     }
     const handleDelete = (key) => {
         axios({
             method: "post",
-            url: "/admin/deleteAnnouncement",
+            url: "/admin/deleteAnnouncement/",
             data: {
                 id: key,
             },
@@ -255,7 +252,7 @@ function AnnouncementList(props) {
         })
             .then(res => {
                 console.log(res.data);
-                getAllData();
+                getAList();
             })
     };
 
@@ -443,12 +440,11 @@ function PassageList(props) {
         {
             title: '操作',
             dataIndex: 'operation',
-            render: (_, record) =>
-                record.length >= 1 ? (
+            render: (_, record) => (
                     <Popconfirm title="确认删除?" onConfirm={() => handleDelete(record.announcementID)}>
                         <a>删除</a>
                     </Popconfirm>
-                ) : null,
+            )
         },
     ];
 
@@ -466,30 +462,24 @@ function PassageList(props) {
         setShowModal(false);
     }
 
-    const getAllData = ()=>{
+    const getPList = ()=>{
         axios({
             method: "post",
             url:'/admin/allAnnouncement/',
+            data: {
+                type: 1,
+            }
             // headers: {
             //   'token': token
             // }
         })
             .then(res => {
-                console.log(res.data.data.announcementList);
-                getPData(res.data.data.announcementList);
+                console.log(res.data);
+                setPList(res.data.data);
+                // getAData(res.data.data.announcementList);
+                // getPData(res.data.data.announcementList);
                 // console.log(data);
             })
-    }
-
-    const getPData = (data)=>{
-        let ret = [];
-        for(let i = 0; i < data.length; i++){
-            if(data[i].type === 1){
-                ret.push(data[i]);
-            }
-        }
-        setPList(ret);
-        console.log(PList);
     }
 
     const handleAdd = () => {
@@ -501,7 +491,7 @@ function PassageList(props) {
                 title: AddTitle,
                 content: AddContent,
                 type: AddType,
-                time: nowTime,
+                // time: nowTime,
             },
             // headers: {
             //     token: localStorage.getItem("userToken")
@@ -511,13 +501,14 @@ function PassageList(props) {
                 console.log(res.data);
                 // setDoctors(res.data.data.doctorList);
                 // console.log(doctors);
-                getAllData();
+                getPList();
             })
     }
     const handleDelete = (key) => {
+        console.log(key)
         axios({
             method: "post",
-            url: "/admin/deleteAnnouncement",
+            url: "/admin/deleteAnnouncement/",
             data: {
                 id: key,
             },
@@ -527,7 +518,7 @@ function PassageList(props) {
         })
             .then(res => {
                 console.log(res.data);
-                getAllData();
+                getPList();
             })
     };
 
@@ -604,7 +595,7 @@ function Board(){
     const [allList, setAllList] = useState();
     const [AList, setAList] = useState();
     const [PList, setPList] = useState();
-    const getAllData = ()=>{
+    const getAList = ()=>{
         axios({
             method: "post",
             url:'/admin/allAnnouncement/',
@@ -617,9 +608,29 @@ function Board(){
         })
             .then(res => {
                 console.log(res.data);
-                setAllList(res.data.data.announcementList);
-                getAData(res.data.data.announcementList);
-                getPData(res.data.data.announcementList);
+                setAList(res.data.data);
+                // setAllList(res.data.data.announcementList);
+                // getAData(res.data.data.announcementList);
+                // getPData(res.data.data.announcementList);
+                // console.log(data);
+            })
+    }
+    const getPList = ()=>{
+        axios({
+            method: "post",
+            url:'/admin/allAnnouncement/',
+            data: {
+                type: 1,
+            }
+            // headers: {
+            //   'token': token
+            // }
+        })
+            .then(res => {
+                console.log(res.data);
+                setPList(res.data.data);
+                // getAData(res.data.data.announcementList);
+                // getPData(res.data.data.announcementList);
                 // console.log(data);
             })
     }
@@ -644,7 +655,8 @@ function Board(){
         console.log(PList);
     }
     useEffect(()=>{
-        getAllData();
+        getAList();
+        getPList();
     },[])
 
     return(
