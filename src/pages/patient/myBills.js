@@ -23,7 +23,7 @@ function processPartRawBills(partRawBills, billType) {
             price: bill.price,
             status: -1,
         }
-        if (processedBill.payTime.trim().length > 0) {
+        if (processedBill.payTime !== null) {
             // 有时间记录，说明已经支付
             processedBill.status = 1;
         } else {
