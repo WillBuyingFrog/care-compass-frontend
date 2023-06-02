@@ -22,7 +22,8 @@ import {
     Table,
     Spin,
     Image,
-    message
+    message,
+    Input as Input2
 } from 'antd';
 import {
     UserOutlined,
@@ -45,6 +46,7 @@ import moment from "moment";
 import {ExternalLinkIcon, SearchIcon} from "@chakra-ui/icons";
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
+const { TextArea } = Input2;
 
 function separator(numb) {
     var str = numb.toString().split(".");
@@ -110,174 +112,8 @@ function DataChart(props) {
     )
 }
 
-function DoctorDataList(props) {
-    const [workscount, setWorkscount] = useState();
-    const [citescount, setCitescount] = useState();
-    const [worksyear, setWorksyear] = useState([]);
-    const [citesyear, setCitesyear] = useState([]);
 
-    useEffect(() =>{
-        setWorkscount(props.workscount);
-        setCitescount(props.citescount);
-        setWorksyear(props.worksyear);
-        setCitesyear(props.citesyear);
-    }, [props])
-    console.log(workscount)
-    console.log(citescount)
-    console.log(worksyear)
-    console.log(citesyear)
-    return (
-        <div
-            style={{
-                height: 500,
-                overflow: 'auto',
-                padding: '0',
-                border: 'none',
-            }}
-            css={{
-                '&::-webkit-scrollbar': {
-                  width: '4px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  width: '6px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: '#cccccc',
-                  borderRadius: '24px',
-                },
-              }}
-        >
-            <Box
-                id="scrollableDataList"
-                style={{
-                    height: 450,
-                    overflow: 'auto',
-                    padding: '0 25px',
-                    border: 'none',
-                }}
-                css={{
-                    '&::-webkit-scrollbar': {
-                      width: '4px',
-                    },
-                    '&::-webkit-scrollbar-track': {
-                      width: '6px',
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                      background: '#cccccc',
-                      borderRadius: '24px',
-                    },
-                  }}
-            >
-                <Row>
-                    <Col span={12}>
-                        <DataChart
-                            count={worksyear}
-                            title={<Text className={'dark-text'} style={{color :'#4A5568'}}>近五年论文数量</Text>}
-                            icon={<IoNewspaperSharp className='chart-icon' />}
-                        ></DataChart>
-                    </Col>
-                    <Col span={12}>
-                        <Image
-                            src={papers}
-                            preview={false}
-                            style={{
-                                width: '80%',
-                                margin: 'auto',
-                                marginTop: '50px',
-                            }}></Image>
-                        {citescount &&
-                            <Typography
-                                style={{
-                                    padding: '0px 0 0 50px',
-                                }}
-                            >
-                                <Text
-                                    className={'dark-text'}
-                                    style={{
-                                        fontSize: '36px',
-                                        fontWeight: 'bold',
-                                        letterSpacing: '3px',
-                                        color: '#4A5568',
-                                    }}
-                                >
-                                    发表总论文数为
-                                </Text>
-                                <Text
-                                    style={{
-                                        margin: '0 0 0 20px',
-                                        color: '#3a3af1',
-                                        fontSize: '36px',
-                                        fontWeight: 'bold',
-                                        letterSpacing: '3px',
-                                    }}
-                                >
-                                    {separator(workscount)}
-                                </Text>
-                            </Typography>
-                        }
-                    </Col>
-                </Row>
-                <Row
-                    style={{
-                        marginBottom: '30px',
-                    }}
-                >
-                    <Col span={12}>
-                        <Image
-                            src={cite}
-                            preview={false}
-                            style={{
-                                width: '80%',
-                                margin: 'auto',
-                                marginTop: '50px',
-                            }}></Image>
-                        {citescount &&
-                            <Typography
-                                style={{
-                                    padding: '0px 0 0 0px',
-                                }}
-                            >
-                                <Text
-                                    className={'dark-text'}
-                                    style={{
-                                        margin: '200px 0 0 10px',
-                                        fontSize: '36px',
-                                        fontWeight: 'bold',
-                                        letterSpacing: '3px',
-                                        color: '#4A5568',
-                                    }}
-                                >
-                                    总被引用量为
-                                </Text>
-                                <Text
-                                    style={{
-                                        margin: '200px 0 0 20px',
-                                        color: '#3a3af1',
-                                        fontSize: '36px',
-                                        fontWeight: 'bold',
-                                        letterSpacing: '3px',
-                                    }}
-                                >
-                                    {separator(citescount)}
-                                </Text>
-                            </Typography>
-                        }
-                    </Col>
-                    <Col span={12}>
-                        <DataChart
-                            count={citesyear}
-                            title={<Text className={'dark-text'} style={{color :'#4A5568'}}>近五年被引数量</Text>}
-                            icon={<FaQuoteLeft className='chart-icon' />}
-                        ></DataChart>
-                    </Col>
-                </Row>
-
-            </Box>
-        </div>
-    )
-}
-
-function Portal() {
+function EditPortal2() {
     // const DoctorInfo =
     //     {
     //         key: '1',
@@ -294,10 +130,10 @@ function Portal() {
     let doctorData = {}
     const [data, setData] = useState({});
 
-    useEffect(() => {
-        // setData(DoctorInfo);
+    useEffect(()=>{
         axios.post('/admin/getOneDoctor/',JSON.stringify({
-            //之后获取真正ID
+            //之后获取真正ID,记得修改！！！！！
+            // doctorID:location.state.doctorID
             doctorID:0
         }))
         .then(res=>{
@@ -309,7 +145,8 @@ function Portal() {
                 message.error(res.data.msg)
             }
         })
-    }, [])
+
+    },[])
     const columns = [
         {
             title:'日期',
@@ -327,7 +164,6 @@ function Portal() {
             key: 'data',
         }
     ]
-
     let location = useLocation()
     const navigate = useNavigate();
     let params = new URLSearchParams(location.search)
@@ -358,6 +194,7 @@ function Portal() {
     // useEffect(() => {
     //     getData();
     // }, [])
+
 
     //用于转换为合适table的格式，存到d3days2中
     function convertD3days(temData){
@@ -404,8 +241,7 @@ function Portal() {
                     width: '100px',
                 }}
                 onClick={() => {
-                    //需要doctorID
-                    navigate('/editPortal/',{state:{doctorID:0}});
+                    navigate('/editPortal/?RID=' + RID);
                 }}
             >
                 编辑
@@ -451,6 +287,37 @@ function Portal() {
     }
     const instituteStyle = {
         textDecoration: instituteIsHover ? 'underline' : 'none'
+    }
+
+    function changetitle(value){
+        doctorData.title=value.target.value
+        setData(doctorData)
+    }
+
+    function changearea(value){
+        doctorData.area=value.target.value
+        console.log(value)
+        setData(doctorData)
+    }
+
+    function changeintro(value){
+        doctorData.intro=value.target.value
+        setData(doctorData)
+    }
+
+    function submit(){
+        setData(doctorData)
+        axios.post('/admin/updateOneDoctor/',JSON.stringify({
+            //之后需要更新
+            doctorID:0,
+            title:data.title,
+            intro:data.intro,
+            price:data.price,
+            area:data.area
+        }))
+        .then(res=>{
+            message.success('您的修改已提交成功！')
+        })
     }
 
     return (
@@ -502,18 +369,20 @@ function Portal() {
                                     <Space>
                                         <HomeOutlined style={{color :'#4A5568'}}/>
                                     </Space>
-                                    <Link
+                                    {/* <Link
                                         style={instituteStyle}
                                         onMouseEnter={handleMouseEnterInstitute}
                                         onMouseLeave={handleMouseLeaveInstitute}
                                         // href={"/institute?IID=" + data.r_IID} isExternal
-                                    > {data.title} </Link>
+                                    > {data.title} </Link> */}
+                                    <Input2 style={{marginLeft:10,width:100}} defaultValue={data.title} onChange={changetitle}/>
                                 </Paragraph>
                                 <Paragraph>
                                     <Space>
                                         <BulbOutlined style={{color :'#4A5568'}} />
                                     </Space>
-                                    <Text style={{color :'#4A5568'}}> {data.area}</Text>
+                                    {/* <Text style={{color :'#4A5568'}}> {data.area}</Text> */}
+                                    <Input2 style={{marginLeft:10,width:100}} defaultValue={data.area} onChange={changearea}/>
                                 </Paragraph>
                                 {data.count != "none" &&
                                     <Paragraph>
@@ -528,10 +397,14 @@ function Portal() {
                                         <Space>
                                             <SolutionOutlined style={{color :'#4A5568'}}/>
                                         </Space>
-                                        <Text style={{color :'#4A5568'}}> {data.intro}</Text>
+                                        {/* <Text style={{color :'#4A5568'}}> {data.intro}</Text> */}
+                                        <TextArea style={{marginLeft:10,width:600}} defaultValue={data.intro} onChange={changeintro}/>
                                     </Paragraph>
                                 }
                             </Typography>
+                            <div>
+                                <Button style={{marginLeft:900}} onClick={submit}>提交</Button>
+                            </div>
                         </Col>
                         <Col span={4}>
                             {showButton()}
@@ -555,7 +428,7 @@ function Portal() {
                         citesyear={data.rcitesyear}
                     />
                 </div> */}
-                <div
+                {/* <div
                     style={{
                         marginTop: '30px',
                         padding: '24px',
@@ -566,9 +439,9 @@ function Portal() {
                     }}
                 >
                     <Table dataSource={d3days2} columns={columns}></Table>
-                </div>
+                </div> */}
             </Content>
         </Layout>
     );
 }
-export default Portal;
+export default EditPortal2;

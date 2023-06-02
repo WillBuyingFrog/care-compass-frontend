@@ -51,8 +51,8 @@ const default_router = createBrowserRouter([
     {
         //临时修改主页面方便调试，记得改回
         path: '/',
-        // element: <Homepage />
-        element:<DoctorMain/>
+        element: <Homepage />
+        // element:<DoctorMain/>
     },
     {
         path: '/loginAndRegister',
