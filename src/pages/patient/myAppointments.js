@@ -54,6 +54,8 @@ function MyAppointments() {
         const cancelAppointment = async () => {
             const res = await axios.post('/patient/appointment/cancel/', {
                 id: cancelingAppointment.id
+            }, {
+                headers: customHeaders
             });
             if(res.status === 200){
                 message.success("取消预约成功！");
@@ -142,8 +144,8 @@ function MyAppointments() {
             title: '支付状态',
             dataIndex: 'isPaid',
             key: 'isPaid',
-            render: (text) => {
-                if (text === 0) {
+            render: (_, record) => {
+                if (record.appointmentOrder === -1) {
                     return <Text style={{'color': 'grey'}}>未支付</Text>
                 }else{
                     return <Text type="success">已支付</Text>
@@ -154,7 +156,7 @@ function MyAppointments() {
             title: '操作',
             key: 'action',
             render: (_, record) => {
-                if(record.isPaid === 1) {
+                if(record.appointmentOrder !== -1) {
                     // 显示可用的取消挂号按钮
                     return (
                         <Button
