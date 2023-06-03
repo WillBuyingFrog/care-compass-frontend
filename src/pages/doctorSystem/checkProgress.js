@@ -51,7 +51,7 @@ function CheckProgress(){
       axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
         {
             //doctorID需要从header获取
-            doctorID:1,
+            doctorID:parseInt(localStorage.getItem("doctorID")),
             date:today
         }
     ))
@@ -66,7 +66,7 @@ function CheckProgress(){
     })
     axios.post('/treatment/getDocAllLeave/',JSON.stringify({
       //从header拿
-      doctorID:1
+      doctorID:parseInt(localStorage.getItem("doctorID"))
     }))
     .then(res=>{
       console.log(res)

@@ -28,7 +28,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 function MyHeader({textColor, isLanding=false}){
     const navigate = useNavigate();
-    const [user, SetUser]=React.useState({uname:''});
+    const [user, SetUser]=React.useState({username:''});
     const [open, setOpen] = React.useState(false);
     const [isLoggedIn, setIsLoggedIn]=React.useState(0);
     const [status, setStatus]=React.useState(0);
@@ -40,25 +40,40 @@ function MyHeader({textColor, isLanding=false}){
     };
     React.useEffect(() => {
         console.log(localStorage.getItem("userToken"))
+        console.log(localStorage)
         if (localStorage.getItem("userToken") != null) {
             // 已经登录
+            console.log(localStorage.getItem('userToken'))
+            console.log(localStorage)
             setIsLoggedIn(1)
 
-            var config = {
-                method: 'post',
-                url: '/personInfo',
-                headers: {
-                    token: localStorage.getItem("userToken")
-                }
-            };
-            axios(config)
-                .then(res => {
-                    SetUser(res.data.data)
-                    console.log(res.data.data);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            var nowuser = {
+                username:localStorage.getItem("username"),
+                u_rid:localStorage.getItem('userID'),
+                utype:localStorage.getItem('userType')
+
+            }
+            SetUser(nowuser)
+            // var config = {
+            //     method: 'post',
+            //     url: '/personInfo/',
+            //     headers: {
+            //         token: localStorage.getItem("userToken")
+            //     }
+            // };
+
+            // axios(config)
+            //     .then(res => {
+            //         console.log(res)
+            //         console.log('res')
+                    
+            //         SetUser(res.data.data)
+            //         console.log('setuser')
+            //         console.log(res.data.data);
+            //     })
+            //     .catch(function (error) {
+            //         console.log(error);
+            //     });
         }
 
     }, [])
@@ -67,6 +82,15 @@ function MyHeader({textColor, isLanding=false}){
 
     const sections = ['工具箱']
 
+    //转换医生返还的res格式，契合本页面
+    const changgeDate = (temdate)=>{
+        let backdate =null
+        backdate.uname = temdate.username
+        backdate.u_rid = temdate.userID
+        backdate.utype = temdate.type 
+        console.log(backdate)
+        return backdate
+    }
     const confirm = (e) => {
         setIsLoggedIn(0);
         localStorage.removeItem("userToken")
@@ -83,7 +107,7 @@ function MyHeader({textColor, isLanding=false}){
 
 
     let userButton;
-    if(isLoggedIn && user.utype == "default"){
+    if(isLoggedIn && user.type == "default"){
         userButton = (<Button w='220px' mt='8px' onClick={()=>{
             navigate('/applyPortal')
         }}
@@ -129,10 +153,10 @@ function MyHeader({textColor, isLanding=false}){
                             <PopoverTrigger>
                                 <Row style={{marginLeft:'60px'}}>
                                     <Col>
-                                        <Text mt='6px' color='white' size='2xl' fontWeight='550'>👏Hey , {user.uname}</Text>
+                                        <Text mt='6px' color='white' size='2xl' fontWeight='550'>👏Hey , {user.username}</Text>
                                     </Col>
                                     <Col>
-                                        <Avatar width='35px' ml='8px' height='35px' name={user.uname}></Avatar>
+                                        <Avatar width='35px' ml='8px' height='35px' name={user.username}></Avatar>
                                     </Col>
                                 </Row >
                             </PopoverTrigger>

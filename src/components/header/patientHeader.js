@@ -46,6 +46,47 @@ function PatientHeader(){
     const [isLoggedIn, setIsLoggedIn]=React.useState(1);
     const [user, setUser]=React.useState({uname:''});
 
+    React.useEffect(() => {
+        console.log(localStorage.getItem("userToken"))
+        console.log(localStorage)
+        if (localStorage.getItem("userToken") != null) {
+            // 已经登录
+            console.log(localStorage.getItem('userToken'))
+            console.log(localStorage)
+            setIsLoggedIn(1)
+
+            var nowuser = {
+                username:localStorage.getItem("username"),
+                u_rid:localStorage.getItem('userID'),
+                utype:localStorage.getItem('userType')
+
+            }
+            setUser(nowuser)
+            console.log(user)
+            // var config = {
+            //     method: 'post',
+            //     url: '/personInfo/',
+            //     headers: {
+            //         token: localStorage.getItem("userToken")
+            //     }
+            // };
+
+            // axios(config)
+            //     .then(res => {
+            //         console.log(res)
+            //         console.log('res')
+                    
+            //         SetUser(res.data.data)
+            //         console.log('setuser')
+            //         console.log(res.data.data);
+            //     })
+            //     .catch(function (error) {
+            //         console.log(error);
+            //     });
+        }
+
+    }, [])
+
     const confirm = (e) => {
         setIsLoggedIn(0);
         localStorage.removeItem("userToken")
@@ -132,10 +173,10 @@ function PatientHeader(){
                             <PopoverTrigger>
                                 <Row style={{marginLeft:'60px'}}>
                                     <Col>
-                                        <Text mt='6px' color='white' size='2xl' fontWeight='550'>👏Hey , {user.uname}</Text>
+                                        <Text mt='6px' color='white' size='2xl' fontWeight='550'>👏Hey , {user.username}</Text>
                                     </Col>
                                     <Col>
-                                        <Avatar width='35px' ml='8px' height='35px' name={user.uname}></Avatar>
+                                        <Avatar width='35px' ml='8px' height='35px' name={user.username}></Avatar>
                                     </Col>
                                 </Row >
                             </PopoverTrigger>

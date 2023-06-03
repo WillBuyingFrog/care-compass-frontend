@@ -38,12 +38,10 @@ function PatientAppointment(){
     const location = useLocation()
     // const useEffect = useEffect()
 
-    let shiftlist=[]
+    // let shiftlist=[]
+    const [shiftlist,setshiftlist] = useState([])
     //检查有无date和time
     // console.log(location.state)
-    if(location.state !== null){
-        shiftlist = location.state.shiftlist
-    }
 
     // console.log(splitdate('2023-05-21 上午'))
     let nowmixdate=''
@@ -83,11 +81,72 @@ function PatientAppointment(){
     var today = year + "-" + month + "-" + day;
 
     useEffect(() => {
+        if(location.state !== null){
+            console.log('location != null')
+            axios.post('/treatment/getPatientList/',JSON.stringify({
+                doctorID:parseInt(localStorage.getItem("doctorID")),
+                date:location.state.date,
+                time:location.state.time
+            }))
+            .then(res=>{
+                console.log(res)
+                if(res.data.code === 0){
+                    patientlist=res.data.data.patientList
+                    let temcards = patientlist.map((item,index)=>{
+                        return (
+                            <Col span={6} >
+                                            <Card bordered={true}>
+                                            <span style={{paddingTop:-110}}>{item.name}</span>
+                                            <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
+                                            <br/>
+                                            <span style={{paddingTop:-110}}>预约时间:8:30-8:50</span>
+                                            <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
+                                            <br/>
+                                            <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
+                                            <div style={{textAlign:'center',marginTop:10}}>
+                                                <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
+                                            </div>
+                                            </Card>
+                                        </Col>
+                        )
+                    })
+                    setcards(temcards)
+                }
+                else{
+                    error(res.data.msg)
+                }
+            })
 
+            axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
+                {
+                    //doctorID需要从header获取
+                    doctorID:parseInt(localStorage.getItem("doctorID")),
+                    date:today
+                }
+            ))
+            .then(res=>{
+                console.log(res)
+                if(res.data.code === 1){
+                    error(res.data.msg)
+                }
+                else if(res.data.code ==0 ){
+                    setshiftlist(res.data.data.shiftList)
+                    let temoptions =  shiftlist.map((item,index)=>{
+                        return (
+                            <Option key={mixdate(item.date,item.time)} value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
+                        )
+                    })
+                    setoptions(temoptions)
+                }
+            })
+    
+        }
+        console.log(typeof(parseInt(localStorage.getItem("userID"))))
+        // console.log(parseInt(localStorage.getItem("userID")))
         axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
             {
                 //doctorID需要从header获取
-                doctorID:1,
+                doctorID:parseInt(localStorage.getItem("doctorID")),
                 date:today
             }
         ))
@@ -97,10 +156,10 @@ function PatientAppointment(){
                 error(res.data.msg)
             }
             else if(res.data.code ==0 ){
-                shiftlist = res.data.data.shiftList
+                setshiftlist(res.data.data.shiftList)
                 let temoptions =  shiftlist.map((item,index)=>{
                     return (
-                        <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
+                        <Option key={mixdate(item.date,item.time)} value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
                     )
                 })
                 setoptions(temoptions)
@@ -116,8 +175,10 @@ function PatientAppointment(){
         backdate = location.state.date
         nowmixdate=mixdate(location.state.date,location.state.time)
         //初始渲染时，获取对应时间病人信息
+        console.log(localStorage)
+        console.log('this is localstorage')
         axios.post('/treatment/getPatientList/',JSON.stringify({
-            doctorID:1,
+            doctorID:parseInt(localStorage.getItem("doctorID")),
             date:splitdate(nowmixdate).date,
             time:splitdate(nowmixdate).time
         }))
@@ -149,7 +210,7 @@ function PatientAppointment(){
         nowmixdate=value
         console.log(nowmixdate)
         axios.post('/treatment/getPatientList/',JSON.stringify({
-            doctorID:1,
+            doctorID:parseInt(localStorage.getItem("doctorID")),
             date:splitdate(nowmixdate).date,
             time:splitdate(nowmixdate).time
         }))

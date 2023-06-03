@@ -1,5 +1,6 @@
 import {Button,Layout,Menu, Breadcrumb,Select,Input,List,InputNumber,message} from 'antd'
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 
@@ -24,19 +25,27 @@ function PatientHistory(){
         description:'this is a description',
         doctorname:'张三'
     }]
-    let recordlist=[]
+    // let recordlist=[]
+    const [recordlist,setrecordlist] = useState()
 
-    axios.post('/treatment/getHistoryRecord/',JSON.stringify({
-        patientID:location.state.patientID
-    }))
-    .then(res=>{
-        if(res.data.code == 0){
-            recordlist = res.data.data.recordList
-        }
-        else{
-            message.error(res.data.msg)
-        }
-    })
+    useEffect(() => {
+        console.log(typeof(parseInt(localStorage.getItem("userID"))))
+        // console.log(parseInt(localStorage.getItem("userID")))
+        axios.post('/treatment/getHistoryRecord/',JSON.stringify({
+            patientID:location.state.patientID
+        }))
+        .then(res=>{
+            console.log(res)
+            if(res.data.code == 0){
+                // recordlist = res.data.data.recordList
+                setrecordlist(res.data.data.recordList)
+            }
+            else{
+                message.error(res.data.msg)
+            }
+        })
+
+    }, []);
     return(
         <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>

@@ -1,6 +1,7 @@
 import {Button,Layout,Menu, Breadcrumb} from 'antd'
 import { useLocation, useNavigate,Link,Route,Outlet } from 'react-router-dom';
 import PatientAppointment from './patientAppointment';
+import MyHeader from '../../components/header/header';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -9,19 +10,10 @@ function DoctorMain(){
     const nagivate = useNavigate()
     return(
         <Layout>
-            <Header className="header">
-            <div className="logo" />
-            {/* <Menu
-                theme="dark"
-                mode="horizontal"
-                defaultSelectedKeys={['2']}
-                style={{ lineHeight: '64px' }}
-            >
-                <Menu.Item key="1">nav 1</Menu.Item>
-                <Menu.Item key="2">nav 2</Menu.Item>
-                <Menu.Item key="3">nav 3</Menu.Item>
-            </Menu> */}
-            </Header>
+            {/* <Header className="header">
+            <MyHeader></MyHeader>
+            </Header> */}
+            <MyHeader/>
             <Layout>
             <Sider width={200} style={{ background: '#fff' }}>
                 <Menu

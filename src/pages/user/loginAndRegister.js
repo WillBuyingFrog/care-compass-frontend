@@ -37,9 +37,11 @@ async function loginUser(username, password) {
     await axios.post('/login/', formData)
         .then(res => {
             console.log(res.data);
+            console.log('this is this ')
             if(res.data.code === 200){
                 message.success('登录成功');
                 localStorage.setItem('userID', res.data.userID);
+                localStorage.setItem('doctorID',res.data.doctorID)
             } else
                 message.error(res.data.message)
             status = res.data.msg
@@ -50,6 +52,7 @@ async function loginUser(username, password) {
 
     return {
         type: ret.type,
+        uname:ret.username,
         token: ret.token,
         status: status
     };
@@ -119,14 +122,15 @@ function LoginAndRegister () {
         if (data.token !== "" && data.status === "登录成功") {
             localStorage.setItem("userToken", data.token);
             localStorage.setItem("userType", data.type);
-            localStorage.setItem("username", username);
+            localStorage.setItem("username", data.uname);
+            console.log(localStorage)
             if(data.type === 1){
                 setTimeout(function () {
                     navigate("/patient/personInfo");
                 }, 1000);
             }else if(data.type === 2){
                 setTimeout(function () {
-                    navigate("/doctorMain");
+                    navigate("/doctorMain/patientAppointment");
                 }, 1000);
             } else{
                 setTimeout(function () {

@@ -47,6 +47,7 @@ function SelectDepartment({selectedDepartment, setSelectedDepartment}) {
                 setDepartmentData(response.data);
                 // 获取用于sidebar展示的科室信息
                 setDeptSidebarData(getSidebarItemsByDepartmentData(response.data));
+                // console.log(deptSidebarData)
                 setLoading(false);
             } catch (error) {
                 console.log(error);
