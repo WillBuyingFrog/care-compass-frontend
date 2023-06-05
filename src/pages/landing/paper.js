@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import "./homepage.css"
-import { Row, Col, List } from 'antd';
+import { Row, Col, List, Modal } from 'antd';
 import {Box, Text, Heading, Link, Spinner} from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
@@ -19,21 +19,34 @@ function Papers(props){
     const [data, setData] = useState([])
     const [cname, setCname] = useState([])
     const [isLoading, setLoading] = React.useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     const getData = ()=>{
         axios({
-          method: "get",
-          url: '/frogRecommendPapers',
+            method: "post",
+            url: '/admin/allAnnouncement/',
+            data: {
+                type: props.type,
+            },
         })
         .then(res => {
             console.log(res.data)
-            setData(res.data.data.paperResults)
-            setCname(res.data.data.cName)
+            setData(res.data.data)
+            // setCname(res.data.data.cName)
             setLoading(false)
           }
         )
       }
     useEffect(() =>{
-    getData()
+        getData()
     }, [])
     if(isLoading){
         return (
@@ -57,7 +70,7 @@ function Papers(props){
                 <Row>
                     <ImFire className="chart-icon"></ImFire>
                     <Heading className="title">
-                        {props.title + (cname != null ? (": " + cname): "")}
+                        {props.title}
                     </Heading>
                 </Row>
                 <List
@@ -65,18 +78,22 @@ function Papers(props){
                     itemLayout="horizontal"
                     dataSource={data}
                     renderItem={(item) => (
-                    <List.Item >
+                    <><List.Item >
                         <div className="listitem">
                         <Row>
-                       <Link href={"/paperDetails?PID=" + item.pID} isExternal>
-                            <Text fontWeight={'bold'} fontSize="18px" className="pName">{item.pName}</Text>
-                       </Link>
+                            <Link onClick={showModal}>
+                                <Text fontWeight={'bold'} fontSize="18px" className="pName">{item.title}</Text>
+                            </Link>
                        </Row>
                        <Row>
-                       <Text as='em' fontSize="16px" fontWeight={'normal'}  className="PVname">{"来自出版物: " + (item.pVName == null? "unknown": item.pVName)}</Text>
+                       <Text as='em' fontSize="16px" fontWeight={'normal'}  className="PVname">{"时间 : " + (item.time == null? "unknown": item.time.split('T')[0])}</Text>
                        </Row>
                        </div>
+                        <Modal title={item.title} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+                            <p>{item.content}</p>
+                        </Modal>
                     </List.Item>
+                    </>
                     )}
                 />
         </Box>

@@ -2,7 +2,8 @@ import {Button, Col, Row, Space, Table, Typography} from "antd";
 import {useEffect, useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import axios from "axios";
-import {Center} from "@chakra-ui/react";
+import {Center, Box} from "@chakra-ui/react";
+import './personInfo.css'
 
 const {Title, Text} = Typography;
 
@@ -169,21 +170,55 @@ function MyBills(props){
 
 
     return (
-        <div style={{'marginTop': '3vh'}}>
-            <Row>
-                <Col span={2} />
-                <Col span={20}>
-                    <Center>
-                        <Space direction='vertical'>
-                            <Table columns={columns} dataSource={bills}
-                                   pagination={{pageSize: 8}}
-                            />
-                        </Space>
-                    </Center>
-                </Col>
-                <Col span={2} />
-            </Row>
+        <div
+            style={{
+                height: 500,
+                overflow: 'auto',
+                padding: '0',
+                border: 'none',
+            }}
+            css={{
+                '&::-webkit-scrollbar': {
+                    width: '4px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    width: '6px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    background: '#cccccc',
+                    borderRadius: '24px',
+                },
+            }}
+        >
+            <Box
+                id="scrollableDataList"
+                style={{
+                    height: 450,
+                    overflow: 'auto',
+                    padding: '0 25px',
+                    border: 'none',
+                }}
+                css={{
+                    '&::-webkit-scrollbar': {
+                        width: '4px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        width: '6px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        background: '#cccccc',
+                        borderRadius: '24px',
+                    },
+                }}
+            >
+
+            <Table columns={columns} dataSource={bills}
+                   pagination={{pageSize: 8}}
+                   className='plist'
+            />
+            </Box>
         </div>
+
     )
 }
 

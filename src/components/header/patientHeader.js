@@ -44,7 +44,7 @@ const NavLink = ({ children, href }) => (
 function PatientHeader(){
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn]=React.useState(1);
-    const [user, setUser]=React.useState({uname:''});
+    const [user, setUser]=React.useState({username:''});
 
     React.useEffect(() => {
         console.log(localStorage.getItem("userToken"))
@@ -62,7 +62,7 @@ function PatientHeader(){
 
             }
             setUser(nowuser)
-            console.log(user)
+            console.log(nowuser)
             // var config = {
             //     method: 'post',
             //     url: '/personInfo/',
@@ -75,7 +75,7 @@ function PatientHeader(){
             //     .then(res => {
             //         console.log(res)
             //         console.log('res')
-                    
+
             //         SetUser(res.data.data)
             //         console.log('setuser')
             //         console.log(res.data.data);
@@ -181,12 +181,6 @@ function PatientHeader(){
                                 </Row >
                             </PopoverTrigger>
                             <PopoverContent w='240px' border='blue' >
-                                <PopoverArrow />
-                                <PopoverCloseButton />
-                                <PopoverHeader>
-                                    <Text fontSize='md' fontWeight='550' mr='20px' >Email  </Text>
-                                    <Text ml='20px' mt='10px'>{user.uemail}</Text>
-                                </PopoverHeader>
                                 <PopoverBody>
                                     <Row>
                                         <Button w='220px' mt='8px' onClick={()=>{
