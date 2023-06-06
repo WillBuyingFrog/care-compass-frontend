@@ -25,11 +25,11 @@ function VisitInterface(){
 
     let patientName = ''
     let data = [
-       
+
       ];
 
     let data2 = [
-        
+
     ]
 
     if(location.state !== null){
@@ -166,26 +166,42 @@ function VisitInterface(){
     }
 
     return(
-        <Layout style={{ padding: '0 24px 24px' }}>
+        <Layout style={{
+            padding: '30px',
+            // height: '100vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
+            <div
+                style={{
+                    padding: '20px 30px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,1.0), rgba(255,255,255,0.4))',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                }}
+            >
                 <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>医生系统</Breadcrumb.Item>
                 <Breadcrumb.Item>就诊</Breadcrumb.Item>
                 </Breadcrumb>
                 <div>
                     <span style={{fontSize:30}}>{patientName}</span>
+<<<<<<< HEAD
                     <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date ,time:location.state.time}})}}>返回预约界面</Button>
+=======
+                    <Button style={{marginLeft:'60vw'}}
+                            size="large"
+                            shape={"round"}
+                            onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date }})}}>返回预约界面</Button>
+>>>>>>> e33e9e49ab6f45d0d779fdf24b67d80b53333f5d
                 </div>
                 <Content
                 style={{
-                    background: 'white',
-                    padding: 24,
+                    padding: '24px 0',
                     margin: 0,
                     minHeight: 600,
                 }}
                 >
-
-
-                    <span>本次就诊症状*：</span>
+                    <span style={{fontSize: 16}}>本次就诊症状*：</span>
                     <br/>
                     <TextArea rows={6} placeholder='请输入症状' onChange={sendvalue}></TextArea>
                     <br/>
@@ -251,13 +267,14 @@ function VisitInterface(){
                     </div> */}
                     <InspectList msg={data2} senddata={sendInspectData}/>
 
-                    <span>医嘱*：</span>
+                    <span style={{fontSize: 16}}>医嘱*：</span>
                     <br/>
                     <TextArea rows={6} placeholder='请输入医嘱' onChange={sendvalue2}></TextArea>
                     <div style={{textAlign:'center',marginTop:10}}>
                                 <Button onClick={success}>提交</Button>
                             </div>
                 </Content>
+            </div>
             </Layout>
     )
 }

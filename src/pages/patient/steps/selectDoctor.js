@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {Col, Row, Tabs} from "antd";
 import DoctorCard from "./doctorCard";
 import * as React from "react";
+import './selectDoctor.css'
 
 
 function PeriodCard(props){
@@ -165,7 +166,7 @@ function SelectDoctor(props){
             key: id,
             children: (
                 (loading === false && props.departmentID != null) ? (
-                    <Row style={{'width': '800px'}}>
+                    <Row style={{'width': '75vw'}}>
                         {
                             currentDoctorData.map((doctor) => {
                                     return (
@@ -206,19 +207,12 @@ function SelectDoctor(props){
     });
 
     return (
-        <div>
-            <Row>
-                <Col span={8} offset={8}>
-                    <Row>
-                        <Tabs type="card" items={items}
-                            onChange={(key) => {
-                                setCurrentPeriod(parseInt(key))
-                            }}
-                        />
-                    </Row>
-
-                </Col>
-            </Row>
+        <div className="card-container">
+            <Tabs type="card" items={items}
+                onChange={(key) => {
+                    setCurrentPeriod(parseInt(key))
+                }}
+            />
         </div>
     )
 }

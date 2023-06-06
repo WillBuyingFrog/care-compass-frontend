@@ -9,6 +9,7 @@ import SelectDepartment from "./steps/selectDepartment";
 import {Outlet, useNavigate, useOutletContext} from "react-router-dom";
 import SelectDoctor from "./steps/selectDoctor";
 import {Center, Checkbox} from "@chakra-ui/react";
+import {CheckCircleOutlined} from "@ant-design/icons";
 const { Title , Text} = Typography;
 const {TextArea} = Input;
 
@@ -176,42 +177,40 @@ function MakeAppointment() {
 
 
     return (
-        <>
+        <div style={{
+            // padding: '80px 200px 50px 200px',
+            // height: '100vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
             {
                 loading ? (
                     <div>loading...</div>
                 ) : (
-                    <>
+                    <div>
                         <Row>
-                            <Col span={6}>
-                                <SelectDepartment
-                                    selectedDepartment={selectedDepartment}
-                                    setSelectedDepartment={setSelectedDepartment}
-                                />
-                            </Col>
-                            <Col span={18}>
-                                {
-                                    // 如果step为2，那么这里渲染医生选择界面
-                                    step === 2 && (
-                                        <Row>
-                                            <Col span={20} offset={1}>
-                                                <SelectDoctor
-                                                    departmentID={selectedDepartment}
-                                                    setSelectedDoctor={setSelectedDoctor}
-                                                    setSelectedPeriod={setSelectedPeriod}
-                                                    showConfirmDrawer={showConfirmDrawer}
-                                                />
-                                            </Col>
-                                        </Row>
+                            <SelectDepartment
+                                selectedDepartment={selectedDepartment}
+                                setSelectedDepartment={setSelectedDepartment}
+                            />
+                            {
+                                // 如果step为2，那么这里渲染医生选择界面
+                                step === 2 && (
+                                    <Row>
+                                            <SelectDoctor
+                                                departmentID={selectedDepartment}
+                                                setSelectedDoctor={setSelectedDoctor}
+                                                setSelectedPeriod={setSelectedPeriod}
+                                                showConfirmDrawer={showConfirmDrawer}
+                                            />
+                                    </Row>
 
-                                    )
-                                }
-                            </Col>
+                                )
+                            }
                         </Row>
                         <Drawer title="确认预约信息" width={550} closeable={false}
                                 onClose={closeConfirmDrawer} open={confirmDrawerOpen}
                         >
-                            <Title level={2}>
+                            <Title level={3}>
                                 您将预约挂号的医生以及时段如下：
                             </Title>
                             <Title level={4}>
@@ -233,7 +232,7 @@ function MakeAppointment() {
                             <span style={{'fontSize': '20px'}}>
                                 价格：
                             </span>
-                                        <span style={{'color': '#ff8c00', 'fontSize': '20px', 'fontWeight': 'bold'}}>
+                                        <span style={{'color': '#50af78', 'fontSize': '20px', 'fontWeight': 'bold'}}>
                                 ¥ {
                                             selectedDoctor != null ?
                                                 ((selectedPeriod % 2 === 0) ?
@@ -250,6 +249,10 @@ function MakeAppointment() {
                                         <Button
                                             onClick={confirmAppointment}
                                             disabled={confirmDrawerButtonDisabled}
+
+                                            icon={<CheckCircleOutlined />}
+                                            size="large"
+                                            shape={"round"}
                                         >
                                             {confirmDrawerButtonText}
                                         </Button>
@@ -257,10 +260,10 @@ function MakeAppointment() {
                                 </Col>
                             </Row>
                         </Drawer>
-                    </>
+                    </div>
                 )
             }
-        </>
+        </div>
 
 
     )
