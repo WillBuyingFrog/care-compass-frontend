@@ -84,6 +84,8 @@ function PatientAppointment(){
     useEffect(() => {
         if(location.state !== null){
             console.log('location != null')
+            console.log(location.state)
+            // console.log()
             axios.post('/treatment/getPatientList/',JSON.stringify({
                 doctorID:parseInt(localStorage.getItem("doctorID")),
                 date:location.state.date,
@@ -95,21 +97,27 @@ function PatientAppointment(){
                     patientlist=res.data.data.patientList
                     let temcards = patientlist.map((item,index)=>{
                         return (
-                            <Col span={6} >
-                                <Card bordered={true}>
-                                <span style={{paddingTop:-110}}>{item.name}</span>
-                                <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
-                                <br/>
-                                <span style={{paddingTop:-110}}>预约时间:8:30-8:50</span>
-                                <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
-                                <br/>
-                                <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
-                                <div style={{textAlign:'center',marginTop:10}}>
-                                    <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
-                                </div>
-                                </Card>
-                            </Col>
-
+                            <Col span={8} >
+                            <Card bordered={true} key={item.patientID} style={{borderRadius: 20, 'box-shadow': '4px 4px 15px 0 rgba(0,0,0,0.1)'}}>
+                            <span style={{paddingTop:-110, fontSize: 18, fontWeight: "bold"}}>{item.name}</span>
+                            <Divider dashed />
+                            <span style={{paddingTop:-110}}>预约时间：{gettime(index,location.state.time)}</span>
+                            <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
+                            <br/>
+                            <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
+                            <div style={{textAlign:'center',marginTop:10}}>
+                                <Button
+                                        size="large"
+                                        shape={"round"}
+                                        onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>历史诊疗记录</Button>
+                                <Button style={{marginLeft: 20}}
+                                        type={"primary"}
+                                        size="large"
+                                        shape={"round"}
+                                        onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>开始诊断</Button>
+                            </div>
+                            </Card>
+                        </Col>
                         )
                     })
                     setcards(temcards)
@@ -289,12 +297,12 @@ function PatientAppointment(){
                                 <Button
                                         size="large"
                                         shape={"round"}
-                                        onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
+                                        onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>历史诊疗记录</Button>
                                 <Button style={{marginLeft: 20}}
                                         type={"primary"}
                                         size="large"
                                         shape={"round"}
-                                        onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
+                                        onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>开始诊断</Button>
                             </div>
                             </Card>
                         </Col>

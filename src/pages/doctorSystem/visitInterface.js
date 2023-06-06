@@ -188,7 +188,7 @@ function VisitInterface(){
                     <Button style={{marginLeft:'60vw'}}
                             size="large"
                             shape={"round"}
-                            onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date }})}}>返回预约界面</Button>
+                            onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date,time:location.state.time }})}}>返回预约界面</Button>
                 </div>
                 <Content
                 style={{
