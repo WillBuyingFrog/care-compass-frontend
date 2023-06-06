@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Button, Col, Drawer, Row, Space, Table, Typography} from "antd";
-import {Center} from "@chakra-ui/react";
+import {Center, Box} from "@chakra-ui/react";
 import {useNavigate} from "react-router-dom";
 import MedicalRecord from "./medicalRecord";
+import './personInfo.css'
 
 const {Title, Text} = Typography;
 
@@ -125,21 +126,53 @@ function MyMedicalRecords(){
 
 
     return (
-        <div style={{'marginTop': '3vh'}}>
-            <Row>
-                <Col span={2} />
-                <Col span={20}>
-                    <Center>
-                        <Space direction='vertical'>
-                            <Table
-                                style={{'width': '950px'}}
+        <div
+            style={{
+                height: 500,
+                overflow: 'auto',
+                padding: '0',
+                border: 'none',
+            }}
+            css={{
+                '&::-webkit-scrollbar': {
+                    width: '4px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    width: '6px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    background: '#cccccc',
+                    borderRadius: '24px',
+                },
+            }}
+        >
+            <Box
+                id="scrollableDataList"
+                style={{
+                    height: 450,
+                    overflow: 'auto',
+                    padding: '0 25px',
+                    border: 'none',
+                }}
+                css={{
+                    '&::-webkit-scrollbar': {
+                        width: '4px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        width: '6px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        background: '#cccccc',
+                        borderRadius: '24px',
+                    },
+                }}
+            >
+
+            <Table className='plist'
                                 columns={columns} dataSource={medicalRecords}
                             />
-                        </Space>
-                    </Center>
-                </Col>
-                <Col span={2} />
-            </Row>
+            </Box>
+
             <Drawer
                 width={1200}     title="诊疗记录详情"
                 onClose={handleMedicalRecordDrawerClose} open={medicalRecordDrawerOpen}

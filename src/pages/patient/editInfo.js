@@ -88,14 +88,17 @@ function EditInfo(props){
 
     // 发送post请求到服务器以修改用户信息
     const saveInfo = async () => {
+
+        let customHeaders = {
+            token: localStorage.getItem('userToken')
+        }
+
         const response = await axios.post('/patient/edit/', {
             newPhoneNumber: newPhoneNumber,
             verifyCode: verifyCode,
             password: password
         },{
-            headers: {
-                token: localStorage.getItem('userToken')
-            }
+            headers: customHeaders
         });
         if(response.status === 200){
             message.success('修改成功！');

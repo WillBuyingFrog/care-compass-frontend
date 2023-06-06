@@ -1,16 +1,17 @@
-import {Alert, Avatar, Col, Row, Space, Tabs, Typography} from "antd";
-import default_avatar from '../../assets/patient.png'
+import {Alert, Avatar, Col, Row, Space, Tabs, Typography, Layout} from "antd";
+import default_avatar from '../../assets/m-avatar.png'
 import {BulbOutlined, HomeOutlined, MailOutlined, SolutionOutlined} from "@ant-design/icons";
 import {Center, Link as ChakraLink} from "@chakra-ui/react";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import axios from "axios";
 import MyBills from "./myBills";
 import MyMedicalRecords from "./myMedicalRecords";
+import './personInfo.css'
 import {tab} from "@testing-library/user-event/dist/tab";
-
+import MyHeader from "../../components/header/header";
+const { Header, Content, Footer, Sider } = Layout;
 const {Title, Paragraph, Text} = Typography;
-
 
 function PersonInfo(props){
 
@@ -67,109 +68,98 @@ function PersonInfo(props){
     ]
 
 
-
     return (
-        <div style={{'marginTop': '3vh'}}>
+        <>
             {loading ? (
                 <div>loading...</div>
             ) : (
+            <Content
+                style={{
+                    padding: '50px 100px 20px 100px',
+                    backgroundColor: 'rgb(230,235,247)',
+                }}
+            >
                 <>
-                    <Row>
-                        <Col span={3} />
-                        <Col span={18}>
-                            <Title level={1}>
-                                我的个人信息
-                            </Title>
-                            <Center>
-                                <Space direction='vertical' style={{'width': '60%'}}>
-                                    {
-                                        isDefaulted === 1 ? (
-                                            <Alert message="您是失约患者，暂时无法使用预约挂号功能。" type="warning" />
-                                        ): (
-                                            <></>
-                                        )
-                                    }
-                                    <div
+                {isDefaulted === 1 &&
+                <div>
+                    <Alert message="您是失约患者，暂时无法使用预约挂号功能。" type="warning" />
+                </div>
+                }
+                    <div
+                        style={{
+                            padding: '24px',
+                            minHeight: '150px',
+                            width: '100%',
+                            background: 'linear-gradient(360deg,rgba(255,255,255,1.0), rgba(255,255,255,0.0))',
+                            boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                            borderRadius: '20px',
+                        }}
+                    >
+                        <Row>
+                            <Col span={7}>
+                                <Avatar
+                                    size={130}
+                                    // icon={<UserOutlined />}
+                                    style={{
+                                        boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.2)',
+                                        margin: '10px 0 0 30px',
+                                    }}
+                                    src={default_avatar}
+                                />
+                            </Col>
+                            <Col span={15}>
+                                <Typography
+                                    style={{
+                                        padding: '0 0 0 10px',
+                                    }}
+                                >
+                                    <Title
+                                        className="dark-text"
                                         style={{
-                                            padding: '24px',
-                                            minHeight: '150px',
-                                            width: '100%',
-                                            background: 'linear-gradient(360deg,rgba(255,255,255,1.0), rgba(255,255,255,0.0))',
-                                            boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
-                                            borderRadius: '20px',
+                                            textShadow: '4px 4px 6px rgba(0,0,0,0.2)',
+                                            color: '#4A5568',
                                         }}
                                     >
-                                        <Row>
-                                            <Col span={7}>
-                                                <Avatar
-                                                    size={130}
-                                                    // icon={<UserOutlined />}
-                                                    style={{
-                                                        boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.2)',
-                                                        margin: '10px 0 0 30px',
-                                                    }}
-                                                    src={default_avatar}
-                                                />
-                                            </Col>
-                                            <Col span={15}>
-                                                <Typography
-                                                    style={{
-                                                        padding: '0 0 0 10px',
-                                                    }}
-                                                >
-                                                    <Title
-                                                        className="dark-text"
-                                                        style={{
-                                                            textShadow: '4px 4px 6px rgba(0,0,0,0.2)',
-                                                            color: '#4A5568',
-                                                        }}
-                                                    >
-                                                        {personalInfo.name}
-                                                    </Title>
-                                                    <Paragraph>
-                                                        <Space>
-                                                            <HomeOutlined style={{color :'#4A5568'}}/>
-                                                        </Space>
-                                                        <Text>
-                                                            {personalInfo.phone}
-                                                        </Text>
-                                                    </Paragraph>
-                                                    <Paragraph>
-                                                        <Space>
-                                                            <BulbOutlined style={{color :'#4A5568'}} />
-                                                        </Space>
-                                                        <Text style={{color :'#4A5568'}}>{personalInfo.officialID}</Text>
-                                                    </Paragraph>
-                                                </Typography>
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                </Space>
-                            </Center>
+                                        {personalInfo.name}
+                                    </Title>
+                                    <Paragraph>
+                                        <Space>
+                                            <HomeOutlined style={{color :'#4A5568'}}/>
+                                        </Space>
+                                        <Text>
+                                            {personalInfo.phone}
+                                        </Text>
+                                    </Paragraph>
+                                    <Paragraph>
+                                        <Space>
+                                            <BulbOutlined style={{color :'#4A5568'}} />
+                                        </Space>
+                                        <Text style={{color :'#4A5568'}}>{personalInfo.officialID}</Text>
+                                    </Paragraph>
+                                </Typography>
+                            </Col>
+                        </Row>
+                    </div>
 
-                        </Col>
-                        <Col span={3} />
-                    </Row>
-                    <Row>
-                        <Col span={3} />
-                        <Col span={18}>
-                            <Title level={1}>
-                                诊疗与缴费
-                            </Title>
-                            <Center>
-                                <Space direction='vertical' style={{'width': '80%'}}>
-                                    <Tabs defaultActiveKey={1} items={tabItems} />
-                                </Space>
-                            </Center>
-                        </Col>
-                        <Col span={3} />
-                    </Row>
+                    <div
+                        style={{
+                            marginTop: '30px',
+                            marginBottom: '30px',
+                            padding: '24px',
+                            backgroundColor: 'white',
+                            height: '300px',
+                            boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                            borderRadius: '20px',
+                            minHeight: '70vh',
+                        }}
+                    >
+                        <Tabs defaultActiveKey={1} items={tabItems} />
+                    </div>
                 </>
-
+            </Content>
             )}
-        </div>
-    )
-}
+        </>
+    )}
 
 
 export default PersonInfo;

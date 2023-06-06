@@ -55,16 +55,16 @@ function Homepage(){
             <div className="recomand">
                 {/*<Header1></Header1>*/}
                 <Row style={{marginTop:30}}>
-                    <Text fontWeight={"extrabold"} color="#ffffff" fontSize="55px">热门推荐</Text>
+                    <Text fontWeight={"extrabold"} color="#ffffff" fontSize="55px">公告栏</Text>
                 </Row>
-                {/*<Row style={{marginTop:30}}>*/}
-                {/*    <Col span={16}><Papers  title="热门文献"></Papers></Col>*/}
-                {/*    <Col span={8}><img src={require("../../assets/homepage3.png")} style={{marginTop:90}}></img></Col>*/}
-                {/*</Row>*/}
-                {/*<Row gutter={30} style={{marginTop:30}}>*/}
-                {/*    <Col span={8}><img src={require("../../assets/homepage1.png")} style={{marginTop:90}}></img></Col>*/}
-                {/*    <Col span={16}><Conferences url="/frogRecommendJournals" title="热门期刊"></Conferences></Col>*/}
-                {/*</Row>*/}
+                <Row style={{marginTop:30}}>
+                    <Col span={16}><Papers  title="就医须知" type={0}></Papers></Col>
+                    <Col span={8}><img src={require("../../assets/doctors.png")} style={{marginTop:90}}></img></Col>
+                </Row>
+                <Row gutter={30} style={{marginTop:30}}>
+                    <Col span={8}><img src={require("../../assets/doctors.png")} style={{marginTop:90}}></img></Col>
+                    <Col span={16}><Papers  title="健康科普" type={1}></Papers></Col>
+                </Row>
                 {/*<Row gutter={30} style={{marginTop:30}}>*/}
                 {/*    <Col span={16}><Conferences url="/frogRecommendConferences" title="热门会议"></Conferences> </Col>*/}
                 {/*    <Col span={8}><img src={require("../../assets/homepage2.png")} style={{marginTop:90}}></img></Col>*/}

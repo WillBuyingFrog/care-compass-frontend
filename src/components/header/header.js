@@ -66,7 +66,7 @@ function MyHeader({textColor, isLanding=false}){
             //     .then(res => {
             //         console.log(res)
             //         console.log('res')
-                    
+
             //         SetUser(res.data.data)
             //         console.log('setuser')
             //         console.log(res.data.data);
@@ -87,7 +87,7 @@ function MyHeader({textColor, isLanding=false}){
         let backdate =null
         backdate.uname = temdate.username
         backdate.u_rid = temdate.userID
-        backdate.utype = temdate.type 
+        backdate.utype = temdate.type
         console.log(backdate)
         return backdate
     }
