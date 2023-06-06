@@ -156,15 +156,39 @@ function SelectDoctor(props){
 
     const items = periods.map((period) => {
         const id = period.key;
+
+        let label = (period.date.getMonth() + 1).toString() + "月";
+        label = label + (period.date.getDate()).toString() + "日";
+
         return {
-            label: period.date,
+            label: label,
             key: id,
             children: (
-                <>
-                    <p>Content of Tab Pane {id}</p>
-                    <p>Content of Tab Pane {id}</p>
-                    <p>Content of Tab Pane {id}</p>
-                </>
+                (loading === false && props.departmentID != null) ? (
+                    <Row style={{'width': '800px'}}>
+                        {
+                            currentDoctorData.map((doctor) => {
+                                    return (
+                                        <Col span={8} key={doctor.doctorID}>
+                                            <DoctorCard
+                                                doctor={doctor}
+                                                periodKey = {currentPeriod}
+                                                setSelectedDoctor={props.setSelectedDoctor}
+                                                setSelectedPeriod={props.setSelectedPeriod}
+                                                showConfirmDrawer={props.showConfirmDrawer}
+                                            />
+                                        </Col>
+
+                                    )
+                                }
+                            )
+                        }
+                    </Row>
+                ) : (
+                    <div>
+                        正在加载医生信息
+                    </div>
+                )
             ),
         };
         // {periods.map((period) => {
@@ -186,7 +210,11 @@ function SelectDoctor(props){
             <Row>
                 <Col span={8} offset={8}>
                     <Row>
-                        <Tabs type="card" items={items} />
+                        <Tabs type="card" items={items}
+                            onChange={(key) => {
+                                setCurrentPeriod(parseInt(key))
+                            }}
+                        />
                     </Row>
 
                 </Col>
