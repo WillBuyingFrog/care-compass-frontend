@@ -2,6 +2,7 @@ import {Button, Col, message, Modal, Row, Table, Typography, Layout} from "antd"
 import {useEffect, useState} from "react";
 import axios from "axios";
 import './personInfo.css'
+import {useNavigate} from "react-router-dom";
 
 
 const {Title, Text} = Typography;
@@ -16,6 +17,7 @@ function processRawAppointments(rawAppointments){
             key: appointment.id,
             id: appointment.id,
             commitTime: appointment.commitTime,
+            billID: appointment.billID,
             price: appointment.price,
             departmentID: appointment.departmentID,
             departmentName: appointment.departmentName,
@@ -35,6 +37,8 @@ function MyAppointments() {
 
     const [rawAppointments, setRawAppointments] = useState([]);
     const [appointments, setAppointments] = useState([]);
+
+    const navigate = useNavigate();
 
     let customHeaders = {
         token: localStorage.getItem('userToken')
@@ -159,6 +163,16 @@ function MyAppointments() {
             key: 'action',
             render: (_, record) => {
                 if(record.appointmentOrder !== -1) {
+                    let appointDate = new Date(record.appointmentTime.split(' ')[0])
+                    let today= new Date();
+                    // 如果预约时间在今天及以前，就不能取消挂号
+                    if(appointDate.getTime() <= today.getTime()){
+                        return (
+                            <Button
+                                disabled
+                            >取消挂号</Button>
+                        )
+                    }
                     // 显示可用的取消挂号按钮
                     return (
                         <Button
@@ -166,7 +180,16 @@ function MyAppointments() {
                                 setCancelingAppointment(record);
                                 showModal();
                             }}
+
                         >取消挂号</Button>
+                    )
+                } else {
+                    return (
+                        <Button
+                            onClick={() => {
+                                navigate('/patient/payBill/' + record.billID.toString())
+                            }}
+                        >前往支付</Button>
                     )
                 }
             }
