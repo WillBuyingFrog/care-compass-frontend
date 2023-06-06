@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {Col, Row} from "antd";
+import {Col, Row, Tabs} from "antd";
 import DoctorCard from "./doctorCard";
 import * as React from "react";
 
@@ -14,7 +14,7 @@ function PeriodCard(props){
             <span
                 style={{
                     'width': '100px',
-                    'fontSize': '16px',
+                    'fontSize': '18px',
                     'cursor': 'default'
                 }}
             >
@@ -154,26 +154,39 @@ function SelectDoctor(props){
         }
     }, [currentPeriod]);
 
+    const items = periods.map((period) => {
+        const id = period.key;
+        return {
+            label: period.date,
+            key: id,
+            children: (
+                <>
+                    <p>Content of Tab Pane {id}</p>
+                    <p>Content of Tab Pane {id}</p>
+                    <p>Content of Tab Pane {id}</p>
+                </>
+            ),
+        };
+        // {periods.map((period) => {
+        //     return (
+        //         <Col span={8} key={period.key}>
+        //             <PeriodCard
+        //                 date={period.date}
+        //                 handleClickPeriod={() => {
+        //                     setCurrentPeriod(period.key);
+        //                 }}
+        //             />
+        //         </Col>
+        //     )
+        // })}
+    });
+
     return (
         <div>
             <Row>
                 <Col span={8} offset={8}>
                     <Row>
-                        {
-                            periods.map((period) => {
-                                    return (
-                                        <Col span={8} key={period.key}>
-                                            <PeriodCard
-                                                date={period.date}
-                                                handleClickPeriod={() => {
-                                                    setCurrentPeriod(period.key);
-                                                }}
-                                            />
-                                        </Col>
-                                    )
-                                }
-                            )
-                        }
+                        <Tabs type="card" items={items} />
                     </Row>
 
                 </Col>

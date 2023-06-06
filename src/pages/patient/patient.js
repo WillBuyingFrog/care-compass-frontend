@@ -17,13 +17,11 @@ function Patient(){
 
 
     return (
-            <Layout style={{'height': '100vh', 'overflow': 'scroll'}}>
+            <Layout>
                 <PatientHeader />
-                <Layout style={{'minHeight': '80vh'}}>
-                    <Content>
-                        <Outlet context={[patientId, setPatientId]}/>
-                    </Content>
-                </Layout>
+                <Content>
+                    <Outlet context={[patientId, setPatientId]}/>
+                </Content>
             </Layout>
     )
 }

@@ -169,8 +169,8 @@ function MyMedicalRecords(){
             >
 
             <Table className='plist'
-                                columns={columns} dataSource={medicalRecords}
-                            />
+                columns={columns} dataSource={medicalRecords}
+            />
             </Box>
 
             <Drawer

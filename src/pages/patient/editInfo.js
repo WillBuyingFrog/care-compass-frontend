@@ -1,7 +1,8 @@
 import {Col, Form, Row, Typography, Image, Input, Button, message} from "antd";
 import "./css/editInfo.css"
-import right from '../../assets/patient.png'
-import {useEffect, useState} from "react";
+import right from '../../assets/info.png'
+import left from '../../assets/jogging.png'
+import React, {useEffect, useState} from "react";
 import {CheckCircleOutlined} from "@ant-design/icons";
 import axios from "axios";
 
@@ -60,6 +61,7 @@ function EditInfo(props){
         backgroundColor: saveIsHover ? '#5bc28b' : '#50af78',
         border: 'none',
         boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.2)',
+        marginLeft: '200px'
     }
 
     // 发送验证码按钮的倒计时
@@ -172,20 +174,12 @@ function EditInfo(props){
                     >
                         <Input
                             className={'editInput'}
-                            style={{'width': '78%'}}
                             autoComplete={'off'}
                             initialValue={data.newPhoneNumber}
                             placeholder={data.newPhoneNumber}
 
                         />
-                        <Button
-                            onClick={() => {
-                                requireVerifyCode();
-                            }}
-                            disabled={countdown > 0}
-                        >
-                            {countdown > 0 ? `${countdown}秒后重新发送` : '获取验证码'}
-                        </Button>
+
                     </Form.Item>
                     <span className={'inputLabel'}>验证码</span>
                     <Form.Item
@@ -203,9 +197,23 @@ function EditInfo(props){
                         <Input
                             className={'editInput'}
                             autoComplete={'off'}
+                            style={{'width': '50%'}}
                             initialvalues={data.verifyCode}
                             placeholder={data.verifyCode}
                         />
+                        <Button
+                            onClick={() => {
+                                requireVerifyCode();
+                            }}
+                            disabled={countdown > 0}
+                            type={"primary"}
+                            icon={<CheckCircleOutlined />}
+                            size="large"
+                            shape={"round"}
+                            style={{marginLeft: 20}}
+                        >
+                            {countdown > 0 ? `${countdown}秒后重新发送` : '获取验证码'}
+                        </Button>
                     </Form.Item>
                     <span className={'inputLabel'}>密码</span>
                     <Form.Item
@@ -253,7 +261,7 @@ function EditInfo(props){
                         padding: '8px 0 0 0',
                     }}
                 >
-                    <Image src={right} preview={false} style={{width: '60%', marginTop: '-200px'}}></Image>
+                    <img src={require("../../assets/jogging.png")} style={{width: '20vw',marginTop:-100}}></img>
                     <Button
                         type={"primary"}
                         icon={<CheckCircleOutlined />}

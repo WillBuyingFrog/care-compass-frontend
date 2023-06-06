@@ -1,6 +1,6 @@
 import {Alert, Avatar, Col, Row, Space, Tabs, Typography, Layout} from "antd";
 import default_avatar from '../../assets/m-avatar.png'
-import {BulbOutlined, HomeOutlined, MailOutlined, SolutionOutlined} from "@ant-design/icons";
+import {BulbOutlined, HomeOutlined, MailOutlined, SolutionOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
 import {Center, Link as ChakraLink} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
@@ -124,7 +124,7 @@ function PersonInfo(props){
                                     </Title>
                                     <Paragraph>
                                         <Space>
-                                            <HomeOutlined style={{color :'#4A5568'}}/>
+                                            <PhoneOutlined style={{color :'#4A5568'}}/>
                                         </Space>
                                         <Text>
                                             {personalInfo.phone}
@@ -132,7 +132,7 @@ function PersonInfo(props){
                                     </Paragraph>
                                     <Paragraph>
                                         <Space>
-                                            <BulbOutlined style={{color :'#4A5568'}} />
+                                            <IdcardOutlined style={{color :'#4A5568'}} />
                                         </Space>
                                         <Text style={{color :'#4A5568'}}>{personalInfo.officialID}</Text>
                                     </Paragraph>
