@@ -116,7 +116,7 @@ function EditInfo(props){
             style={{
                 padding: '80px 200px 50px 200px',
                 // height: '100vh',
-                backgroundColor: 'rgb(230,235,247)',
+                backgroundColor: 'rgb(220,225,242)',
             }}
         >
             <div

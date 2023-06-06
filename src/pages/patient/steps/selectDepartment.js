@@ -70,7 +70,9 @@ function SelectDepartment({selectedDepartment, setSelectedDepartment}) {
                 <div>
                     <Menu
                         style={{
-                            'width': '20vw'
+                            width:'20vw',
+                            borderRadius: '0 20px 20px 0',
+                            boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
                         }}
                         mode="inline"
                         items={deptSidebarData}

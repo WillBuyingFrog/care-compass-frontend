@@ -76,7 +76,7 @@ function PersonInfo(props){
             <Content
                 style={{
                     padding: '50px 100px 20px 100px',
-                    backgroundColor: 'rgb(230,235,247)',
+                    backgroundColor: 'rgb(220,225,242)',
                 }}
             >
                 <>
