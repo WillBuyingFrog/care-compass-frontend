@@ -9,6 +9,7 @@ import SelectDepartment from "./steps/selectDepartment";
 import {Outlet, useNavigate, useOutletContext} from "react-router-dom";
 import SelectDoctor from "./steps/selectDoctor";
 import {Center, Checkbox} from "@chakra-ui/react";
+import {CheckCircleOutlined} from "@ant-design/icons";
 const { Title , Text} = Typography;
 const {TextArea} = Input;
 
@@ -248,6 +249,10 @@ function MakeAppointment() {
                                         <Button
                                             onClick={confirmAppointment}
                                             disabled={confirmDrawerButtonDisabled}
+
+                                            icon={<CheckCircleOutlined />}
+                                            size="large"
+                                            shape={"round"}
                                         >
                                             {confirmDrawerButtonText}
                                         </Button>

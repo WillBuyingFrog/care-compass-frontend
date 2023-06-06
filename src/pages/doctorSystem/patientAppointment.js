@@ -1,9 +1,10 @@
-import {Button,Layout,Menu, Breadcrumb,Select,message} from 'antd'
+import {Button,Layout,Menu, Breadcrumb,Select,message, Divider} from 'antd'
 import { useLocation, useNavigate ,Outlet} from 'react-router-dom';
 import { Card, Col, Row ,Icon} from 'antd';
 import { Center } from '@chakra-ui/react';
-import { useState , useEffect} from 'react';
+import React, { useState , useEffect} from 'react';
 import axios from 'axios';
+import {CheckCircleOutlined} from "@ant-design/icons";
 
 const { SubMenu } = Menu;
 const { Option } = Select;
@@ -95,19 +96,20 @@ function PatientAppointment(){
                     let temcards = patientlist.map((item,index)=>{
                         return (
                             <Col span={6} >
-                                            <Card bordered={true}>
-                                            <span style={{paddingTop:-110}}>{item.name}</span>
-                                            <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
-                                            <br/>
-                                            <span style={{paddingTop:-110}}>预约时间:8:30-8:50</span>
-                                            <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
-                                            <br/>
-                                            <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
-                                            <div style={{textAlign:'center',marginTop:10}}>
-                                                <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
-                                            </div>
-                                            </Card>
-                                        </Col>
+                                <Card bordered={true}>
+                                <span style={{paddingTop:-110}}>{item.name}</span>
+                                <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
+                                <br/>
+                                <span style={{paddingTop:-110}}>预约时间:8:30-8:50</span>
+                                <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
+                                <br/>
+                                <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
+                                <div style={{textAlign:'center',marginTop:10}}>
+                                    <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
+                                </div>
+                                </Card>
+                            </Col>
+
                         )
                     })
                     setcards(temcards)
@@ -140,7 +142,7 @@ function PatientAppointment(){
                     setoptions(temoptions)
                 }
             })
-    
+
         }
         console.log(typeof(parseInt(localStorage.getItem("userID"))))
         // console.log(parseInt(localStorage.getItem("userID")))
@@ -179,7 +181,7 @@ function PatientAppointment(){
     }
 
     const [cards,setcards] = useState([])
-    
+
     if(location.state !== null){
         backdate = location.state.date
         nowmixdate=mixdate(location.state.date,location.state.time)
@@ -228,7 +230,7 @@ function PatientAppointment(){
              i1 = i + 14
         }
         let j1 = j*10
-        
+
         if(j == 0){
             backdata1 = i1.toString() + ':00'
             backdata2 =i1.toString() + ':10'
@@ -275,20 +277,27 @@ function PatientAppointment(){
                 patientlist=res.data.data.patientList
                 let temcards = patientlist.map((item,index)=>{
                     return (
-                        <Col span={6} >
-                                        <Card bordered={true} key={item.patientID}>
-                                        <span style={{paddingTop:-110}}>{item.name}</span>
-                                        <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
-                                        <br/>
-                                        <span style={{paddingTop:-110}}>预约时间:{gettime(index,splitdate(value).time)}</span>
-                                        <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
-                                        <br/>
-                                        <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
-                                        <div style={{textAlign:'center',marginTop:10}}>
-                                            <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
-                                        </div>
-                                        </Card>
-                                    </Col>
+                        <Col span={8} >
+                            <Card bordered={true} key={item.patientID} style={{borderRadius: 20, 'box-shadow': '4px 4px 15px 0 rgba(0,0,0,0.1)'}}>
+                            <span style={{paddingTop:-110, fontSize: 18, fontWeight: "bold"}}>{item.name}</span>
+                            <Divider dashed />
+                            <span style={{paddingTop:-110}}>预约时间：{gettime(index,splitdate(value).time)}</span>
+                            <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
+                            <br/>
+                            <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
+                            <div style={{textAlign:'center',marginTop:10}}>
+                                <Button
+                                        size="large"
+                                        shape={"round"}
+                                        onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
+                                <Button style={{marginLeft: 20}}
+                                        type={"primary"}
+                                        size="large"
+                                        shape={"round"}
+                                        onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
+                            </div>
+                            </Card>
+                        </Col>
                     )
                 })
                 setcards(temcards)
@@ -297,18 +306,30 @@ function PatientAppointment(){
                 error(res.data.msg)
             }
         })
-        
+
       }
     console.log(options)
     return(
-        <Layout style={{ padding: '0 24px 24px' }}>
-                <Breadcrumb style={{ margin: '16px 0' }}>
+        <Layout style={{
+            padding: '30px',
+            // height: '100vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
+            <div
+                style={{
+                    padding: '20px 30px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,1.0), rgba(255,255,255,0.4))',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                }}
+            >
+                <Breadcrumb style={{ margin: '10px 0' }}>
                 <Breadcrumb.Item>医生系统</Breadcrumb.Item>
                 <Breadcrumb.Item>预约患者</Breadcrumb.Item>
                 </Breadcrumb>
                 <div>
-                <span>请选择所要查看的时间段</span>           
-                    <Select defaultValue={nowmixdate} style={{ width: 200 ,marginLeft:500}} onChange={handleChange}>
+                <span style={{margin: '10px 0'}}>请选择所要查看的时间段</span>
+                    <Select defaultValue={nowmixdate} style={{ width: 200 ,margin:'0 0 2vh 50vw'}} onChange={handleChange}>
                         {/* <Option value="6-8 周四 上午">6-8 周四 上午</Option>
                         <Option value="6-8 周四 下午">6-8 周四 下午</Option>
                         <Option value="6-10 周六 上午">6-10 周六 上午</Option> */}
@@ -317,7 +338,6 @@ function PatientAppointment(){
                 </div>
                 <Content
                 style={{
-                    background: '#ECECEC',
                     padding: 24,
                     margin: 0,
                     minHeight: 600,
@@ -391,9 +411,10 @@ function PatientAppointment(){
                         </Col> */}
                         {cards}
                         </Row>
-                        
-                        
+
+
                 </Content>
+            </div>
             </Layout>
     );
 }
