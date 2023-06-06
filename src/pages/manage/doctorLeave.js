@@ -294,8 +294,6 @@ function UncheckList() {
             dataIndex: 'type',
             key: 'type',
             ...getColumnSearchProps('type'),
-            sorter: (a, b) => a.type.localeCompare(b.type),
-            sortDirections: ['descend', 'ascend'],
             render: (_, record) => (
                 <Text>{record.type === 1 ? "病假":"事假"}</Text>
             ),

@@ -47,7 +47,19 @@ function PatientHistory(){
 
     }, []);
     return(
-        <Layout style={{ padding: '0 24px 24px' }}>
+        <Layout style={{
+            padding: '30px',
+            // height: '100vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
+            <div
+                style={{
+                    padding: '20px 30px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,1.0), rgba(255,255,255,0.4))',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                }}
+            >
                 <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>医生系统</Breadcrumb.Item>
                 <Breadcrumb.Item>历史诊疗记录</Breadcrumb.Item>
@@ -56,10 +68,13 @@ function PatientHistory(){
                 {/* //调试使用，记得改回 */}
                 {/* <span style={{fontSize:30}}>{location.state.patientName}</span>            */}
                 <span style={{fontSize:30}}>{location.state.patientName}</span>
+                <Button style={{marginLeft:'60vw'}}
+                        size="large"
+                        shape={"round"}
+                        onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date ,time:location.state.time}})}}>返回预约界面</Button>
                 </div>
                 <Content
                 style={{
-                    background: 'white',
                     padding: 24,
                     margin: 0,
                     minHeight: 600,
@@ -82,9 +97,10 @@ function PatientHistory(){
                         </List.Item>
                         )}
                     />,
-                        
-                        
+
+
                 </Content>
+            </div>
             </Layout>
     )
 }

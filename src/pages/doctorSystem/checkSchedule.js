@@ -25,7 +25,7 @@ function CheckSchedule(){
     day = (day < 10) ? ("0" + day) : day;
     var today = year + "-" + month + "-" + day;
     console.log(typeof(today))
-    
+
     useEffect(() => {
 
         axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
@@ -43,18 +43,20 @@ function CheckSchedule(){
             else if(res.data.code ==0 ){
                 shiftlist = res.data.data.shiftList
                 var temcards = shiftlist.map((item,index)=>{
-    
+
                     return (
                         <Col span={6}>
-                                        <Card bordered={true}>
-                                        <span style={{paddingTop:-110}}>{mixdate(item.date,item.time)}</span>
-                                        <br/>
-                                        <span style={{paddingTop:-110}}>当前患者人数： {item.num}人</span>
-                                        <div style={{textAlign:'center',marginTop:10}}>
-                                            <Button onClick={()=>nagivate('/doctorMain/patientAppointment',{state:{shiftlist:item,date:item.date,time:item.time}})}>查看详情</Button>
-                                        </div>
-                                        </Card>
-                                    </Col>
+                            <Card bordered={true} style={{borderRadius: 20, 'box-shadow': '4px 4px 15px 0 rgba(0,0,0,0.1)'}}>
+                            <span style={{paddingTop:-110}}>{mixdate(item.date,item.time)}</span>
+                            <br/>
+                            <span style={{paddingTop:-110}}>当前患者人数： {item.num}人</span>
+                            <div style={{textAlign:'center',marginTop:10}}>
+                                <Button size="large"
+                                        shape={"round"}
+                                        onClick={()=>nagivate('/doctorMain/patientAppointment',{state:{shiftlist:item,date:item.date,time:item.time}})}>查看详情</Button>
+                            </div>
+                            </Card>
+                        </Col>
                     )
                 })
                 setcards(temcards)
@@ -76,23 +78,31 @@ function CheckSchedule(){
 
 
     return(
-        <Layout style={{ padding: '0 24px 24px' }}>
+        <Layout style={{
+            padding: '30px',
+            // height: '100vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
+            <div
+                style={{
+                    padding: '20px 30px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,1.0), rgba(255,255,255,0.4))',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                }}
+            >
                 <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>医生系统</Breadcrumb.Item>
                 <Breadcrumb.Item>查看排班</Breadcrumb.Item>
                 </Breadcrumb>
                 <div>
                     {/* //医生姓名从header拿 */}
-                    <span style={{fontSize:30}}>{localStorage.getItem('username')}</span>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <span style={{fontSize:10}}>最近两周排班</span>
+                    <span style={{fontSize:30}}>{localStorage.getItem('username')}</span><br />
+                    <span style={{fontSize:12}}>最近两周排班</span>
                     <br/>
                 </div>
                 <Content
                 style={{
-                    background: '#ECECEC',
                     padding: 24,
                     margin: 0,
                     minHeight: 600,
@@ -165,6 +175,7 @@ function CheckSchedule(){
                         {cards}
                         </Row>
                 </Content>
+            </div>
             </Layout>
     );
 }

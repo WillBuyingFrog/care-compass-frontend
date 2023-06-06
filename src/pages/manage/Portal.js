@@ -424,7 +424,7 @@ function Portal() {
         </div>)
         }
         else{
-            return 
+            return
         }
     }
     const institute_name = (institute) => {
@@ -471,6 +471,7 @@ function Portal() {
                 style={{
                     padding: '50px 100px 20px 100px',
                     backgroundColor: 'rgb(230,235,247)',
+                    height: '90vh'
                 }}
             >
                 <div
@@ -513,12 +514,10 @@ function Portal() {
                                     <Space>
                                         <HomeOutlined style={{color :'#4A5568'}}/>
                                     </Space>
-                                    <Link
-                                        style={instituteStyle}
-                                        onMouseEnter={handleMouseEnterInstitute}
-                                        onMouseLeave={handleMouseLeaveInstitute}
+                                    <Text
+                                        style={{color :'#4A5568'}}
                                         // href={"/institute?IID=" + data.r_IID} isExternal
-                                    > {data.title} </Link>
+                                    > {data.title} </Text>
                                 </Paragraph>
                                 <Paragraph>
                                     <Space>
@@ -531,7 +530,7 @@ function Portal() {
                                         <Space>
                                             <MailOutlined style={{color :'#4A5568'}}/>
                                         </Space>
-                                        <Text style={{color :'#4A5568'}}> {'历史累计挂号量'+data.count}</Text>
+                                        <Text style={{color :'#4A5568'}}> {'历史累计挂号量：'+data.count}</Text>
                                     </Paragraph>
                                 }
                                 {data.intro != "none" &&
@@ -576,7 +575,7 @@ function Portal() {
                         borderRadius: '20px',
                     }}
                 >
-                    <Table dataSource={d3days2} columns={columns}></Table>
+                    <Table dataSource={d3days2} columns={columns} className='plist'></Table>
                 </div>
             </Content>
         </Layout>

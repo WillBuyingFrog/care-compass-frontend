@@ -22,6 +22,7 @@
 [data-theme='compact'] .card-container > .ant-tabs-card .ant-tabs-tab {
     background: transparent;
     border-color: transparent;
+    font-size: 18px;
 }
 .card-container > .ant-tabs-card .ant-tabs-tab-active,
 [data-theme='compact'] .card-container > .ant-tabs-card .ant-tabs-tab-active {

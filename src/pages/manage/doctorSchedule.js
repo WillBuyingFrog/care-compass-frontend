@@ -501,7 +501,7 @@ function WorkCalendar(props){
             // }
         })
             .then(res => {
-                // console.log(res.data.data);
+                console.log(res.data.data);
                 setDayData(res.data.data.shiftList);
                 console.log(dayData);
             })

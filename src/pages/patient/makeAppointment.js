@@ -9,7 +9,8 @@ import SelectDepartment from "./steps/selectDepartment";
 import {Outlet, useNavigate, useOutletContext} from "react-router-dom";
 import SelectDoctor from "./steps/selectDoctor";
 import {Center, Checkbox} from "@chakra-ui/react";
-const { Title , Text, Paragraph} = Typography;
+import {CheckCircleOutlined} from "@ant-design/icons";
+const { Title , Text} = Typography;
 const {TextArea} = Input;
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -218,24 +219,10 @@ function MakeAppointment() {
                             <Text>
                                 {getConfirmedPeriodText(selectedPeriod)}
                             </Text>
-                            <Title level={4}>
+                            <Title level={3}>
                                 请您完整阅读以下预约挂号守则：
                             </Title>
-
-                            <Paragraph>
-                                1. CareCompass 平台提供<Text strong>未来三天</Text>号源的在线挂号，每天00:00开放未来第三天号源。
-                                当日挂号请前往医院，在线下窗口咨询或是使用医院内自助服务机操作挂号。
-                            </Paragraph>
-                            <Paragraph>
-                                2. 患者30天内累计爽约3次将<Text strong type='danger'>进入限制名单</Text>，此后一段时间内内将无法通过 CareCompass 平台预约号源（到期后自动恢复正常）。
-                            </Paragraph>
-                            <Paragraph>
-                                3. 挂号成功后，请按建议候诊时间提前到院，上午号9:00-12:00，下午号13:00-17:00。
-                            </Paragraph>
-                            <Paragraph>
-                                4. 为全面了解您的病情，便于更好地为您提供诊疗服务，接诊医师可能会调取您的历史诊疗资料，我们会对您的历史诊疗资料严格保密。
-                            </Paragraph>
-
+                            <TextArea rows={4} defaultValue={'这里显示预约挂号守则'} />
                             <Checkbox onChange={handleConfirmDrawerCheckboxChange}>
                                 我已阅读并承诺遵守预约挂号守则
                             </Checkbox>
@@ -262,6 +249,10 @@ function MakeAppointment() {
                                         <Button
                                             onClick={confirmAppointment}
                                             disabled={confirmDrawerButtonDisabled}
+
+                                            icon={<CheckCircleOutlined />}
+                                            size="large"
+                                            shape={"round"}
                                         >
                                             {confirmDrawerButtonText}
                                         </Button>
