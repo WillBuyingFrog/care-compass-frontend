@@ -92,17 +92,16 @@ function CheckProgress(){
 
     function getdate(temshiftID){
       console.log(temshiftID)
-      console.log(typeof(temshiftID))
+      // console.log(typeof(temshiftID))
       console.log(shiftlist)
+      console.log(shiftlist[1].id)
+      var backdata='default'
       for(let i=0;i<shiftlist.length;i++){
-        if(temshiftID === shiftlist[i].id){
-          return mixdate(shiftlist[i].date,shiftlist[i].time)
-        }
-        else{
-          console.log('return null')
-          return 'default'
+        if(temshiftID == shiftlist[i].id){
+          backdata = mixdate(shiftlist[i].date,shiftlist[i].time)
         }
       }
+      return backdata
     }
 
     function getstate(temstate){

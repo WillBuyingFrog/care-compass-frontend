@@ -306,7 +306,7 @@ function Department(){
                                                        {
                                                            record.doctorList.map((value, key) => {
                                                                return (
-                                                                   <Link href={"/doctorPortal?dID=" + value.doctorID} isExternal fontSize='sm' mr='25px' mt='5px' color='#98bcdf'> {`${value.doctorName}`}</Link>
+                                                                   <Link href={`/doctorPortal/${value.doctorID}`} isExternal fontSize='sm' mr='25px' mt='5px' color='#98bcdf'> {`${value.doctorName}`}</Link>
                                                                );})
                                                        }
                                                    </Row>

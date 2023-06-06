@@ -215,8 +215,8 @@ function PatientAppointment(){
     }
 
     function gettime(temindex,temtime){
-        let i = parseInt(temindex/4)
-        let j = temindex%4
+        let i = parseInt(temindex/6)
+        let j = temindex%6
         let backdata1
         let backdata2
         let i1
@@ -227,22 +227,30 @@ function PatientAppointment(){
         else{
              i1 = i + 14
         }
-        let j1 = j*15
+        let j1 = j*10
         
         if(j == 0){
             backdata1 = i1.toString() + ':00'
-            backdata2 =i1.toString() + ':15'
+            backdata2 =i1.toString() + ':10'
         }
         else if(j == 1){
-            backdata1 = i1.toString() + ':15'
-            backdata2 =i1.toString() + ':30'
+            backdata1 = i1.toString() + ':10'
+            backdata2 =i1.toString() + ':20'
         }
         else if(j == 2){
-            backdata1 = i1.toString() + ':30'
-            backdata2 =i1.toString() + ':45'
+            backdata1 = i1.toString() + ':20'
+            backdata2 =i1.toString() + ':30'
         }
         else if(j == 3){
-            backdata1 = i1.toString() + ':45'
+            backdata1 = i1.toString() + ':30'
+            backdata2 =(i1+1).toString() + ':40'
+        }
+        else if(j == 4){
+            backdata1 = i1.toString() + ':40'
+            backdata2 =(i1+1).toString() + ':50'
+        }
+        else if(j == 5){
+            backdata1 = i1.toString() + ':50'
             backdata2 =(i1+1).toString() + ':00'
         }
         // backdata = i1.toString() + ':'+j1.toString()

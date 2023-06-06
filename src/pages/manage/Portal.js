@@ -291,14 +291,23 @@ function Portal() {
     //         dintro: '详细介绍'
     //     };
     let location = useLocation()
+    console.log(location.pathname)
     let doctorData = {}
+    var doctorID
     const [data, setData] = useState({});
 
     useEffect(() => {
+        if(location.pathname.slice(-2,-1) == '/'){
+            doctorID=parseInt(location.pathname.slice(-1))
+        }
+        else{
+            doctorID=parseInt(location.pathname.slice(-2))
+        }
         // setData(DoctorInfo);
+        console.log(doctorID)
         axios.post('/admin/getOneDoctor/',JSON.stringify({
             //之后获取真正ID
-            doctorID:location.state.doctorID
+            doctorID:doctorID
         }))
         .then(res=>{
             console.log(res)
@@ -405,7 +414,9 @@ function Portal() {
                 }}
                 onClick={() => {
                     //需要doctorID
-                    navigate('/editPortal',{state:{doctorID:location.state.doctorID}});
+                    console.log(data)
+                    console.log('this is data')
+                    navigate('/editPortal',{state:{title:data.title,area:data.area,intro:data.intro,doctorID:location.pathname.slice(-2,-1) == '/'?doctorID=parseInt(location.pathname.slice(-1)):doctorID=parseInt(location.pathname.slice(-2))}});
                 }}
             >
                 编辑

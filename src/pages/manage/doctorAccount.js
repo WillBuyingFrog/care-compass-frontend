@@ -84,7 +84,8 @@ function DoctorAccount(){
                 // console.log('i am here')
                 console.log(res.data);
                 setTheDoctor(res.data.data);
-                navigate('/doctorPortal',{state:{doctorID:res.data.data.doctorID}})
+                // navigate('/doctorPortal',{state:{doctorID:res.data.data.doctorID}})
+                window.open(`/doctorPortal/${res.data.data.doctorID}`, '_blank');
                 console.log(theDoctor);
             })
     }

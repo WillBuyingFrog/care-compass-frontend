@@ -64,7 +64,7 @@ const default_router = createBrowserRouter([
         element: <FindPassword />
     },
     {
-        path: '/doctorPortal',
+        path: '/doctorPortal/:doctorID',
         element: <Portal />
     },
     {

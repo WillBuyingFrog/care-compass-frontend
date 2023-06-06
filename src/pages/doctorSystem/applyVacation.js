@@ -176,8 +176,6 @@ function ApplyVacation(){
                 <TextArea rows={6} placeholder='请输入理由' onChange={onChange}></TextArea>
                 <br/>
                 <br/>
-                <span>点击添加图片：</span>
-                <PicturesWall/>
                 <br/>
                 <br/>
                 <br/>
