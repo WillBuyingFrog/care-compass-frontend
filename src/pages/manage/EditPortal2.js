@@ -114,6 +114,7 @@ function DataChart(props) {
 
 
 function EditPortal2() {
+    let location = useLocation()
     // const DoctorInfo =
     //     {
     //         key: '1',
@@ -127,10 +128,15 @@ function EditPortal2() {
     //         dintro: '详细介绍'
     //     };
     
-    let doctorData = {}
+    let doctorData = {
+        title:location.state.title,
+        area:location.state.area,
+        intro:location.state.intro
+    }
     const [data, setData] = useState({});
 
     useEffect(()=>{
+        // console.log(location.state)
         axios.post('/admin/getOneDoctor/',JSON.stringify({
             //之后获取真正ID,记得修改！！！！！
             doctorID:location.state.doctorID
@@ -138,8 +144,11 @@ function EditPortal2() {
         }))
         .then(res=>{
             if(res.data.code === 0){
+                console.log(res.data)
+                console.log('res data')
                 doctorData=res.data.data
                 setData(doctorData)
+                console.log(data)
             }
             else{
                 message.error(res.data.msg)
@@ -164,7 +173,6 @@ function EditPortal2() {
             key: 'data',
         }
     ]
-    let location = useLocation()
     const navigate = useNavigate();
     let params = new URLSearchParams(location.search)
     var RID;
@@ -173,7 +181,7 @@ function EditPortal2() {
     }else {
         RID = ''
     }
-    console.log('RID:' + RID)
+    console.log(location)
 
     // const getData = ()=>{
     //     axios({
@@ -307,6 +315,9 @@ function EditPortal2() {
 
     function submit(){
         setData(doctorData)
+        console.log(data.price)
+        console.log('this is success')
+        // console.log(doctorData)
         axios.post('/admin/updateOneDoctor/',JSON.stringify({
             //之后需要更新
             doctorID:location.state.doctorID,
@@ -316,8 +327,11 @@ function EditPortal2() {
             area:data.area
         }))
         .then(res=>{
+            console.log(res)
+            console.log('this is res')
             message.success('您的修改已提交成功！')
-            navigate('/doctorPortal',{state:{doctorID:location.state.doctorID}})
+            navigate(`/doctorPortal/${location.state.doctorID}`)
+            // window.open(`/doctorPortal/${location.state.doctorID}`);
         })
     }
 
@@ -376,14 +390,14 @@ function EditPortal2() {
                                         onMouseLeave={handleMouseLeaveInstitute}
                                         // href={"/institute?IID=" + data.r_IID} isExternal
                                     > {data.title} </Link> */}
-                                    <Input2 style={{marginLeft:10,width:100}} defaultValue={data.title} onChange={changetitle}/>
+                                    <Input2 style={{marginLeft:10,width:100}} defaultValue={location.state.title} onChange={changetitle}/>
                                 </Paragraph>
                                 <Paragraph>
                                     <Space>
                                         <BulbOutlined style={{color :'#4A5568'}} />
                                     </Space>
                                     {/* <Text style={{color :'#4A5568'}}> {data.area}</Text> */}
-                                    <Input2 style={{marginLeft:10,width:100}} defaultValue={data.area} onChange={changearea}/>
+                                    <Input2 style={{marginLeft:10,width:100}} defaultValue={location.state.area} onChange={changearea}/>
                                 </Paragraph>
                                 {data.count != "none" &&
                                     <Paragraph>
@@ -399,7 +413,7 @@ function EditPortal2() {
                                             <SolutionOutlined style={{color :'#4A5568'}}/>
                                         </Space>
                                         {/* <Text style={{color :'#4A5568'}}> {data.intro}</Text> */}
-                                        <TextArea style={{marginLeft:10,width:600}} defaultValue={data.intro} onChange={changeintro}/>
+                                        <TextArea style={{marginLeft:10,width:600}} defaultValue={location.state.intro} onChange={changeintro}/>
                                     </Paragraph>
                                 }
                             </Typography>

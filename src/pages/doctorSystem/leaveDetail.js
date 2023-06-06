@@ -53,8 +53,6 @@ function LeaveDetail(){
                 <TextArea rows={6} defaultValue={location.state.description} disabled></TextArea>
                 <br/>
                 <br/>
-                <span>点击添加图片：</span>
-                <PicturesWall disabled/>
                 <br/>
                 <br/>
                 <br/>

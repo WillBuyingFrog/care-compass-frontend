@@ -110,7 +110,8 @@ function MyHeader({textColor, isLanding=false}){
     console.log(typeof(user.utype))
     if(isLoggedIn && user.utype == "2"){
         userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/doctorPortal',{state:{doctorID:localStorage.getItem('doctorID')}})
+            // navigate('/doctorPortal',{state:{doctorID:localStorage.getItem('doctorID')}})
+            window.open(`/doctorPortal/${localStorage.getItem('doctorID')}`, '_blank');
         }}
         >我的门户</Button>)
     }
