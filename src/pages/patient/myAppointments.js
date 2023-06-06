@@ -1,9 +1,11 @@
-import {Button, Col, message, Modal, Row, Table, Typography} from "antd";
+import {Button, Col, message, Modal, Row, Table, Typography, Layout} from "antd";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import './personInfo.css'
 
 
 const {Title, Text} = Typography;
+const { Header, Content, Footer, Sider } = Layout;
 
 
 function processRawAppointments(rawAppointments){
@@ -94,7 +96,7 @@ function MyAppointments() {
             title: '挂号发起时间',
             dataIndex: 'commitTime',
             key: 'commitTime',
-            render: (text) => <Text>{text}</Text>
+            render: (text) => <Text>{text.split('T')[0]} {text.split('T')[1].split('.')[0]}</Text>
         },
         {
             title: '挂号价格',
@@ -173,21 +175,38 @@ function MyAppointments() {
 
 
     return (
-        <div style={{'marginTop': '3vh'}}>
+        <Content
+            style={{
+                padding: '50px 100px 20px 100px',
+                backgroundColor: 'rgb(220,225,242)',
+            }}
+        >
+            <div
+                style={{
+                    marginBottom: '30px',
+                    padding: '24px',
+                    backgroundColor: 'white',
+                    height: '300px',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                    minHeight: '80vh',
+                }}
+            >
             <Row>
-                <Col span={4} />
-                <Col span={16}>
+                <Col span={2} />
+                <Col span={20}>
                     <Title level={1}>
                         我的挂号
                     </Title>
-                    <Table columns={columns} dataSource={appointments} />
+                    <Table columns={columns} dataSource={appointments} className='plist' pagination={{pageSize: 6}}/>
                 </Col>
-                <Col span={4} />
+                <Col span={2} />
             </Row>
             <Modal title="确认取消挂号" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Text>您确定要取消 #{cancelingAppointment.id} 挂号吗？</Text>
             </Modal>
-        </div>
+            </div>
+        </Content>
     )
 }
 

@@ -91,7 +91,7 @@ function MyBills(props){
 
     const columns = [
         {
-            title: '缴费编号',
+            title: '编号',
             dataIndex: 'id',
             key: 'id',
             render: (text) => <Text>#{text}</Text>
@@ -102,7 +102,7 @@ function MyBills(props){
             key: 'createTime',
         },
         {
-            title: '费用类型',
+            title: '类型',
             dataIndex: 'billType',
             key: 'billType',
             render: (text) => {
@@ -120,12 +120,12 @@ function MyBills(props){
             }
         },
         {
-            title: '缴费金额',
+            title: '金额',
             dataIndex: 'price',
             key: 'price',
         },
         {
-            title: '缴费状态',
+            title: '状态',
             dataIndex: 'status',
             key: 'status',
             render: (text) => {
@@ -213,7 +213,7 @@ function MyBills(props){
             >
 
             <Table columns={columns} dataSource={bills}
-                   pagination={{pageSize: 8}}
+                   pagination={{pageSize: 4}}
                    className='plist'
             />
             </Box>

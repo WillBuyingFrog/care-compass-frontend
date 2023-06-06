@@ -152,12 +152,6 @@ function MyHeader({textColor, isLanding=false}){
                                 </Row >
                             </PopoverTrigger>
                             <PopoverContent w='240px' border='blue' >
-                                <PopoverArrow />
-                                <PopoverCloseButton />
-                                <PopoverHeader>
-                                    <Text fontSize='md' fontWeight='550' mr='20px' >Email  </Text>
-                                    <Text ml='20px' mt='10px'>{user.uemail}</Text>
-                                </PopoverHeader>
                                 <PopoverBody>
                                     <Row>
                                         {userButton}

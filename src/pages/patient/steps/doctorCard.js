@@ -39,7 +39,7 @@ function DoctorAppointment(props){
     const appointmentAvailableStyle = {
         marginLeft: '10px',
         // 设置文字颜色为橙色
-        color: '#ff8c00',
+        color: '#50af78',
         fontWeight: 'bold',
         fontSize: '20px',
         verticalAlign: 'baseline'
@@ -48,8 +48,8 @@ function DoctorAppointment(props){
     return (
         <div>
             <Row>
-                <Col span={3} />
-                <Col span={18}>
+                <Col span={2} />
+                <Col span={20}>
                     {
                         props.doctor.morningAvailable !== -1 ? (
                             <Row>
@@ -87,9 +87,9 @@ function DoctorAppointment(props){
                         )
                     }
                 </Col>
-                <Col span={3} />
-                <Col span={3} />
-                <Col span={18}>
+                <Col span={2} />
+                <Col span={2} />
+                <Col span={20}>
                     {
                         props.doctor.afternoonAvailable !== -1 ? (
                             <Row>
@@ -145,6 +145,7 @@ function DoctorCard(props){
     return (
         <Box
             width={'100%'}
+            height={'25vh'}
             borderWidth={'5'}
             borderRadius={'7'}
             borderStyle={'solid'}
@@ -153,12 +154,23 @@ function DoctorCard(props){
             backgroundColor={'#ffffff'}
             pl={3} pr={3} pt={2} pb={2} mt={4}
         >
-            <DoctorInfo name={props.doctor.doctorName} title={props.doctor.doctorTitle} />
-            <DoctorAppointment
-                doctor={props.doctor}
-                periodKey={props.periodKey}
-                handleClickAppointment={handleClickAppointment}
-            />
+            <Box
+                height={'35%'}
+            >
+                <DoctorInfo name={props.doctor.doctorName} title={props.doctor.doctorTitle} />
+            </Box>
+            <Box
+                width={'100%'}
+                height={'65%'}
+            >
+                    <DoctorAppointment
+                        doctor={props.doctor}
+                        periodKey={props.periodKey}
+                        handleClickAppointment={handleClickAppointment}
+                    />
+            </Box>
+
+
         </Box>
     )
 }

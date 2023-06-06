@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {Col, Row} from "antd";
+import {Col, Row, Tabs} from "antd";
 import DoctorCard from "./doctorCard";
 import * as React from "react";
 
@@ -14,7 +14,7 @@ function PeriodCard(props){
             <span
                 style={{
                     'width': '100px',
-                    'fontSize': '16px',
+                    'fontSize': '18px',
                     'cursor': 'default'
                 }}
             >
@@ -154,54 +154,70 @@ function SelectDoctor(props){
         }
     }, [currentPeriod]);
 
-    return (
-        <div>
-            <Row>
-                <Col span={8} offset={8}>
-                    <Row>
+    const items = periods.map((period) => {
+        const id = period.key;
+
+        let label = (period.date.getMonth() + 1).toString() + "月";
+        label = label + (period.date.getDate()).toString() + "日";
+
+        return {
+            label: label,
+            key: id,
+            children: (
+                (loading === false && props.departmentID != null) ? (
+                    <Row style={{'width': '800px'}}>
                         {
-                            periods.map((period) => {
+                            currentDoctorData.map((doctor) => {
                                     return (
-                                        <Col span={8} key={period.key}>
-                                            <PeriodCard
-                                                date={period.date}
-                                                handleClickPeriod={() => {
-                                                    setCurrentPeriod(period.key);
-                                                }}
+                                        <Col span={8} key={doctor.doctorID}>
+                                            <DoctorCard
+                                                doctor={doctor}
+                                                periodKey = {currentPeriod}
+                                                setSelectedDoctor={props.setSelectedDoctor}
+                                                setSelectedPeriod={props.setSelectedPeriod}
+                                                showConfirmDrawer={props.showConfirmDrawer}
                                             />
                                         </Col>
+
                                     )
                                 }
                             )
                         }
                     </Row>
+                ) : (
+                    <div>
+                        正在加载医生信息
+                    </div>
+                )
+            ),
+        };
+        // {periods.map((period) => {
+        //     return (
+        //         <Col span={8} key={period.key}>
+        //             <PeriodCard
+        //                 date={period.date}
+        //                 handleClickPeriod={() => {
+        //                     setCurrentPeriod(period.key);
+        //                 }}
+        //             />
+        //         </Col>
+        //     )
+        // })}
+    });
+
+    return (
+        <div>
+            <Row>
+                <Col span={8} offset={8}>
+                    <Row>
+                        <Tabs type="card" items={items}
+                            onChange={(key) => {
+                                setCurrentPeriod(parseInt(key))
+                            }}
+                        />
+                    </Row>
 
                 </Col>
-            </Row>
-            <Row gutter={16}>
-                {
-                    (loading === false && props.departmentID != null) ? (
-                        currentDoctorData.map((doctor) => {
-                                return (
-                                    <Col span={8} key={doctor.doctorID}>
-                                        <DoctorCard
-                                            doctor={doctor}
-                                            periodKey = {currentPeriod}
-                                            setSelectedDoctor={props.setSelectedDoctor}
-                                            setSelectedPeriod={props.setSelectedPeriod}
-                                            showConfirmDrawer={props.showConfirmDrawer}
-                                        />
-                                    </Col>
-
-                                )
-                            }
-                        )
-                    ) : (
-                        <div>
-                            正在加载医生信息
-                        </div>
-                    )
-                }
             </Row>
         </div>
     )
