@@ -14,7 +14,7 @@ const { TextArea } = Input;
 const { Header, Content, Sider } = Layout;
 
 function ApplyVacation(){
-    const nagivate = useNavigate()
+    const navigate = useNavigate()
     const location = useLocation()
 
     let type=0
@@ -75,7 +75,10 @@ function ApplyVacation(){
         .then(res=>{
             console.log(success)
             console.log(res)
+            navigate('/checkProgress')
         })
+
+
       };
       
     const error = (msg) => {

@@ -83,7 +83,7 @@ function CheckSchedule(){
                 </Breadcrumb>
                 <div>
                     {/* //医生姓名从header拿 */}
-                    <span style={{fontSize:30}}>医生姓名</span>
+                    <span style={{fontSize:30}}>{localStorage.getItem('username')}</span>
                     <br/>
                     <br/>
                     <br/>
