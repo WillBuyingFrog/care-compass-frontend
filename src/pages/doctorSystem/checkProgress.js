@@ -32,7 +32,7 @@ function CheckProgress(){
     const location = useLocation()
 
     const [leavelist , setleavelist] =useState()
-    const [shiftlist , setshiftlist] = useState()
+    const [shiftlist , setshiftlist] = useState([])
 
     const [title , settitle] = useState()
     const [state, setstate] = useState()

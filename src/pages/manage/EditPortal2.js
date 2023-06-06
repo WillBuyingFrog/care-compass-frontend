@@ -133,8 +133,8 @@ function EditPortal2() {
     useEffect(()=>{
         axios.post('/admin/getOneDoctor/',JSON.stringify({
             //之后获取真正ID,记得修改！！！！！
-            // doctorID:location.state.doctorID
-            doctorID:0
+            doctorID:location.state.doctorID
+            // doctorID:0
         }))
         .then(res=>{
             if(res.data.code === 0){
@@ -309,7 +309,7 @@ function EditPortal2() {
         setData(doctorData)
         axios.post('/admin/updateOneDoctor/',JSON.stringify({
             //之后需要更新
-            doctorID:0,
+            doctorID:location.state.doctorID,
             title:data.title,
             intro:data.intro,
             price:data.price,
@@ -317,6 +317,7 @@ function EditPortal2() {
         }))
         .then(res=>{
             message.success('您的修改已提交成功！')
+            navigate('/doctorPortal',{state:{doctorID:location.state.doctorID}})
         })
     }
 

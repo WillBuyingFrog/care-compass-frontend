@@ -55,7 +55,7 @@ function PatientHistory(){
                 <div>
                 {/* //调试使用，记得改回 */}
                 {/* <span style={{fontSize:30}}>{location.state.patientName}</span>            */}
-                <span style={{fontSize:30}}>张三</span>
+                <span style={{fontSize:30}}>{location.state.patientName}</span>
                 </div>
                 <Content
                 style={{

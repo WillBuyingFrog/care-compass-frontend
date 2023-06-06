@@ -107,22 +107,12 @@ function MyHeader({textColor, isLanding=false}){
 
 
     let userButton;
-    if(isLoggedIn && user.type == "default"){
+    console.log(typeof(user.utype))
+    if(isLoggedIn && user.utype == "2"){
         userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/applyPortal')
+            navigate('/doctorPortal',{state:{doctorID:localStorage.getItem('doctorID')}})
         }}
-        >申请入驻</Button>)
-    }
-    else if(isLoggedIn && user.utype == "admin"){
-        userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/manage/info')
-        }}
-        >后台管理</Button>)
-    }
-    else{
-        userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/scholarPortal?RID=' + user.u_rid)
-        }}>我的门户</Button>)
+        >我的门户</Button>)
     }
 
 
@@ -168,18 +158,6 @@ function MyHeader({textColor, isLanding=false}){
                                     <Text ml='20px' mt='10px'>{user.uemail}</Text>
                                 </PopoverHeader>
                                 <PopoverBody>
-                                    <Row>
-                                        <Button w='220px' onClick={()=>{
-                                            navigate('/favorite')
-                                        }}>
-                                            我的收藏</Button>
-                                    </Row>
-                                    <Row>
-                                        <Button w='220px' mt='8px' onClick={()=>{
-                                            navigate('/personInfo')
-                                        }}>
-                                            账户设置</Button>
-                                    </Row>
                                     <Row>
                                         {userButton}
                                     </Row>

@@ -46,6 +46,7 @@ import PersonInfo from "../pages/patient/personInfo";
 import EditInfo from "../pages/patient/editInfo";
 import PatientHistory from "../pages/doctorSystem/patientHistory.js";
 import HistoricalRecord from "../pages/doctorSystem/historicalRecord.js";
+import EditPortal2 from "../pages/manage/EditPortal2.js";
 
 const default_router = createBrowserRouter([
     {
@@ -69,6 +70,10 @@ const default_router = createBrowserRouter([
     {
         path: '/editDoctorPortal',
         element: <EditPortal />
+    },
+    {
+        path: '/editPortal',
+        element:<EditPortal2></EditPortal2>
     },
     {
         path: '/manage',
