@@ -24,9 +24,6 @@ function Patient(){
                         <Outlet context={[patientId, setPatientId]}/>
                     </Content>
                 </Layout>
-                <Footer>
-
-                </Footer>
             </Layout>
     )
 }
