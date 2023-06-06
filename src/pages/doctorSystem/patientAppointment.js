@@ -101,7 +101,7 @@ function PatientAppointment(){
                             <Card bordered={true} key={item.patientID} style={{borderRadius: 20, 'box-shadow': '4px 4px 15px 0 rgba(0,0,0,0.1)'}}>
                             <span style={{paddingTop:-110, fontSize: 18, fontWeight: "bold"}}>{item.name}</span>
                             <Divider dashed />
-                            <span style={{paddingTop:-110}}>预约时间：{gettime(index,splitdate(value).time)}</span>
+                            <span style={{paddingTop:-110}}>预约时间：{gettime(index,location.state.time)}</span>
                             <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
                             <br/>
                             <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
