@@ -219,31 +219,6 @@ function SelectDoctor(props){
 
                 </Col>
             </Row>
-            <Row gutter={16}>
-                {
-                    (loading === false && props.departmentID != null) ? (
-                        currentDoctorData.map((doctor) => {
-                                return (
-                                    <Col span={8} key={doctor.doctorID}>
-                                        <DoctorCard
-                                            doctor={doctor}
-                                            periodKey = {currentPeriod}
-                                            setSelectedDoctor={props.setSelectedDoctor}
-                                            setSelectedPeriod={props.setSelectedPeriod}
-                                            showConfirmDrawer={props.showConfirmDrawer}
-                                        />
-                                    </Col>
-
-                                )
-                            }
-                        )
-                    ) : (
-                        <div>
-                            正在加载医生信息
-                        </div>
-                    )
-                }
-            </Row>
         </div>
     )
 }
