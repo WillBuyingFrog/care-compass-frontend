@@ -6,7 +6,7 @@ import axios from 'axios'
 
 import PicturesWall from './pictureWall';
 import MyRadio from './myradio';
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 
 const { SubMenu } = Menu;
 const { Option } = Select;
@@ -31,28 +31,32 @@ function ApplyVacation(){
     day = (day < 10) ? ("0" + day) : day;
     var today = year + "-" + month + "-" + day;
     
-    axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
-        {
-            //doctorID需要从header获取
-            doctorID:parseInt(localStorage.getItem("doctorID")),
-            date:today
-        }
-    ))
-    .then(res=>{
-        // console.log(res)
-        if(res.data.code === 1){
-            error(res.data.msg)
-        }
-        else if(res.data.code == 0 ){
-            setshiftlist(res.data.data.shiftList)
-            var temoptions =  res.data.data.shiftList.map((item,index)=>{
-                return (
-                    <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
-                )
-            })
-            setoptions(temoptions)
-        }
-    })
+    useEffect(() => {
+        axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
+            {
+                //doctorID需要从header获取
+                doctorID:parseInt(localStorage.getItem("doctorID")),
+                date:today
+            }
+        ))
+        .then(res=>{
+            console.log(res)
+            if(res.data.code === 1){
+                error(res.data.msg)
+            }
+            else if(res.data.code == 0 ){
+                setshiftlist(res.data.data.shiftList)
+                var temoptions =  res.data.data.shiftList.map((item,index)=>{
+                    return (
+                        <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
+                    )
+                })
+                setoptions(temoptions)
+            }
+        })
+  
+    }, []);
+    
 
     const success = () => {
         message.success('您的申请已成功提交，管理员会在24小时内进行审批！');

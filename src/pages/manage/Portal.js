@@ -290,7 +290,7 @@ function Portal() {
     //         d3days: [['2023.5.23(周二)', '上午', 25, 25], ['2023.5.24(周三)', '上午', 23, 25], ['2023.5.23(周三)', '上午', 20, 25]],
     //         dintro: '详细介绍'
     //     };
-    
+    let location = useLocation()
     let doctorData = {}
     const [data, setData] = useState({});
 
@@ -298,9 +298,10 @@ function Portal() {
         // setData(DoctorInfo);
         axios.post('/admin/getOneDoctor/',JSON.stringify({
             //之后获取真正ID
-            doctorID:0
+            doctorID:location.state.doctorID
         }))
         .then(res=>{
+            console.log(res)
             if(res.data.code === 0){
                 doctorData=res.data.data
                 setData(doctorData)
@@ -328,7 +329,6 @@ function Portal() {
         }
     ]
 
-    let location = useLocation()
     const navigate = useNavigate();
     let params = new URLSearchParams(location.search)
     var RID;
@@ -382,7 +382,7 @@ function Portal() {
     function showButton(){
 
         //判断条件
-        if(data.flag === true){
+        if(localStorage.getItem('userType') === '0'){
             return (<div
             style={{
                 width: '130px',
@@ -405,7 +405,7 @@ function Portal() {
                 }}
                 onClick={() => {
                     //需要doctorID
-                    navigate('/editPortal/',{state:{doctorID:0}});
+                    navigate('/editPortal',{state:{doctorID:location.state.doctorID}});
                 }}
             >
                 编辑

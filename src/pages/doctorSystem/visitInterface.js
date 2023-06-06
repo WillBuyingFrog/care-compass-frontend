@@ -25,53 +25,11 @@ function VisitInterface(){
 
     let patientName = ''
     let data = [
-        {
-            id:1,
-            name:'阿司匹林',
-            description:'',
-            num:1
-        },
-        {
-            id:2,
-            name:'阿司匹林',
-            description:'',
-            num:1
-        },
-        {
-            id:3,
-            name:'阿司匹林',
-            description:'',
-            num:1
-        },
-        {
-            id:4,
-            name:'阿司匹林',
-            description:'',
-            num:1
-        },
+       
       ];
 
     let data2 = [
-        {
-            id:1,
-            name:'CT',
-            description:''
-        },
-        {
-            id:2,
-            name:'CT',
-            description:''
-        },
-        {
-            id:3,
-            name:'CT',
-            description:''
-        },
-        {
-            id:4,
-            name:'CT',
-            description:''
-        }
+        
     ]
 
     if(location.state !== null){

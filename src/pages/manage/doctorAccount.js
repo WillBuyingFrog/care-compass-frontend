@@ -4,7 +4,7 @@ import { Avatar } from '@chakra-ui/react'
 import {Card, Row, Col, Badge, Calendar, ConfigProvider, Divider, Steps, Typography, Button, Alert, Drawer, Space, Form, Input, Popconfirm, Table, Modal, Radio, Select, InputNumber} from 'antd';
 import * as echarts from 'echarts'
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import {Link, useLocation} from 'react-router-dom'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import axios from 'axios';
 import moment from 'moment';
 import {
@@ -37,6 +37,7 @@ const gridStyle = {
 
 function DoctorAccount(){
 
+    const navigate = useNavigate()
     const [departmentID, setDepartmentID] = useState();
     const [departmentName, setDepartmentName] = useState();
     const [departmentList, setDepartmentList] = useState();
@@ -80,8 +81,10 @@ function DoctorAccount(){
             // }
         })
             .then(res => {
+                // console.log('i am here')
                 console.log(res.data);
                 setTheDoctor(res.data.data);
+                navigate('/doctorPortal',{state:{doctorID:res.data.data.doctorID}})
                 console.log(theDoctor);
             })
     }

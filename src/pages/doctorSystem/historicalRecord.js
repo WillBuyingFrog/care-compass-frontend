@@ -59,7 +59,7 @@ function HistoricalRecord(){
                 </Breadcrumb>
                 <div>
                     <span style={{fontSize:30}}>{location.state.patientName+"      "+mixdate(location.state.item.date,location.state.item.time)}</span> 
-                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientHistory',{ state: { patientID:location.state.patientID }})}}>返回历史病历界面</Button>          
+                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientHistory',{ state: { patientID:location.state.patientID ,patientName:location.state.patientName}})}}>返回历史病历界面</Button>          
                 </div>
                 <Content
                 style={{

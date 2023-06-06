@@ -39,7 +39,7 @@ function PatientAppointment(){
     // const useEffect = useEffect()
 
     // let shiftlist=[]
-    const [shiftlist,setshiftlist] = useState([])
+    let [shiftlist,setshiftlist] = useState([])
     //检查有无date和time
     // console.log(location.state)
 
@@ -69,7 +69,7 @@ function PatientAppointment(){
         //     isEnd:0
         // }
     ]
-    const [options, setoptions] = useState([]);
+    let [options, setoptions] = useState([]);
 
 
     const date = new Date()
@@ -130,6 +130,7 @@ function PatientAppointment(){
                     error(res.data.msg)
                 }
                 else if(res.data.code ==0 ){
+                    console.log('1')
                     setshiftlist(res.data.data.shiftList)
                     let temoptions =  shiftlist.map((item,index)=>{
                         return (
@@ -156,18 +157,26 @@ function PatientAppointment(){
                 error(res.data.msg)
             }
             else if(res.data.code ==0 ){
+                console.log('2')
+                console.log(res.data)
                 setshiftlist(res.data.data.shiftList)
-                let temoptions =  shiftlist.map((item,index)=>{
-                    return (
-                        <Option key={mixdate(item.date,item.time)} value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
-                    )
-                })
-                setoptions(temoptions)
+                setoption2(res.data.data.shiftList)
             }
         })
 
     }, []);
 
+
+    async function setoption2 (temlist){
+        console.log(temlist)
+        let temoptions = temlist.map((item,index)=>{
+            return (
+                <Option key={mixdate(item.date,item.time)} value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
+            )
+        })
+        console.log(temoptions)
+        setoptions(temoptions)
+    }
 
     const [cards,setcards] = useState([])
     
@@ -205,6 +214,44 @@ function PatientAppointment(){
         }
     }
 
+    function gettime(temindex,temtime){
+        let i = parseInt(temindex/4)
+        let j = temindex%4
+        let backdata1
+        let backdata2
+        let i1
+
+        if( temtime == 0){
+             i1 = i + 8
+        }
+        else{
+             i1 = i + 14
+        }
+        let j1 = j*15
+        
+        if(j == 0){
+            backdata1 = i1.toString() + ':00'
+            backdata2 =i1.toString() + ':15'
+        }
+        else if(j == 1){
+            backdata1 = i1.toString() + ':15'
+            backdata2 =i1.toString() + ':30'
+        }
+        else if(j == 2){
+            backdata1 = i1.toString() + ':30'
+            backdata2 =i1.toString() + ':45'
+        }
+        else if(j == 3){
+            backdata1 = i1.toString() + ':45'
+            backdata2 =(i1+1).toString() + ':00'
+        }
+        // backdata = i1.toString() + ':'+j1.toString()
+        console.log(temindex)
+        console.log(i,j)
+        console.log(backdata1)
+        return (backdata1+'-'+backdata2)
+    }
+
     function handleChange(value) {
         // console.log(`selected ${value}`);
         nowmixdate=value
@@ -221,11 +268,11 @@ function PatientAppointment(){
                 let temcards = patientlist.map((item,index)=>{
                     return (
                         <Col span={6} >
-                                        <Card bordered={true}>
+                                        <Card bordered={true} key={item.patientID}>
                                         <span style={{paddingTop:-110}}>{item.name}</span>
                                         <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
                                         <br/>
-                                        <span style={{paddingTop:-110}}>预约时间:8:30-8:50</span>
+                                        <span style={{paddingTop:-110}}>预约时间:{gettime(index,splitdate(value).time)}</span>
                                         <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
                                         <br/>
                                         <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
@@ -244,7 +291,7 @@ function PatientAppointment(){
         })
         
       }
-    console.log(location.state)
+    console.log(options)
     return(
         <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>

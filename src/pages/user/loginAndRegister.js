@@ -43,7 +43,7 @@ async function loginUser(username, password) {
                 localStorage.setItem('userID', res.data.userID);
                 localStorage.setItem('doctorID',res.data.doctorID)
             } else
-                message.error(res.data.message)
+                message.error(res.data.msg)
             status = res.data.msg
             ret = res.data
         })

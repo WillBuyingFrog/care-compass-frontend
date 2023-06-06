@@ -107,25 +107,12 @@ function MyHeader({textColor, isLanding=false}){
 
 
     let userButton;
-    // 医生
-    if(isLoggedIn && user.type == 2){
+    console.log(typeof(user.utype))
+    if(isLoggedIn && user.utype == "2"){
         userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/applyPortal')
+            navigate('/doctorPortal',{state:{doctorID:localStorage.getItem('doctorID')}})
         }}
-        >申请入驻</Button>)
-    }
-    // 管理员
-    else if(isLoggedIn && user.utype == 0){
-        userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/manage/doctorSchedule')
-        }}
-        >后台管理</Button>)
-    }
-    // 患者
-    else{
-        userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/scholarPortal?RID=' + user.u_rid)
-        }}>我的门户</Button>)
+        >我的门户</Button>)
     }
 
 
@@ -164,11 +151,18 @@ function MyHeader({textColor, isLanding=false}){
                                 </Row >
                             </PopoverTrigger>
                             <PopoverContent w='240px' border='blue' >
+                                <PopoverArrow />
+                                <PopoverCloseButton />
+                                <PopoverHeader>
+                                    <Text fontSize='md' fontWeight='550' mr='20px' >Email  </Text>
+                                    <Text ml='20px' mt='10px'>{user.uemail}</Text>
+                                </PopoverHeader>
                                 <PopoverBody>
                                     <Row>
                                         {userButton}
                                     </Row>
                                     <Row>
+
                                         <Popconfirm
                                             placement="bottom"
                                             title="确认退出登录？"
