@@ -83,6 +83,8 @@ function PatientAppointment(){
     useEffect(() => {
         if(location.state !== null){
             console.log('location != null')
+            console.log(location.state)
+            // console.log()
             axios.post('/treatment/getPatientList/',JSON.stringify({
                 doctorID:parseInt(localStorage.getItem("doctorID")),
                 date:location.state.date,
@@ -97,14 +99,14 @@ function PatientAppointment(){
                             <Col span={6} >
                                             <Card bordered={true}>
                                             <span style={{paddingTop:-110}}>{item.name}</span>
-                                            <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
+                                            <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>历史诊疗记录</Button>
                                             <br/>
                                             <span style={{paddingTop:-110}}>预约时间:8:30-8:50</span>
                                             <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
                                             <br/>
                                             <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
                                             <div style={{textAlign:'center',marginTop:10}}>
-                                                <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
+                                                <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>开始诊断</Button>
                                             </div>
                                             </Card>
                                         </Col>
@@ -278,14 +280,14 @@ function PatientAppointment(){
                         <Col span={6} >
                                         <Card bordered={true} key={item.patientID}>
                                         <span style={{paddingTop:-110}}>{item.name}</span>
-                                        <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name}})}}>历史诊疗记录</Button>
+                                        <Button style={{marginLeft:180}} onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>历史诊疗记录</Button>
                                         <br/>
                                         <span style={{paddingTop:-110}}>预约时间:{gettime(index,splitdate(value).time)}</span>
                                         <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
                                         <br/>
                                         <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
                                         <div style={{textAlign:'center',marginTop:10}}>
-                                            <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name}})}}>开始诊断</Button>
+                                            <Button onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>开始诊断</Button>
                                         </div>
                                         </Card>
                                     </Col>

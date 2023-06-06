@@ -173,7 +173,7 @@ function VisitInterface(){
                 </Breadcrumb>
                 <div>
                     <span style={{fontSize:30}}>{patientName}</span>
-                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date }})}}>返回预约界面</Button>
+                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date ,time:location.state.time}})}}>返回预约界面</Button>
                 </div>
                 <Content
                 style={{
