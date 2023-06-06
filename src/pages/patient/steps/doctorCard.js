@@ -144,7 +144,7 @@ function DoctorCard(props){
 
     return (
         <Box
-            width={'100%'}
+            width={'90%'}
             height={'25vh'}
             borderWidth={'5'}
             borderRadius={'7'}
@@ -152,7 +152,7 @@ function DoctorCard(props){
             color={'#E2E8F0'}
             boxShadow={'4px 4px 15px 0 rgba(0,0,0,0.1)'}
             backgroundColor={'#ffffff'}
-            pl={3} pr={3} pt={2} pb={2} mt={4}
+            pl={3} pr={3} pt={2} pb={2} mt={4} ml={4} mb={4}
         >
             <Box
                 height={'35%'}
