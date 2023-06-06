@@ -1,6 +1,6 @@
 import "antd/dist/antd.min.css";
 import './portal.css';
-import default_avatar from '../../assets/doctors.png';
+import default_avatar from '../../assets/m-avatar.png';
 import papers from '../../assets/doctors.png';
 import cat from '../../assets/doctors.png';
 import cite from '../../assets/doctors.png';
@@ -127,7 +127,7 @@ function EditPortal2() {
     //         d3days: [['2023.5.23(周二)', '上午', 25, 25], ['2023.5.24(周三)', '上午', 23, 25], ['2023.5.23(周三)', '上午', 20, 25]],
     //         dintro: '详细介绍'
     //     };
-    
+
     let doctorData = {
         title:location.state.title,
         area:location.state.area,
@@ -257,7 +257,7 @@ function EditPortal2() {
         </div>)
         }
         else{
-            return 
+            return
         }
     }
     const institute_name = (institute) => {
@@ -342,12 +342,13 @@ function EditPortal2() {
                 style={{
                     padding: '50px 100px 20px 100px',
                     backgroundColor: 'rgb(230,235,247)',
+                    height: '90vh'
                 }}
             >
                 <div
                     style={{
                         padding: '24px',
-                        minHeight: '150px',
+                        minHeight: '50vh',
                         background: 'linear-gradient(360deg,rgba(255,255,255,1.0), rgba(255,255,255,0.0))',
                         boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
                         borderRadius: '20px',
@@ -390,21 +391,21 @@ function EditPortal2() {
                                         onMouseLeave={handleMouseLeaveInstitute}
                                         // href={"/institute?IID=" + data.r_IID} isExternal
                                     > {data.title} </Link> */}
-                                    <Input2 style={{marginLeft:10,width:100}} defaultValue={location.state.title} onChange={changetitle}/>
+                                    <Input2 style={{marginLeft:10,width:200}} defaultValue={location.state.title} onChange={changetitle}/>
                                 </Paragraph>
                                 <Paragraph>
                                     <Space>
                                         <BulbOutlined style={{color :'#4A5568'}} />
                                     </Space>
                                     {/* <Text style={{color :'#4A5568'}}> {data.area}</Text> */}
-                                    <Input2 style={{marginLeft:10,width:100}} defaultValue={location.state.area} onChange={changearea}/>
+                                    <Input2 style={{marginLeft:10,width:200}} defaultValue={location.state.area} onChange={changearea}/>
                                 </Paragraph>
                                 {data.count != "none" &&
                                     <Paragraph>
                                         <Space>
                                             <MailOutlined style={{color :'#4A5568'}}/>
                                         </Space>
-                                        <Text style={{color :'#4A5568'}}> {'历史累计挂号量'+data.count}</Text>
+                                        <Text style={{color :'#4A5568'}}> {'历史累计挂号量：'+data.count}</Text>
                                     </Paragraph>
                                 }
                                 {data.intro != "none" &&
@@ -418,7 +419,10 @@ function EditPortal2() {
                                 }
                             </Typography>
                             <div>
-                                <Button style={{marginLeft:900}} onClick={submit}>提交</Button>
+                                <Button style={{marginLeft:900}}
+                                        size="large"
+                                        shape={"round"}
+                                        onClick={submit}>提交</Button>
                             </div>
                         </Col>
                         <Col span={4}>

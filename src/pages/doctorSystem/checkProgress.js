@@ -44,7 +44,7 @@ function CheckProgress(){
     month = (month > 9) ? month : ("0" + month);
     day = (day < 10) ? ("0" + day) : day;
     var today = year + "-" + month + "-" + day;
-    
+
 
     useEffect(() => {
 
@@ -116,14 +116,25 @@ function CheckProgress(){
       }
     }
     return(
-        <Layout style={{ padding: '0 24px 24px' }}>
+        <Layout style={{
+            padding: '30px',
+            height: '90vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
+            <div
+                style={{
+                    padding: '20px 30px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,1.0), rgba(255,255,255,0.4))',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                }}
+            >
                 <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>医生系统</Breadcrumb.Item>
                 <Breadcrumb.Item>查看请假进度</Breadcrumb.Item>
                 </Breadcrumb>
                 <Content
                 style={{
-                    background: '#fff',
                     padding: 24,
                     margin: 0,
                     minHeight: 280,
@@ -137,7 +148,7 @@ function CheckProgress(){
                     <List.Item>
                         <List.Item.Meta
                         style={{maxWidth:300}}
-                        avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                        // avatar={<Avatar src={'src/assets/m-avatar.png'} />}
                         title={getdate(item.doctorShiftID)}
                         description={item.reason}
                         />
@@ -160,6 +171,7 @@ function CheckProgress(){
                     )}
                 />
                 </Content>
+            </div>
             </Layout>
     );
 }

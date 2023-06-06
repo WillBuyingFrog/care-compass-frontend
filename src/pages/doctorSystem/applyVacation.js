@@ -30,7 +30,7 @@ function ApplyVacation(){
     month = (month > 9) ? month : ("0" + month);
     day = (day < 10) ? ("0" + day) : day;
     var today = year + "-" + month + "-" + day;
-    
+
     useEffect(() => {
         axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
             {
@@ -54,9 +54,9 @@ function ApplyVacation(){
                 setoptions(temoptions)
             }
         })
-  
+
     }, []);
-    
+
 
     const success = () => {
         message.success('您的申请已成功提交，管理员会在24小时内进行审批！');
@@ -80,7 +80,7 @@ function ApplyVacation(){
 
 
       };
-      
+
     const error = (msg) => {
         message.error(msg);
       };
@@ -93,7 +93,7 @@ function ApplyVacation(){
             return date+' 下午'
         }
     }
-    
+
     function splitdate(temmixdate){
         let temdate=''
         let temtime=null
@@ -124,7 +124,7 @@ function ApplyVacation(){
 
     function onChange(value) {
         reason=value.target.value
-        console.log(reason) 
+        console.log(reason)
     };
 
     function sendType(temtype){
@@ -140,14 +140,25 @@ function ApplyVacation(){
 
 
     return(
-        <Layout style={{ padding: '0 24px 24px' }}>
+        <Layout style={{
+            padding: '30px',
+            height: '90vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
+            <div
+                style={{
+                    padding: '20px 30px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,1.0), rgba(255,255,255,0.4))',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                }}
+            >
                 <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>医生系统</Breadcrumb.Item>
                 <Breadcrumb.Item>请假</Breadcrumb.Item>
                 </Breadcrumb>
                 <Content
                 style={{
-                    background: '#fff',
                     padding: 24,
                     margin: 0,
                     minHeight: 280,
@@ -157,8 +168,8 @@ function ApplyVacation(){
                 <br/>
                 <br/>
                 <div>
-                <span>请选择请假时间*：</span>           
-                    <Select defaultValue="" style={{ width: 200 ,marginLeft:500}} onChange={handleChange}>
+                <span style={{fontSize: 16}}>请选择请假时间*：</span>
+                    <Select defaultValue="" style={{ width: 200 ,marginLeft: '3vw'}} onChange={handleChange}>
                         {/* <Option value="6-8 周四 上午">6-8 周四 上午</Option>
                         <Option value="6-8 周四 下午">6-8 周四 下午</Option>
                         <Option value="6-10 周六 上午">6-10 周六 上午</Option> */}
@@ -167,7 +178,7 @@ function ApplyVacation(){
                 </div>
                 <br/>
                 <br/>
-                <span>请选择请假类型*：</span>   
+                <span style={{fontSize: 16}}>请选择请假类型*：</span>
                 {/* <Radio.Group onChange={(e)=>onChange(e)} value={type} buttonStyle='solid'>
                     <Radio value={'1'}>事假</Radio>
                     <Radio value={'2'}>病假</Radio>
@@ -175,17 +186,16 @@ function ApplyVacation(){
                 <MyRadio senddata={sendType}/>
                 <br/>
                 <br/>
-                <span>请说明请假理由*：</span>
+                <span style={{fontSize: 16}}>请说明请假理由*：</span>
                 <TextArea rows={6} placeholder='请输入理由' onChange={onChange}></TextArea>
                 <br/>
                 <br/>
-                <br/>
-                <br/>
-                <br/>
                 <div style={{textAlign:'center',marginTop:10}}>
-                                <Button onClick={success}>提交</Button>
+                                <Button onClick={success} size="large"
+                                        shape={"round"}>提交</Button>
                             </div>
                 </Content>
+            </div>
             </Layout>
     );
 }

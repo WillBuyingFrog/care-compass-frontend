@@ -68,7 +68,10 @@ function PatientHistory(){
                 {/* //调试使用，记得改回 */}
                 {/* <span style={{fontSize:30}}>{location.state.patientName}</span>            */}
                 <span style={{fontSize:30}}>{location.state.patientName}</span>
-                <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date ,time:location.state.time}})}}>返回预约界面</Button>
+                <Button style={{marginLeft:'60vw'}}
+                        size="large"
+                        shape={"round"}
+                        onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date ,time:location.state.time}})}}>返回预约界面</Button>
                 </div>
                 <Content
                 style={{

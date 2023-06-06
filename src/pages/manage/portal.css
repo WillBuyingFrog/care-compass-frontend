@@ -28,22 +28,22 @@
     text-shadow: 4px 4px 6px rgba(0,0,0,0.2);
 }
 
-.portal .paperList{
+.plist{
     /*padding: 40px;*/
 }
 
-.portal .paperList .ant-table-thead>tr>th {
+.plist .ant-table-thead>tr>th {
     color: #4A5568;
     font-weight: 700;
     font-size: 15px;
 }
 
-.portal .paperList .ant-table-tbody>tr>td {
+.plist .ant-table-tbody>tr>td {
     font-size: 14px;
     font-weight: 550;
 }
 
-.portal .paperList .css-spn4bz:hover {
+.plist .css-spn4bz:hover {
     color: #1b3bbb;
 }
 
