@@ -66,7 +66,7 @@ function MyHeader({textColor, isLanding=false}){
             //     .then(res => {
             //         console.log(res)
             //         console.log('res')
-                    
+
             //         SetUser(res.data.data)
             //         console.log('setuser')
             //         console.log(res.data.data);
@@ -87,7 +87,7 @@ function MyHeader({textColor, isLanding=false}){
         let backdate =null
         backdate.uname = temdate.username
         backdate.u_rid = temdate.userID
-        backdate.utype = temdate.type 
+        backdate.utype = temdate.type
         console.log(backdate)
         return backdate
     }
@@ -107,18 +107,21 @@ function MyHeader({textColor, isLanding=false}){
 
 
     let userButton;
-    if(isLoggedIn && user.type == "default"){
+    // 医生
+    if(isLoggedIn && user.type == 2){
         userButton = (<Button w='220px' mt='8px' onClick={()=>{
             navigate('/applyPortal')
         }}
         >申请入驻</Button>)
     }
-    else if(isLoggedIn && user.utype == "admin"){
+    // 管理员
+    else if(isLoggedIn && user.utype == 0){
         userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            navigate('/manage/info')
+            navigate('/manage/doctorSchedule')
         }}
         >后台管理</Button>)
     }
+    // 患者
     else{
         userButton = (<Button w='220px' mt='8px' onClick={()=>{
             navigate('/scholarPortal?RID=' + user.u_rid)
@@ -161,30 +164,11 @@ function MyHeader({textColor, isLanding=false}){
                                 </Row >
                             </PopoverTrigger>
                             <PopoverContent w='240px' border='blue' >
-                                <PopoverArrow />
-                                <PopoverCloseButton />
-                                <PopoverHeader>
-                                    <Text fontSize='md' fontWeight='550' mr='20px' >Email  </Text>
-                                    <Text ml='20px' mt='10px'>{user.uemail}</Text>
-                                </PopoverHeader>
                                 <PopoverBody>
-                                    <Row>
-                                        <Button w='220px' onClick={()=>{
-                                            navigate('/favorite')
-                                        }}>
-                                            我的收藏</Button>
-                                    </Row>
-                                    <Row>
-                                        <Button w='220px' mt='8px' onClick={()=>{
-                                            navigate('/personInfo')
-                                        }}>
-                                            账户设置</Button>
-                                    </Row>
                                     <Row>
                                         {userButton}
                                     </Row>
                                     <Row>
-
                                         <Popconfirm
                                             placement="bottom"
                                             title="确认退出登录？"
