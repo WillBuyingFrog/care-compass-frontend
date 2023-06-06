@@ -1,5 +1,5 @@
 import {Col, Menu, message, Popconfirm, Row} from "antd";
-import {Link as ChakraLink} from "@chakra-ui/react";
+import {Link as ChakraLink, Box} from "@chakra-ui/react";
 import {
     Avatar, Button,
     Popover,
@@ -30,10 +30,12 @@ const NavLink = ({ children, href }) => (
     >
         <span
             style={{
-                'width': '100px',
-                'margin': '20px',
-                'fontSize': '16px',
-                'color': 'white'
+                'width': '200px',
+                'margin': '30px',
+                'fontSize': '18px',
+                'color': 'white',
+                'font-weight': 'bold',
+                'letter-spacing': '2px',
             }}
         >
             {children}
@@ -138,12 +140,10 @@ function PatientHeader(){
 
 
     return (
-        <div
-            style={{
-                'height': '9.5vh',
-                'width': '100%',
-                'backgroundColor': '#1A365D'
-            }}
+        <Box
+            w='100%'
+            h='9.5vh'
+            bg='#1A365D'
         >
             <Row style={{'width': '100%'}}>
                 <Col span='6'>
@@ -217,7 +217,7 @@ function PatientHeader(){
                 </Col>
 
             </Row>
-        </div>
+        </Box>
     )
 }
 

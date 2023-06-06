@@ -39,7 +39,7 @@ function DoctorAppointment(props){
     const appointmentAvailableStyle = {
         marginLeft: '10px',
         // 设置文字颜色为橙色
-        color: '#ff8c00',
+        color: '#50af78',
         fontWeight: 'bold',
         fontSize: '20px',
         verticalAlign: 'baseline'

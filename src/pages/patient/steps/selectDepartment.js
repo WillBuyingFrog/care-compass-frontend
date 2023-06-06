@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {Card, Col, Menu, Row, Typography} from "antd";
 import {Link} from "react-router-dom";
+import './departmentMenu.css'
 
 const { Title } = Typography;
 
@@ -62,14 +63,14 @@ function SelectDepartment({selectedDepartment, setSelectedDepartment}) {
     }
 
     return (
-        <div style={{'margin': '20px', 'width' : '100%'}}>
+        <div>
             {loading ? (
                 <div>loading...</div>
             ) : (
                 <div>
                     <Menu
                         style={{
-                            'width': '80%'
+                            'width': '20vw'
                         }}
                         mode="inline"
                         items={deptSidebarData}
