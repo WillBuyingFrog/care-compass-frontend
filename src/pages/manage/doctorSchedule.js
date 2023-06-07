@@ -390,7 +390,7 @@ function WorkCalendar(props){
         },
         {
             title: '工号',
-            dataIndex: 'doctorID',
+            dataIndex: 'workID',
         },
         {
             title: '时间段',
@@ -402,7 +402,6 @@ function WorkCalendar(props){
         {
             title: '放号量',
             dataIndex: 'total',
-            editable: true,
         },
         {
             title: '操作',
