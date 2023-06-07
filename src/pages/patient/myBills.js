@@ -4,6 +4,7 @@ import {useNavigate, useOutletContext} from "react-router-dom";
 import axios from "axios";
 import {Center, Box} from "@chakra-ui/react";
 import './personInfo.css'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const {Title, Text} = Typography;
 

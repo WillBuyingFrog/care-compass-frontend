@@ -19,7 +19,6 @@ function parseRawMedicalRecords(rawMedicalRecords){
             doctorName: medicalRecord.doctorName,
             departmentID: medicalRecord.departmentID,
             doctorID: medicalRecord.doctorID,
-            doctorTitle: medicalRecord.doctorTitle,
             medicalDate: medicalRecord.date + (medicalRecord.time === 0 ? '  上午' : '  下午'),
         }
         medicalRecords.push(processedMedicalRecord);
@@ -91,7 +90,7 @@ function MyMedicalRecords(){
             key: 'doctorName',
             render: (text, record) => {
                 return (
-                    <Text>{text}, {record.doctorTitle}</Text>
+                    <Text>{text}</Text>
                 )
             }
         },
