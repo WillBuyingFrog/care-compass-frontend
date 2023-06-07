@@ -575,7 +575,7 @@ function Portal() {
                         borderRadius: '20px',
                     }}
                 >
-                    <Table dataSource={d3days2} columns={columns} className='plist'></Table>
+                    <Table dataSource={d3days2} columns={columns} className='plist' scroll={{ y: 200 }} pagination={false}></Table>
                 </div>
             </Content>
         </Layout>
