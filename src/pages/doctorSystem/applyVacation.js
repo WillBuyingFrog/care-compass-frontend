@@ -29,8 +29,20 @@ function ApplyVacation(){
     var day = date.getDate();
     month = (month > 9) ? month : ("0" + month);
     day = (day < 10) ? ("0" + day) : day;
-    var today = year + "-" + month + "-" + day;
 
+    var tomorrowday = date.getDate()+1;
+    tomorrowday = (tomorrowday < 10) ? ("0" + tomorrowday) : tomorrowday;
+
+    var aftertomorrowday = date.getDate()+2;
+    aftertomorrowday = (aftertomorrowday < 10) ? ("0" + aftertomorrowday) : aftertomorrowday;
+
+    var afteraftertomorrowday = date.getDate()+3;
+    afteraftertomorrowday = (afteraftertomorrowday < 10) ? ("0" + afteraftertomorrowday) : afteraftertomorrowday;
+
+    var today = year + "-" + month + "-" + day;
+    var tomorrow = year + "-" + month + "-" + tomorrowday
+    var aftertomorrow = year + "-" + month + "-" + aftertomorrowday
+    var afteraftertomorrow = year + "-" + month + "-" + afteraftertomorrowday
     useEffect(() => {
         axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
             {
@@ -45,8 +57,17 @@ function ApplyVacation(){
                 error(res.data.msg)
             }
             else if(res.data.code == 0 ){
-                setshiftlist(res.data.data.shiftList)
-                var temoptions =  res.data.data.shiftList.map((item,index)=>{
+                let temshiftlist=[]
+                console.log(tomorrow)
+                for(let i=0;i<res.data.data.shiftList.length;i++){
+                    if(res.data.data.shiftList[i].date !== today && res.data.data.shiftList[i].date !== tomorrow && res.data.data.shiftList[i].date !== aftertomorrow && res.data.data.shiftList[i].date !== afteraftertomorrow){
+                        temshiftlist.push(res.data.data.shiftList[i])
+                    }
+                }
+                console.log(temshiftlist)
+
+                setshiftlist(temshiftlist)
+                var temoptions =  temshiftlist.map((item,index)=>{
                     return (
                         <Option value={mixdate(item.date,item.time)}>{mixdate(item.date,item.time)}</Option>
                     )

@@ -416,7 +416,7 @@ function Portal() {
                     //需要doctorID
                     console.log(data)
                     console.log('this is data')
-                    navigate('/editPortal',{state:{title:data.title,area:data.area,intro:data.intro,doctorID:location.pathname.slice(-2,-1) == '/'?doctorID=parseInt(location.pathname.slice(-1)):doctorID=parseInt(location.pathname.slice(-2))}});
+                    navigate('/editPortal',{state:{price:data.price,title:data.title,area:data.area,intro:data.intro,doctorID:location.pathname.slice(-2,-1) == '/'?doctorID=parseInt(location.pathname.slice(-1)):doctorID=parseInt(location.pathname.slice(-2))}});
                 }}
             >
                 编辑

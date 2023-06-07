@@ -131,7 +131,8 @@ function EditPortal2() {
     let doctorData = {
         title:location.state.title,
         area:location.state.area,
-        intro:location.state.intro
+        intro:location.state.intro,
+        price:location.state.price
     }
     const [data, setData] = useState({});
 
@@ -298,33 +299,41 @@ function EditPortal2() {
     }
 
     function changetitle(value){
-        doctorData.title=value.target.value
-        setData(doctorData)
+        let temdoctorData={
+            title:value.target.value,
+            area:doctorData.area,
+            intro:doctorData.intro,
+            price:doctorData.price
+        }
+        doctorData=temdoctorData
+        console.log(doctorData)
+        // setData(doctorData)
     }
 
     function changearea(value){
         doctorData.area=value.target.value
         console.log(value)
-        setData(doctorData)
+        // setData(doctorData)
     }
 
     function changeintro(value){
         doctorData.intro=value.target.value
-        setData(doctorData)
+        // setData(doctorData)
     }
 
     function submit(){
-        setData(doctorData)
-        console.log(data.price)
+        // setData(doctorData)
+        console.log(doctorData)
         console.log('this is success')
         // console.log(doctorData)
+        console.log(doctorData.price)
         axios.post('/admin/updateOneDoctor/',JSON.stringify({
             //之后需要更新
             doctorID:location.state.doctorID,
-            title:data.title,
-            intro:data.intro,
-            price:data.price,
-            area:data.area
+            title:doctorData.title,
+            intro:doctorData.intro,
+            price:doctorData.price,
+            area:doctorData.area
         }))
         .then(res=>{
             console.log(res)
