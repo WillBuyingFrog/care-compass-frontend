@@ -18,14 +18,25 @@ function LeaveDetail(){
       }
     console.log(location.state)
     return(
-        <Layout style={{ padding: '0 24px 24px' }}>
+        <Layout style={{
+            padding: '30px',
+            height: '90vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
+            <div
+                style={{
+                    padding: '20px 30px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,1.0), rgba(255,255,255,0.4))',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                }}
+            >
                 <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>医生系统</Breadcrumb.Item>
                 <Breadcrumb.Item>请假</Breadcrumb.Item>
                 </Breadcrumb>
                 <Content
                 style={{
-                    background: '#fff',
                     padding: 24,
                     margin: 0,
                     minHeight: 280,
@@ -35,13 +46,13 @@ function LeaveDetail(){
                 <br/>
                 <br/>
                 <div>
-                <span>请选择请假时间：</span>           
+                <span style={{fontSize: 16}}>请选择请假时间：</span>
                     <Select defaultValue={location.state.title} style={{ width: 200 ,marginLeft:500}} onChange={handleChange} disabled>
                     </Select>
                 </div>
                 <br/>
                 <br/>
-                <span>请选择请假类型*：</span>   
+                <span style={{fontSize: 16}}>请选择请假类型*：</span>
                 {/* <Radio.Group onChange={(e)=>onChange(e)} value={type} buttonStyle='solid'>
                     <Radio value={'1'}>事假</Radio>
                     <Radio value={'2'}>病假</Radio>
@@ -49,17 +60,14 @@ function LeaveDetail(){
                 <MyRadio msg1={location.state.type} msg={1}/>
                 <br/>
                 <br/>
-                <span>请说明请假理由：</span>
+                <span style={{fontSize: 16}}>请说明请假理由：</span>
                 <TextArea rows={6} defaultValue={location.state.description} disabled></TextArea>
                 <br/>
                 <br/>
-                <br/>
-                <br/>
-                <br/>
-                <div style={{textAlign:'center',marginTop:10}}>
-                                {location.state.state}
-                            </div>
+                <span style={{fontSize: 18}}>审核结果：{location.state.state}</span>
+
                 </Content>
+            </div>
             </Layout>
     );
 }

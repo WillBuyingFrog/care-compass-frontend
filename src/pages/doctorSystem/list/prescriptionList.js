@@ -1,6 +1,7 @@
 import {Button,Layout,Menu, Breadcrumb,Select,Input,List,InputNumber,message} from 'antd'
 import React from 'react';
 import MySelect from '../select/myselect';
+import {DeleteOutlined} from "@ant-design/icons";
 
 class PrescriptionList extends React.Component{
     state={
@@ -56,7 +57,7 @@ class PrescriptionList extends React.Component{
         return (
 
             <div>
-                        <span>开具处方:</span>
+                        <span style={{fontSize: 16}}>开具处方:</span>
                         <MySelect style={{ width: '50%' ,marginLeft:300}} senddata={this.getPrescription}/>
                         <br/>
                         <br/>
@@ -70,15 +71,17 @@ class PrescriptionList extends React.Component{
                                 style={{maxWidth:300}}
                                 description={item.name}
                                 />
-                                <div style={{marginRight:510}}>
+                                <span style={{marginLeft:'30vw'}}>数量：</span>
+                                <div style={{marginRight:'10vw'}}>
                                     <InputNumber min={1} max={10} defaultValue={1} onChange={(e)=>this.numchange(e,item.id)}/>
                                 </div>
+                                <span>备注：</span>
                                 <Input style={{ width: 150 }} onChange={(e)=>this.inputchange(e,item.id)}></Input>
-                                <Button type="primary" shape="circle" onClick={()=>this.deleteItem(item.id)} >test</Button>
+                                <Button shape="circle" onClick={()=>this.deleteItem(item.id)} icon={<DeleteOutlined />}></Button>
                             </List.Item>
                             )}
                         />
-                        
+
                     </div>
 
         )

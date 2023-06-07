@@ -262,13 +262,17 @@ function VisitInterface(){
                         <InspectList msg={data2} senddata={sendInspectData}/>
                     </div> */}
                     <InspectList msg={data2} senddata={sendInspectData}/>
-
+                    <br/>
                     <span style={{fontSize: 16}}>医嘱*：</span>
                     <br/>
                     <TextArea rows={6} placeholder='请输入医嘱' onChange={sendvalue2}></TextArea>
                     <div style={{textAlign:'center',marginTop:10}}>
-                                <Button onClick={success}>提交</Button>
-                            </div>
+                        <Button onClick={success}
+                                size="large"
+                                shape={"round"}
+                                type={"primary"}
+                        >提交</Button>
+                    </div>
                 </Content>
             </div>
             </Layout>
