@@ -9,6 +9,7 @@ class MySelect extends React.Component {
     state = {
       data: [],
       value: undefined,
+      data2:this.props.msg2
     };
   
     handleSearch = value => {
@@ -50,22 +51,43 @@ class MySelect extends React.Component {
     };
     render() {
         const options = this.state.data.map(d => <Option key={d.name}>{d.name}</Option>);
-        return (
-        <Select
-          showSearch
-          value={this.state.value}
-          placeholder={this.props.placeholder}
-          style={this.props.style}
-          defaultActiveFirstOption={false}
-          showArrow={false}
-          filterOption={false}
-          onSearch={this.handleSearch}
-          onChange={this.handleChange}
-          notFoundContent={null}
-        >
-          {options}
-        </Select>
-      );
+        if(this.state.data2 == '1'){
+          return (
+            <Select
+              showSearch
+              value={this.state.value}
+              placeholder={this.props.placeholder}
+              style={this.props.style}
+              defaultActiveFirstOption={false}
+              showArrow={false}
+              filterOption={false}
+              onSearch={this.handleSearch}
+              onChange={this.handleChange}
+              notFoundContent={null}
+              disabled
+            >
+              {options}
+            </Select>
+          );
+        }
+        else{
+          return (
+            <Select
+              showSearch
+              value={this.state.value}
+              placeholder={this.props.placeholder}
+              style={this.props.style}
+              defaultActiveFirstOption={false}
+              showArrow={false}
+              filterOption={false}
+              onSearch={this.handleSearch}
+              onChange={this.handleChange}
+              notFoundContent={null}
+            >
+              {options}
+            </Select>
+          );
+        }
     }
 }
 

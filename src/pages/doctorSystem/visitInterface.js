@@ -99,6 +99,9 @@ function VisitInterface(){
                         num:data[i].num,
                         description:data[i].description
                     }))
+                    .then(res=>{
+                        console.log(res)
+                    })
                 }
 
                 for(let i=0;i<data2.length;i++){
@@ -107,6 +110,9 @@ function VisitInterface(){
                         inspectionID:data2[i].id,
                         description:data2[i].description
                     }))
+                    .then(res=>{
+                        console.log(res)
+                    })
                 }
             }
             else{

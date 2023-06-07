@@ -88,6 +88,30 @@ function PatientAppointment(){
             console.log('location != null')
             console.log(location.state)
             // console.log()
+
+            axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
+                {
+                    //doctorID需要从header获取
+                    doctorID:parseInt(localStorage.getItem("doctorID")),
+                    date:today
+                }
+            ))
+            .then(res=>{
+                if(res.data.code === 1){
+                    error(res.data.msg)
+                }
+                else if(res.data.code ==0 ){
+                    console.log(res.data)
+                    setshiftlist(res.data.data.shiftList)
+                    setoption2(res.data.data.shiftList)
+                    var shiftlist2=res.data.data.shiftList
+                    // setnowmixdate(mixdate(res.data.data.shiftList[0].date,res.data.data.shiftList[0].time))
+                    console.log(nowmixdate)
+                    console.log('2')
+                    
+                }
+            })
+
             axios.post('/treatment/getPatientList/',JSON.stringify({
                 doctorID:parseInt(localStorage.getItem("doctorID")),
                 date:location.state.date,
@@ -116,6 +140,7 @@ function PatientAppointment(){
                                         type={"primary"}
                                         size="large"
                                         shape={"round"}
+                                        disabled={item.isEnd === 1}
                                         onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>开始诊断</Button>
                             </div>
                             </Card>
@@ -154,77 +179,80 @@ function PatientAppointment(){
             })
 
         }
-        console.log(typeof(parseInt(localStorage.getItem("userID"))))
+        // console.log(typeof(parseInt(localStorage.getItem("userID"))))
         // console.log(parseInt(localStorage.getItem("userID")))
-        axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
-            {
-                //doctorID需要从header获取
-                doctorID:parseInt(localStorage.getItem("doctorID")),
-                date:today
-            }
-        ))
-        .then(res=>{
-            console.log('1')
-            console.log(mixdate(res.data.data.shiftList[0].date,res.data.data.shiftList[0].time))
-            nowmixdate=mixdate(res.data.data.shiftList[0].date,res.data.data.shiftList[0].time)
-            // setnowmixdate2(nowmixdate)
-            console.log(nowmixdate)
-            if(res.data.code === 1){
-                error(res.data.msg)
-            }
-            else if(res.data.code ==0 ){
-                console.log(res.data)
-                setshiftlist(res.data.data.shiftList)
-                setoption2(res.data.data.shiftList)
-                var shiftlist2=res.data.data.shiftList
-                // setnowmixdate(mixdate(res.data.data.shiftList[0].date,res.data.data.shiftList[0].time))
-                console.log(nowmixdate)
-                console.log('2')
-                //初始化card
-                axios.post('/treatment/getPatientList/',JSON.stringify({
+        else{
+            axios.post('/treatment/getWorkShiftInfo/',JSON.stringify(
+                {
+                    //doctorID需要从header获取
                     doctorID:parseInt(localStorage.getItem("doctorID")),
-                    date:res.data.data.shiftList[0].date,
-                    time:res.data.data.shiftList[0].time
-                }))
-                .then(res=>{
-                    console.log(res)
-                    console.log('start card')
-                    if(res.data.code === 0){
-                        patientlist=res.data.data.patientList
-                        console.log(patientlist)
-                        let temcards = patientlist.map((item,index)=>{
-                            return (
-                                <Col span={8} >
-                                    <Card bordered={true} key={item.patientID} style={{borderRadius: 20, 'box-shadow': '4px 4px 15px 0 rgba(0,0,0,0.1)'}}>
-                                    <span style={{paddingTop:-110, fontSize: 18, fontWeight: "bold"}}>{item.name}</span>
-                                    <Divider dashed />
-                                    <span style={{paddingTop:-110}}>预约时间：{gettime(index,shiftlist2[0].time)}</span>
-                                    <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
-                                    <br/>
-                                    <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
-                                    <div style={{textAlign:'center',marginTop:10}}>
-                                        <Button
-                                                size="large"
-                                                shape={"round"}
-                                                onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>历史诊疗记录</Button>
-                                        <Button style={{marginLeft: 20}}
-                                                type={"primary"}
-                                                size="large"
-                                                shape={"round"}
-                                                onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>开始诊断</Button>
-                                    </div>
-                                    </Card>
-                                </Col>
-                            )
-                        })
-                        setcards(temcards)
-                    }
-                    else{
-                        error(res.data.msg)
-                    }
-                })
-            }
-        })
+                    date:today
+                }
+            ))
+            .then(res=>{
+                console.log('1')
+                console.log(mixdate(res.data.data.shiftList[0].date,res.data.data.shiftList[0].time))
+                nowmixdate=mixdate(res.data.data.shiftList[0].date,res.data.data.shiftList[0].time)
+                // setnowmixdate2(nowmixdate)
+                console.log(nowmixdate)
+                if(res.data.code === 1){
+                    error(res.data.msg)
+                }
+                else if(res.data.code ==0 ){
+                    console.log(res.data)
+                    setshiftlist(res.data.data.shiftList)
+                    setoption2(res.data.data.shiftList)
+                    var shiftlist2=res.data.data.shiftList
+                    // setnowmixdate(mixdate(res.data.data.shiftList[0].date,res.data.data.shiftList[0].time))
+                    console.log(nowmixdate)
+                    console.log('2')
+                    //初始化card
+                    axios.post('/treatment/getPatientList/',JSON.stringify({
+                        doctorID:parseInt(localStorage.getItem("doctorID")),
+                        date:res.data.data.shiftList[0].date,
+                        time:res.data.data.shiftList[0].time
+                    }))
+                    .then(res=>{
+                        console.log(res)
+                        console.log('start card')
+                        if(res.data.code === 0){
+                            patientlist=res.data.data.patientList
+                            console.log(patientlist)
+                            let temcards = patientlist.map((item,index)=>{
+                                return (
+                                    <Col span={8} >
+                                        <Card bordered={true} key={item.patientID} style={{borderRadius: 20, 'box-shadow': '4px 4px 15px 0 rgba(0,0,0,0.1)'}}>
+                                        <span style={{paddingTop:-110, fontSize: 18, fontWeight: "bold"}}>{item.name}</span>
+                                        <Divider dashed />
+                                        <span style={{paddingTop:-110}}>预约时间：{gettime(index,shiftlist2[0].time)}</span>
+                                        <span style={{fontSize:30 , paddingLeft:190}}>{index+1}</span>
+                                        <br/>
+                                        <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
+                                        <div style={{textAlign:'center',marginTop:10}}>
+                                            <Button
+                                                    size="large"
+                                                    shape={"round"}
+                                                    onClick={()=>{nagivate('/doctorMain/patientHistory',{state:{patientID:item.patientID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>历史诊疗记录</Button>
+                                            <Button style={{marginLeft: 20}}
+                                                    type={"primary"}
+                                                    size="large"
+                                                    shape={"round"}
+                                                    disabled={item.isEnd === 1}
+                                                    onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>开始诊断</Button>
+                                        </div>
+                                        </Card>
+                                    </Col>
+                                )
+                            })
+                            setcards(temcards)
+                        }
+                        else{
+                            error(res.data.msg)
+                        }
+                    })
+                }
+            })
+        }
 
     }, []);
 
@@ -356,6 +384,7 @@ function PatientAppointment(){
                                         type={"primary"}
                                         size="large"
                                         shape={"round"}
+                                        disabled={item.isEnd === 1}
                                         onClick={()=>{nagivate('/doctorMain/visitInterface',{state:{appointmentID:item.appointmentID,date:item.date,patientName:item.name,time:splitdate(nowmixdate).time}})}}>开始诊断</Button>
                             </div>
                             </Card>

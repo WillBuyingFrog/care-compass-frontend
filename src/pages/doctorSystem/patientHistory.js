@@ -30,6 +30,7 @@ function PatientHistory(){
 
     useEffect(() => {
         console.log(typeof(parseInt(localStorage.getItem("userID"))))
+        console.log(location.state.patientID)
         // console.log(parseInt(localStorage.getItem("userID")))
         axios.post('/treatment/getHistoryRecord/',JSON.stringify({
             patientID:location.state.patientID
@@ -72,6 +73,7 @@ function PatientHistory(){
                         size="large"
                         shape={"round"}
                         onClick={()=>{nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date ,time:location.state.time}})}}>返回预约界面</Button>
+                        {/* nagivate('/doctorMain/patientAppointment',{state:{shiftlist:item,date:item.date,time:item.time}}) */}
                 </div>
                 <Content
                 style={{
@@ -93,7 +95,7 @@ function PatientHistory(){
                                 <span>{item.description}</span>
                                 <span>{item.departmentName+':'+item.doctorName}</span>
                                 {/* 查看详情 */}
-                                <Button type="primary" shape="circle" onClick={()=>{nagivate('/doctorMain/historicalRecord',{state:{patientName:location.state.patientName,patientID:location.state.patientID,item:item}})}} >test</Button>
+                                <Button  onClick={()=>{nagivate('/doctorMain/historicalRecord',{state:{patientName:location.state.patientName,patientID:location.state.patientID,item:item,date:location.state.date ,time:location.state.time}})}} >查看详情</Button>
                         </List.Item>
                         )}
                     />,
