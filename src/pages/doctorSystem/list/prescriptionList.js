@@ -5,8 +5,10 @@ import {DeleteOutlined} from "@ant-design/icons";
 
 class PrescriptionList extends React.Component{
     state={
-        data:this.props.msg
+        data:this.props.msg,
+        data2:this.props.msg2
     }
+
 
     deleteItem(id) {
         for (let i = 0; i < this.state.data.length; i++) {
@@ -54,37 +56,74 @@ class PrescriptionList extends React.Component{
     }
 
     render(){
-        return (
+        console.log(this.state.data)
+        if(this.state.data2 === '1'){
+            return (
 
-            <div>
-                        <span style={{fontSize: 16}}>开具处方:</span>
-                        <MySelect style={{ width: '50%' ,marginLeft:300}} senddata={this.getPrescription}/>
-                        <br/>
-                        <br/>
-                        <List
-                            bordered
-                            itemLayout="horizontal"
-                            dataSource={this.state.data}
-                            renderItem={item => (
-                            <List.Item key={item.id}>
-                                <List.Item.Meta
-                                style={{maxWidth:300}}
-                                description={item.name}
-                                />
-                                <span style={{marginLeft:'30vw'}}>数量：</span>
-                                <div style={{marginRight:'10vw'}}>
-                                    <InputNumber min={1} max={10} defaultValue={1} onChange={(e)=>this.numchange(e,item.id)}/>
-                                </div>
-                                <span>备注：</span>
-                                <Input style={{ width: 150 }} onChange={(e)=>this.inputchange(e,item.id)}></Input>
-                                <Button shape="circle" onClick={()=>this.deleteItem(item.id)} icon={<DeleteOutlined />}></Button>
-                            </List.Item>
-                            )}
-                        />
+                <div>
+                            <span style={{fontSize: 16}}>开具处方:</span>
+                            <MySelect style={{ width: '50%' ,marginLeft:300}} senddata={this.getPrescription} msg2='1' />
+                            <br/>
+                            <br/>
+                            <List
+                                bordered
+                                itemLayout="horizontal"
+                                dataSource={this.state.data}
+                                renderItem={item => (
+                                <List.Item key={item.id}>
+                                    <List.Item.Meta
+                                    style={{maxWidth:300}}
+                                    description={item.name}
+                                    disabled
+                                    />
+                                    <span style={{marginLeft:'30vw'}}>数量：</span>
+                                    <div style={{marginRight:'10vw'}}>
+                                        <InputNumber min={1} max={10} defaultValue={item.num} onChange={(e)=>this.numchange(e,item.id)} disabled/>
+                                    </div>
+                                    <span>备注：</span>
+                                    <Input style={{ width: 150 }} defaultValue={item.description} onChange={(e)=>this.inputchange(e,item.id)} disabled></Input>
+                                    <Button shape="circle" onClick={()=>this.deleteItem(item.id)} icon={<DeleteOutlined />} disabled></Button>
+                                </List.Item>
+                                )}
+                            />
+    
+                        </div>
+    
+            )
+        }
+        else{
+            return (
 
-                    </div>
-
-        )
+                <div>
+                            <span style={{fontSize: 16}}>开具处方:</span>
+                            <MySelect style={{ width: '50%' ,marginLeft:300}} senddata={this.getPrescription}/>
+                            <br/>
+                            <br/>
+                            <List
+                                bordered
+                                itemLayout="horizontal"
+                                dataSource={this.state.data}
+                                renderItem={item => (
+                                <List.Item key={item.id}>
+                                    <List.Item.Meta
+                                    style={{maxWidth:300}}
+                                    description={item.name}
+                                    />
+                                    <span style={{marginLeft:'30vw'}}>数量：</span>
+                                    <div style={{marginRight:'10vw'}}>
+                                        <InputNumber min={1} max={10} defaultValue={item.num} onChange={(e)=>this.numchange(e,item.id)}/>
+                                    </div>
+                                    <span>备注：</span>
+                                    <Input style={{ width: 150 }} defaultValue={item.description} onChange={(e)=>this.inputchange(e,item.id)}></Input>
+                                    <Button shape="circle" onClick={()=>this.deleteItem(item.id)} icon={<DeleteOutlined />}></Button>
+                                </List.Item>
+                                )}
+                            />
+    
+                        </div>
+    
+            )
+        }
     }
 }
 

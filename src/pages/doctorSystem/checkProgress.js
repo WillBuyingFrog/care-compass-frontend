@@ -94,7 +94,7 @@ function CheckProgress(){
       console.log(temshiftID)
       // console.log(typeof(temshiftID))
       console.log(shiftlist)
-      console.log(shiftlist[1].id)
+      // console.log(shiftlist[1].id)
       var backdata='default'
       for(let i=0;i<shiftlist.length;i++){
         if(temshiftID == shiftlist[i].id){

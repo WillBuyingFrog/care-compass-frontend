@@ -14,6 +14,7 @@ function HistoricalRecord(){
     const location = useLocation()
     const nagivate = useNavigate()
 
+    console.log(getPrescriptionList(location.state.item.prescriptionList))
     function mixdate(date,time){
         if(time == 0){
             return date+' 上午'
@@ -27,8 +28,9 @@ function HistoricalRecord(){
         let endlist = []
         for(let i=0;i<templist.length;i++){
             let temdata = {
-                name:templist[i].inspectionName,
+                name:templist[i].prescriptionName,
                 id:i,
+                num:templist[i].prescriptionNum,
                 description:templist[i].description
             }
             endlist.push(temdata)
@@ -40,9 +42,8 @@ function HistoricalRecord(){
         let endlist = []
         for(let i=0;i<templist.length;i++){
             let temdata = {
-                name:templist[i].prescriptionName,
+                name:templist[i],
                 id:i,
-                num:templist[i].prescriptionNum,
                 description:templist[i].description
             }
             endlist.push(temdata)
@@ -59,7 +60,7 @@ function HistoricalRecord(){
                 </Breadcrumb>
                 <div>
                     <span style={{fontSize:30}}>{location.state.patientName+"      "+mixdate(location.state.item.date,location.state.item.time)}</span> 
-                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientHistory',{ state: { patientID:location.state.patientID ,patientName:location.state.patientName}})}}>返回历史病历界面</Button>          
+                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientHistory',{ state: { date:location.state.date ,time:location.state.time,patientID:location.state.patientID ,patientName:location.state.patientName}})}}>返回历史病历界面</Button>          
                 </div>
                 <Content
                 style={{
@@ -106,7 +107,7 @@ function HistoricalRecord(){
                         <PrescriptionList msg={data} senddata={sendPrescriptionData}/>
                         {getPrescription(null,null)}
                     </div> */}
-                    <PrescriptionList msg={getPrescriptionList(item.prescriptionList)} disabled/>
+                    <PrescriptionList msg={getPrescriptionList(location.state.item.prescriptionList)} msg2='1' disabled/>
                     <br/>
                     <br/>
                     {/* <div>
@@ -135,7 +136,7 @@ function HistoricalRecord(){
                         />
                         <InspectList msg={data2} senddata={sendInspectData}/>
                     </div> */}
-                    <InspectList msg={getInspectionList(item.inspectionList)} disabled/>
+                    <InspectList msg={getInspectionList(location.state.item.inspectionList)} msg2='1' disabled/>
 
                     <span>医嘱*：</span>
                     <br/>
