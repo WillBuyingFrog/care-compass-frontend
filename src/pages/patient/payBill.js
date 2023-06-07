@@ -4,6 +4,7 @@ import axios from "axios";
 import React, {useEffect, useState} from "react";
 import {Center} from "@chakra-ui/react";
 import {CheckCircleOutlined, PayCircleOutlined} from "@ant-design/icons";
+import  {frogpay_url, frogpay_frontend_url} from "../../routes/frogpay";
 const { Title, Paragraph, Text, Link } = Typography;
 
 export function singleBillLoader({params}){
@@ -83,6 +84,39 @@ function PayBill(props) {
         getBillInfo();
     }, []);
 
+
+    // 向frogpay请求新增账单
+    const handleFrogPayCreateBill = async () => {
+        try {
+            const response = await axios.post(frogpay_url + "/bill/create", {
+                serviceID: 1,
+                serviceBillID: billID,
+                amount: billInfo.price
+            });
+            return response.status === 200;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    //向frogpay检查支付结果
+    const handleFrogPayCheckPayment = async () => {
+        try {
+            const response = await axios.post(frogpay_url + "/bill/query", {
+                serviceID: 1,
+                serviceBillID: billID,
+            });
+             if(response.data.status === 1){
+                 message.success("FrogPay平台校验成功！");
+                 await handlePaymentFinish();
+             } else {
+                    message.error("FrogPay平台校验失败，请检查支付状态。");
+             }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div
             style={{
@@ -117,10 +151,21 @@ function PayBill(props) {
                                             <Radio.Group value={paymentMethod} onChange={handlePaymentMethodChange}>
                                                 <Radio value={1}>支付宝</Radio>
                                                 <Radio value={2}>微信</Radio>
+                                                <Radio value={3}>FrogPay</Radio>
                                             </Radio.Group>
                                             <Center>
                                                 <Button
-                                                    onClick={showPaymentDrawer}
+                                                    onClick={async () => {
+                                                        if (paymentMethod !== 3) {
+                                                            showPaymentDrawer();
+                                                        } else {
+                                                            message.info("请耐心等待FrogPay平台处理")
+                                                            let response = await handleFrogPayCreateBill();
+                                                            if(response){
+                                                                showPaymentDrawer();
+                                                            }
+                                                        }
+                                                    }}
                                                     type={"primary"}
                                                     icon={<PayCircleOutlined />}
                                                     size="large"
@@ -140,24 +185,56 @@ function PayBill(props) {
                         <Drawer title="支付" width={550} closeable={false}
                                 onClose={closePaymentDrawer} open={paymentDrawerOpen}
                         >
-                            <Space direction='vertical'>
-                                <Title level={3}>请扫描二维码完成支付</Title>
-                                <Image
-                                    src={require("../../assets/pay_qrcode.jpg")}
-                                    width={200}
-                                    preview={false}
-                                />
-                                <Text>支付完成后，请点击"已完成支付"，供平台检查支付结果</Text>
-                                <Button onClick={handlePaymentFinish}
-                                        type={"primary"}
-                                        icon={<CheckCircleOutlined />}
-                                        size="large"
-                                        shape={"round"}
-                                        style={{marginLeft: 20, marginTop: 20}}
-                                >
-                                    已完成支付
-                                </Button>
-                            </Space>
+                            <>
+                                {paymentMethod === 3 ? (
+                                    <Space direction='vertical' >
+                                        <Title level={3}>点击下方按钮，跳转到FrogPay完成支付</Title>
+                                        <Button onClick={() => {
+                                            window.open(frogpay_frontend_url + "/payBill/1/" + billID);
+                                        }}
+                                                type={"primary"}
+                                                icon={<CheckCircleOutlined />}
+                                                size="large"
+                                                shape={"round"}
+                                                style={{marginLeft: 20, marginTop: 20}}
+                                        >
+                                            去支付
+                                        </Button>
+                                        <div style={{marginTop: 20}}>
+                                            <Title level={4}>支付完成后，请点击"已完成支付"，供平台检查支付结果</Title>
+                                        </div>
+
+                                        <Button onClick={handleFrogPayCheckPayment}
+                                                type={"primary"}
+                                                icon={<CheckCircleOutlined />}
+                                                size="large"
+                                                shape={"round"}
+                                                style={{marginLeft: 20, marginTop: 20}}
+                                        >
+                                            已完成支付
+                                        </Button>
+                                    </Space>
+                                ) : (
+                                    <Space direction='vertical'>
+                                        <Title level={3}>请扫描二维码完成支付</Title>
+                                        <Image
+                                            src={require("../../assets/pay_qrcode.jpg")}
+                                            width={200}
+                                            preview={false}
+                                        />
+                                        <Text>支付完成后，请点击"已完成支付"，供平台检查支付结果</Text>
+                                        <Button onClick={handlePaymentFinish}
+                                                type={"primary"}
+                                                icon={<CheckCircleOutlined />}
+                                                size="large"
+                                                shape={"round"}
+                                                style={{marginLeft: 20, marginTop: 20}}
+                                        >
+                                            已完成支付
+                                        </Button>
+                                    </Space>
+                                )}
+                            </>
                         </Drawer>
                     </div>
                 )

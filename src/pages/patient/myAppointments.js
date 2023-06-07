@@ -23,7 +23,7 @@ function processRawAppointments(rawAppointments){
             departmentName: appointment.departmentName,
             doctorID: appointment.doctorID,
             doctorName: appointment.doctorName,
-            appointmentTime: appointment.appointDate + (appointment.appointTime === 0 ? "  上午" : "  下午"),
+            appointmentTime: appointment.appointDate + '  ' + appointment.appointTime,
             appointmentOrder: appointment.appointOrder,
             isPaid: appointment.isPaid
         }
