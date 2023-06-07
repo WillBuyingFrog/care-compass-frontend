@@ -1,8 +1,8 @@
 import "antd/dist/antd.min.css";
 import './portal.css';
-import default_avatar from '../../assets/doctors.png';
+import default_avatar from '../../assets/m-avatar.png';
 import papers from '../../assets/doctors.png';
-import cat from '../../assets/doctors.png';
+import cat from '../../assets/info.png';
 import cite from '../../assets/doctors.png';
 import coauthor from '../../assets/doctors.png';
 import Chart from 'react-apexcharts'

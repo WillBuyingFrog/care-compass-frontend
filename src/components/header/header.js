@@ -127,6 +127,18 @@ function MyHeader({textColor, isLanding=false}){
             </div>
 
         )
+    }else if(isLoggedIn && user.utype == "0"){
+        userButton = (
+            <div>
+                <Row>
+                    <Button w='220px' mt='8px' onClick={()=>{
+                        navigate('/manage/doctorSchedule')
+                        }}
+                    >医院管理</Button>
+                </Row>
+            </div>
+
+        )
     }
 
 
