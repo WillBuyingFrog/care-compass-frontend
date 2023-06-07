@@ -80,9 +80,10 @@ function VisitInterface(){
         console.log(data)
         console.log('data2')
         console.log(data2)
-        console.log(location.state.appointmentID)
+        console.log(typeof(location.state.appointmentID))
+        console.log(value1)
         axios.post('/treatment/createMedicalRecord/',JSON.stringify({
-            appointID: location.state.appointmentID,
+            appointmentID: location.state.appointmentID,
             description:value1,
             diagnose:value2
         }))
@@ -114,6 +115,8 @@ function VisitInterface(){
         }
         )
         message.success('病人就诊信息已成功保存！');
+        nagivate('/doctorMain/patientAppointment',{ state: { date:location.state.date,time:location.state.time }})
+        
       };
 
     function deleteItem(id) {
