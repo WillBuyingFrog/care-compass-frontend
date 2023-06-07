@@ -50,21 +50,35 @@ function HistoricalRecord(){
         }
         return endlist
     }
-    
+
     let item = location.state.item
     return(
-        <Layout style={{ padding: '0 24px 24px' }}>
+        <Layout style={{
+            padding: '30px',
+            // height: '100vh',
+            backgroundColor: 'rgb(220,225,242)',
+        }}>
+            <div
+                style={{
+                    padding: '20px 30px',
+                    background: 'linear-gradient(180deg,rgba(255,255,255,1.0), rgba(255,255,255,0.4))',
+                    boxShadow: '4px 4px 15px 0 rgba(0,0,0,0.1)',
+                    borderRadius: '20px',
+                }}
+            >
                 <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>医生系统</Breadcrumb.Item>
                 <Breadcrumb.Item>历史病历</Breadcrumb.Item>
                 </Breadcrumb>
                 <div>
-                    <span style={{fontSize:30}}>{location.state.patientName+"      "+mixdate(location.state.item.date,location.state.item.time)}</span> 
-                    <Button style={{marginLeft:1200}} onClick={()=>{nagivate('/doctorMain/patientHistory',{ state: { date:location.state.date ,time:location.state.time,patientID:location.state.patientID ,patientName:location.state.patientName}})}}>返回历史病历界面</Button>          
+                    <span style={{fontSize:30}}>{location.state.patientName+"      "+mixdate(location.state.item.date,location.state.item.time)}</span>
+                    <Button style={{marginLeft:'60vw'}}
+                            size="large"
+                            shape={"round"}
+                            onClick={()=>{nagivate('/doctorMain/patientHistory',{ state: { date:location.state.date ,time:location.state.time,patientID:location.state.patientID ,patientName:location.state.patientName}})}}>返回历史病历界面</Button>
                 </div>
                 <Content
                 style={{
-                    background: 'white',
                     padding: 24,
                     margin: 0,
                     minHeight: 600,
@@ -72,7 +86,7 @@ function HistoricalRecord(){
                 >
 
 
-                    <span>本次就诊症状*：</span>
+                    <span style={{fontSize: 16}}>本次就诊症状*：</span>
                     <br/>
                     <TextArea rows={6} defaultValue={location.state.item.description} disabled></TextArea>
                     <br/>
@@ -138,13 +152,14 @@ function HistoricalRecord(){
                     </div> */}
                     <InspectList msg={getInspectionList(location.state.item.inspectionList)} msg2='1' disabled/>
 
-                    <span>医嘱*：</span>
+                    <span style={{fontSize: 16}}>医嘱*：</span>
                     <br/>
                     <TextArea rows={6} defaultValue={item.diagnose} disabled></TextArea>
-                    <div style={{textAlign:'center',marginTop:10}}>
-                                <span>{'就诊医生：'+item.doctorName}</span>
+                    <div style={{marginTop:10}}>
+                                <span style={{fontSize: 16}}>{'就诊医生：'+item.doctorName}</span>
                             </div>
                 </Content>
+            </div>
             </Layout>
     )
 }

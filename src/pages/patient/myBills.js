@@ -100,6 +100,7 @@ function MyBills(props){
             title: '发起时间',
             dataIndex: 'createTime',
             key: 'createTime',
+            render: (text) => <Text>{text.split('T')[0]} {text.split('T')[1].split('.')[0]}</Text>
         },
         {
             title: '类型',
@@ -142,7 +143,7 @@ function MyBills(props){
             key: 'payTime',
             render: (text) => {
                 if (typeof text === 'string' && text.trim().length > 0) {
-                    return <Text>{text}</Text>
+                    return <Text>{text.split('T')[0]} {text.split('T')[1].split('.')[0]}</Text>
                 }else{
                     return <Text>---</Text>
                 }

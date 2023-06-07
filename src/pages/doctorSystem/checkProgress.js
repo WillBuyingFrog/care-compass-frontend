@@ -155,7 +155,10 @@ function CheckProgress(){
                         <div>
                             {getstate(item.state)}
                         </div>
-                        <Button onClick={()=>{
+                        <Button
+                            size="large"
+                            shape={"round"}
+                            onClick={()=>{
                           var temtitle = getdate(item.doctorShiftID);
                           var temstate = getstate(item.state);
                           let temtype='';
