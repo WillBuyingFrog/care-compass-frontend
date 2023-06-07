@@ -71,7 +71,7 @@ function Manage(){
                     }}
                     >
                         <div className='left'><LeftMenu/></div>
-                        <img src={require('../../assets/doctors.png')} style={{marginTop:100}} />
+                        <img src={require('../../assets/blooming.png')} style={{marginTop:200}} />
                     </Sider>
                     <Content>
                         <Outlet />

@@ -95,7 +95,10 @@ function PatientHistory(){
                                 <span>{item.description}</span>
                                 <span>{item.departmentName+':'+item.doctorName}</span>
                                 {/* 查看详情 */}
-                                <Button  onClick={()=>{nagivate('/doctorMain/historicalRecord',{state:{patientName:location.state.patientName,patientID:location.state.patientID,item:item,date:location.state.date ,time:location.state.time}})}} >查看详情</Button>
+                                <Button
+                                    size="large"
+                                    shape={"round"}
+                                    onClick={()=>{nagivate('/doctorMain/historicalRecord',{state:{patientName:location.state.patientName,patientID:location.state.patientID,item:item,date:location.state.date ,time:location.state.time}})}} >查看详情</Button>
                         </List.Item>
                         )}
                     />,

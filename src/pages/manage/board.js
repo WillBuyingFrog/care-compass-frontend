@@ -161,7 +161,7 @@ function AnnouncementList(props) {
             render: (_, record) => (
                 <Tooltip label={record.time} aria-label='A tooltip'>
                     <Text>
-                        {record.time}
+                        {record.time.split('T')[0]} {record.time.split('T')[1].split('.')[0]}
                     </Text>
                 </Tooltip>
             ),
@@ -430,7 +430,7 @@ function PassageList(props) {
             render: (_, record) => (
                 <Tooltip label={record.time} aria-label='A tooltip'>
                     <Text>
-                        {record.time}
+                        {record.time.split('T')[0]} {record.time.split('T')[1].split('.')[0]}
                     </Text>
                 </Tooltip>
             ),

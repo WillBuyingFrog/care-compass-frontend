@@ -6,6 +6,7 @@ import {useLoaderData, useOutletContext} from "react-router-dom";
 import DescriptionCard from "./medicalRecordCards/DescriptionCard";
 import PrescriptionAndInspectionCard from "./medicalRecordCards/PrescriptionAndInspectionCard";
 import DiagnoseCard from "./medicalRecordCards/DiagnoseCard";
+import './personInfo.css'
 
 const { Title, Paragraph, Text } = Typography;
 

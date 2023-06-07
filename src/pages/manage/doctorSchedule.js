@@ -390,7 +390,7 @@ function WorkCalendar(props){
         },
         {
             title: '工号',
-            dataIndex: 'doctorID',
+            dataIndex: 'workID',
         },
         {
             title: '时间段',
@@ -402,7 +402,6 @@ function WorkCalendar(props){
         {
             title: '放号量',
             dataIndex: 'total',
-            editable: true,
         },
         {
             title: '操作',
@@ -529,12 +528,15 @@ function WorkCalendar(props){
         setValue(newValue);
         setSelectedValue(newValue);
         getDateData(dID, newValue.format('YYYY-MM-DD'));
+        getMonthDataByDate(newValue);
         showDrawer();
         console.log(newValue.format('YYYY-MM-DD'));
     };
 
     const onPanelChange = (newValue) => {
         setValue(newValue);
+        getMonthDataByDate(newValue);
+
     };
 
     const getListData = (value) => {
@@ -580,6 +582,30 @@ function WorkCalendar(props){
                 // console.log(monthData);
             })
     }
+
+    const getMonthDataByDate = (date) => {
+        axios({
+            method: "post",
+            url: "/admin/getDepartAllShift/",
+            data: {
+                departmentID: props.dID,
+                date: date.format('YYYY-MM-DD').toString(),
+            },
+            // headers: {
+            //     token: localStorage.getItem("userToken")
+            // }
+        })
+            .then(res => {
+                // console.log(res);
+                // console.log(res.data);
+                // console.log(res.data.data);
+                // console.log(res.data.data.shiftList);
+                setMonthData(res.data.data.shiftList);
+                // console.log(res.data.data.shiftList[3]);
+                // console.log(monthData);
+            })
+    }
+
 
     useEffect(() => {
         // console.log(props.dID);

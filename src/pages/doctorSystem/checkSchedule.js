@@ -46,7 +46,7 @@ function CheckSchedule(){
 
                     return (
                         <Col span={6}>
-                            <Card bordered={true} style={{borderRadius: 20, 'box-shadow': '4px 4px 15px 0 rgba(0,0,0,0.1)'}}>
+                            <Card bordered={true} style={{borderRadius: 20, 'box-shadow': '4px 4px 15px 0 rgba(0,0,0,0.1)', marginBottom: 20}}>
                             <span style={{paddingTop:-110}}>{mixdate(item.date,item.time)}</span>
                             <br/>
                             <span style={{paddingTop:-110}}>当前患者人数： {item.num}人</span>

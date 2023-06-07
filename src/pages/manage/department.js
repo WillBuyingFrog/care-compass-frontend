@@ -263,14 +263,14 @@ function Department(){
                 {DList !== undefined &&
                     <div
                         style={{
-                            height: 500,
+                            height: '80vh',
                             overflow: 'auto',
                             padding: '0',
                             border: 'none',
                         }}
                     >
                         <Box css={{
-                            height: 450,
+                            height: '80vh',
                             overflow: 'auto',
                             padding: '0 10px 0 0',
                             '&::-webkit-scrollbar': {

@@ -2,7 +2,7 @@
 .homepage {
     margin: 0;
     padding: 0;
-    background-color: #0a2a43;
+    background-color: #1A365D;
     min-height: 1500px;
   }
   .homepage  section {
@@ -19,7 +19,7 @@
     bottom: 0;
     width: 100%;
     height: 100px;
-    background: linear-gradient(to top #0a2a43 transparent);
+    background: linear-gradient(to top #1A365D transparent);
     z-index: 10000;
   }
   .homepage  section:after {
@@ -29,7 +29,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #0a2a43;
+    background: rgba(150, 193, 255, 0.65);
     z-index: 3;
     mix-blend-mode: color;
   }

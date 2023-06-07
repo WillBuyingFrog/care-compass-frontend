@@ -62,7 +62,7 @@ class PrescriptionList extends React.Component{
 
                 <div>
                             <span style={{fontSize: 16}}>开具处方:</span>
-                            <MySelect style={{ width: '50%' ,marginLeft:300}} senddata={this.getPrescription} msg2='1' />
+                            {/*<MySelect style={{ width: '50%' ,marginLeft:300}} senddata={this.getPrescription} msg2='1' />*/}
                             <br/>
                             <br/>
                             <List
@@ -86,9 +86,9 @@ class PrescriptionList extends React.Component{
                                 </List.Item>
                                 )}
                             />
-    
+
                         </div>
-    
+
             )
         }
         else{
@@ -119,9 +119,9 @@ class PrescriptionList extends React.Component{
                                 </List.Item>
                                 )}
                             />
-    
+
                         </div>
-    
+
             )
         }
     }

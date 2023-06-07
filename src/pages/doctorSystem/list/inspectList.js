@@ -55,7 +55,7 @@ class InspectList extends React.Component{
                             {/* <Select mode="tags" style={{ width: '50%' ,marginLeft:300}} placeholder="Tags Mode" onChange={handleChange2}>
                                 {children2}
                             </Select> */}
-                            <MySelect2 style={{ width: '50%' ,marginLeft:300}} senddata={this.getPrescription} msg2='1' />
+                            {/*<MySelect2 style={{ width: '50%' ,marginLeft:300}} senddata={this.getPrescription} msg2='1' />*/}
                             <br/>
                             <br/>
                             <List
@@ -75,8 +75,8 @@ class InspectList extends React.Component{
                                 )}
                             />
                         </div>
-    
-    
+
+
             )
         }
         else{
@@ -106,8 +106,8 @@ class InspectList extends React.Component{
                                 )}
                             />
                         </div>
-    
-    
+
+
             )
         }
     }
