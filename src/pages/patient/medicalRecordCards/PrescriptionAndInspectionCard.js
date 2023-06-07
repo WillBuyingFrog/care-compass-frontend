@@ -1,6 +1,6 @@
 import {Box, Center} from "@chakra-ui/react";
 import {Space, Table, Typography} from "antd";
-
+import '../personInfo.css'
 const { Title, Text, Paragraph } = Typography;
 
 function PrescriptionAndInspectionCard(props) {
@@ -56,7 +56,7 @@ function PrescriptionAndInspectionCard(props) {
         <Box
             width={'100%'}
             borderWidth={'5'}
-            borderRadius={'7'}
+            borderRadius={'20'}
             borderStyle={'solid'}
             color={'#E2E8F0'}
             boxShadow={'4px 4px 15px 0 rgba(0,0,0,0.1)'}
@@ -72,6 +72,7 @@ function PrescriptionAndInspectionCard(props) {
                     <Center>
                         <Table columns={prescriptionColumns} dataSource={props.prescriptionList}
                                style={{'width': '100%'}} pagination={false}
+                               className='plist'
                         />
                     </Center>
                     <Title level={4}>
@@ -79,7 +80,8 @@ function PrescriptionAndInspectionCard(props) {
                     </Title>
                     <Center>
                         <Table columns={inspectionColumns} dataSource={processedInspectionList}
-                                 style={{'width': '70%'}} pagination={false}
+                                 style={{'width': '100%'}} pagination={false}
+                               className='plist'
                         />
                     </Center>
                 </Space>

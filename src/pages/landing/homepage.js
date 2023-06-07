@@ -9,17 +9,17 @@ import MyHeader from "../../components/header/header";
 function Homepage(){
     useEffect(()=>{
         let bg = document.querySelector('#bg')
-        let moon = document.querySelector('#moon')
-        let mountain = document.querySelector('#mountain')
-        let road = document.querySelector('#road')
-        let middle = document.querySelector('#middle')
+        // let moon = document.querySelector('#moon')
+        // let mountain = document.querySelector('#mountain')
+        // let road = document.querySelector('#road')
+        // let middle = document.querySelector('#middle')
         window.addEventListener('scroll', () => {
             var value = window.scrollY;
             bg.style.top = value * 0.5 + 'px';
-            moon.style.left = -value * 0.5 + 'px';
-            mountain.style.top = -value * 0.15 + 'px';
-            road.style.top = value * 0.15 + 'px';
-            middle.style.top = value * 1 + 'px';
+            // moon.style.left = -value * 0.5 + 'px';
+            // mountain.style.top = -value * 0.15 + 'px';
+            // road.style.top = value * 0.15 + 'px';
+            // middle.style.top = value * 1 + 'px';
         })
     }, [])
     return(
@@ -28,21 +28,21 @@ function Homepage(){
         <div className="homepage">
             <section>
                 <img
-                    src={require("../../assets/bg.jpg")}
+                    src={require("../../assets/bg1.jpeg")}
                     id="bg"
                 />
-                <img
-                    src={require("../../assets/moon.png")}
-                    id="moon"
-                />
-                <img
-                    src={require("../../assets/mountain.png")}
-                    id="mountain"
-                />
-                <img
-                    src={require("../../assets/road.png")}
-                    id="road"
-                />
+                {/*<img*/}
+                {/*    src={require("../../assets/moon.png")}*/}
+                {/*    id="moon"*/}
+                {/*/>*/}
+                {/*<img*/}
+                {/*    src={require("../../assets/mountain.png")}*/}
+                {/*    id="mountain"*/}
+                {/*/>*/}
+                {/*<img*/}
+                {/*    src={require("../../assets/road.png")}*/}
+                {/*    id="road"*/}
+                {/*/>*/}
                 <div id="middle">
                     <Text className="text1" fontWeight={'extrabold'}>
                         CareCompass
@@ -59,7 +59,7 @@ function Homepage(){
                 </Row>
                 <Row style={{marginTop:30}}>
                     <Col span={16}><Papers  title="就医须知" type={0}></Papers></Col>
-                    <Col span={8}><img src={require("../../assets/doctors.png")} style={{marginTop:90}}></img></Col>
+                    <Col span={8}><img src={require("../../assets/medicine.png")} style={{marginTop:90}}></img></Col>
                 </Row>
                 <Row gutter={30} style={{marginTop:30}}>
                     <Col span={8}><img src={require("../../assets/doctors.png")} style={{marginTop:90}}></img></Col>

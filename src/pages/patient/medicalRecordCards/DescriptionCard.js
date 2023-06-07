@@ -1,5 +1,6 @@
 import {Box} from "@chakra-ui/react";
 import {Space, Typography} from "antd";
+import '../personInfo.css'
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -9,7 +10,7 @@ function DescriptionCard(props) {
         <Box
             width={'100%'}
             borderWidth={'5'}
-            borderRadius={'7'}
+            borderRadius={'20'}
             borderStyle={'solid'}
             color={'#E2E8F0'}
             boxShadow={'4px 4px 15px 0 rgba(0,0,0,0.1)'}
