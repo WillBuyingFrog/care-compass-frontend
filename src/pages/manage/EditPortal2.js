@@ -391,14 +391,14 @@ function EditPortal2() {
                                         onMouseLeave={handleMouseLeaveInstitute}
                                         // href={"/institute?IID=" + data.r_IID} isExternal
                                     > {data.title} </Link> */}
-                                    <Input2 style={{marginLeft:10,width:200}} defaultValue={location.state.title} onChange={changetitle}/>
+                                    <Input2 style={{marginLeft:10,width:400}} defaultValue={location.state.title} onChange={changetitle}/>
                                 </Paragraph>
                                 <Paragraph>
                                     <Space>
                                         <BulbOutlined style={{color :'#4A5568'}} />
                                     </Space>
                                     {/* <Text style={{color :'#4A5568'}}> {data.area}</Text> */}
-                                    <Input2 style={{marginLeft:10,width:200}} defaultValue={location.state.area} onChange={changearea}/>
+                                    <Input2 style={{marginLeft:10,width:400}} defaultValue={location.state.area} onChange={changearea}/>
                                 </Paragraph>
                                 {data.count != "none" &&
                                     <Paragraph>

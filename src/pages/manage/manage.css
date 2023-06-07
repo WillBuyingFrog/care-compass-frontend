@@ -9,3 +9,23 @@
     position: relative;
     overflow: hidden;
 }
+
+
+.plist{
+    /*padding: 40px;*/
+}
+
+.plist .ant-table-thead>tr>th {
+    color: #4A5568;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.plist .ant-table-tbody>tr>td {
+    font-size: 14px;
+    font-weight: 550;
+}
+
+.plist .css-spn4bz:hover {
+    color: #1b3bbb;
+}
