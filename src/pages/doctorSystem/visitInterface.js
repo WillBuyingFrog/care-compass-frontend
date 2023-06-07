@@ -80,12 +80,15 @@ function VisitInterface(){
         console.log(data)
         console.log('data2')
         console.log(data2)
+        console.log(location.state.appointmentID)
         axios.post('/treatment/createMedicalRecord/',JSON.stringify({
-            appointID: location.state.appointID,
+            appointID: location.state.appointmentID,
             description:value1,
             diagnose:value2
         }))
         .then(res=>{
+            console.log(res)
+            
             if(res.data.code === 0){
                 recordID=res.data.data.recordID
                 for(let i=0; i<data.length;i++){
@@ -106,7 +109,7 @@ function VisitInterface(){
                 }
             }
             else{
-                message.error(res.data.message)
+                message.error(res.data.msg)
             }
         }
         )
