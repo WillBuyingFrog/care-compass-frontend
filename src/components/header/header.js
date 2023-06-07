@@ -109,11 +109,24 @@ function MyHeader({textColor, isLanding=false}){
     let userButton;
     console.log(typeof(user.utype))
     if(isLoggedIn && user.utype == "2"){
-        userButton = (<Button w='220px' mt='8px' onClick={()=>{
-            // navigate('/doctorPortal',{state:{doctorID:localStorage.getItem('doctorID')}})
-            window.open(`/doctorPortal/${localStorage.getItem('doctorID')}`, '_blank');
-        }}
-        >我的门户</Button>)
+        userButton = (
+            <div>
+            <Row>
+                <Button w='220px' mt='8px' onClick={()=>{
+                    // navigate('/doctorPortal',{state:{doctorID:localStorage.getItem('doctorID')}})
+                    window.open(`/doctorPortal/${localStorage.getItem('doctorID')}`, '_blank');
+                }}
+                >我的门户</Button>
+            </Row>
+            <Row>
+                <Button w='220px' mt='8px' onClick={()=>{
+                    navigate('/doctorMain/patientAppointment');
+                }}
+                >开始诊疗</Button>
+            </Row>
+            </div>
+
+        )
     }
 
 

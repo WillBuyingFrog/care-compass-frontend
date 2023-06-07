@@ -75,7 +75,7 @@ function ApplyVacation(){
         .then(res=>{
             console.log(success)
             console.log(res)
-            navigate('/checkProgress')
+            navigate('/doctorMain/checkProgress')
         })
 
 
@@ -142,7 +142,7 @@ function ApplyVacation(){
     return(
         <Layout style={{
             padding: '30px',
-            height: '90vh',
+            height: '95vh',
             backgroundColor: 'rgb(220,225,242)',
         }}>
             <div
