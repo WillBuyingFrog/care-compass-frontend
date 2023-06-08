@@ -148,7 +148,6 @@ function AnnouncementList(props) {
             key: 'title',
             sorter: (a, b) => a.title.localeCompare(b.title),
             sortDirections: ['descend', 'ascend'],
-            width: 150,
             render: (_, record) => (
                 <Text>{record.title}</Text>
             ),
@@ -166,7 +165,6 @@ function AnnouncementList(props) {
                 </Tooltip>
             ),
             ellipsis: true,
-            width: 400
         },
         {
             title: '操作',
@@ -417,7 +415,6 @@ function PassageList(props) {
             key: 'title',
             sorter: (a, b) => a.title.localeCompare(b.title),
             sortDirections: ['descend', 'ascend'],
-            width: 150,
             render: (_, record) => (
                 <Text>{record.title}</Text>
             ),
@@ -435,7 +432,6 @@ function PassageList(props) {
                 </Tooltip>
             ),
             ellipsis: true,
-            width: 400
         },
         {
             title: '操作',

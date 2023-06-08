@@ -158,7 +158,7 @@ function UncheckList() {
                             <Card title={props.A.department+'——'+props.A.doctorName+' 工号:'+props.A.workID} style={{width:'45vw'}}>
                                     <Form labelCol={{span:8}}>
                                         <Form.Item label='请假时间'>
-                                            <div>{props.A.commitTime}</div>
+                                            <div>{props.A.leaveTime} {props.A.time === 1 ? '下午':'上午'}</div>
                                         </Form.Item>
                                         <Form.Item label='申请时间'>
                                             <div>{props.A.commitTime}</div>
@@ -285,9 +285,12 @@ function UncheckList() {
         },
         {
             title: '请假时间',
-            dataIndex: 'commitTime',
-            key: 'commitTime',
-            ...getColumnSearchProps('commitTime'),
+            dataIndex: 'leaveTime',
+            key: 'leaveTime',
+            ...getColumnSearchProps('leaveTime'),
+            render: (_, record) => (
+                <Text>{record.leaveTime} {record.time === 1 ? '下午': '上午'}</Text>
+            ),
         },
         {
             title: '请假类型',
@@ -536,9 +539,12 @@ function CheckList() {
         },
         {
             title: '请假时间',
-            dataIndex: 'commitTime',
-            key: 'commitTime',
-            ...getColumnSearchProps('commitTime'),
+            dataIndex: 'leaveTime',
+            key: 'leaveTime',
+            ...getColumnSearchProps('leaveTime'),
+            render: (_, record) => (
+                <Text>{record.leaveTime} {record.time === 1 ? '下午': '上午'}</Text>
+            ),
         },
         {
             title: '请假类型',
