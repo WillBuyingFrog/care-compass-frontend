@@ -335,7 +335,7 @@ function UncheckList() {
             </Row>
             <Table dataSource={data} columns={columns} rowKey="aaid"
                    pagination={{
-                       pageSize: 8,
+                       pageSize: 5,
                    }}
                    className='plist'
             ></Table>
@@ -602,7 +602,7 @@ function CheckList() {
                 </Row>
                 <Table dataSource={data} columns={columns} rowKey="aaid"
                        pagination={{
-                           pageSize: 4,
+                           pageSize: 5,
                        }}
                        className='plist'
                 ></Table>
