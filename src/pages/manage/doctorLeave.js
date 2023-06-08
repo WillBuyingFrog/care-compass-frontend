@@ -523,6 +523,7 @@ function CheckList() {
             ...getColumnSearchProps('department'),
             sorter: (a, b) => a.department.localeCompare(b.department),
             sortDirections: ['descend', 'ascend'],
+
         },
         {
             title: '申请人',
@@ -531,7 +532,7 @@ function CheckList() {
             ...getColumnSearchProps('doctorName'),
             sorter: (a, b) => a.doctorName.localeCompare(b.doctorName),
             sortDirections: ['descend', 'ascend'],
-            width:180
+
         },
         {
             title: '请假时间',

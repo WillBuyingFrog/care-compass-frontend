@@ -216,14 +216,14 @@ function MyAppointments() {
                 }}
             >
             <Row>
-                <Col span={2} />
-                <Col span={20}>
+                <Col span={1} />
+                <Col span={22}>
                     <Title level={1}>
                         我的挂号
                     </Title>
                     <Table columns={columns} dataSource={appointments} className='plist' pagination={{pageSize: 6}}/>
                 </Col>
-                <Col span={2} />
+                <Col span={1} />
             </Row>
             <Modal title="确认取消挂号" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Text>您确定要取消 #{cancelingAppointment.id} 挂号吗？</Text>

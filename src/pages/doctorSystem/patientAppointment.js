@@ -128,7 +128,7 @@ function PatientAppointment(){
                             <span style={{paddingTop:-110, fontSize: 18, fontWeight: "bold"}}>{item.name}</span>
                             <Divider dashed />
                             <span style={{paddingTop:-110}}>预约时间：{gettime(index,location.state.time)}</span>
-                            <span style={{fontSize:30 , paddingLeft:130}}>{index+1}</span>
+                            <span style={{fontSize:30 , paddingLeft:100}}>{index+1}</span>
                             <br/>
                             <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
                             <div style={{textAlign:'center',marginTop:10}}>
@@ -225,7 +225,7 @@ function PatientAppointment(){
                                         <span style={{paddingTop:-110, fontSize: 18, fontWeight: "bold"}}>{item.name}</span>
                                         <Divider dashed />
                                         <span style={{paddingTop:-110}}>预约时间：{gettime(index,shiftlist2[0].time)}</span>
-                                        <span style={{fontSize:30, paddingLeft:130}}>{index+1}</span>
+                                        <span style={{fontSize:30, paddingLeft:100}}>{index+1}</span>
                                         <br/>
                                         <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
                                         <div style={{textAlign:'center',marginTop:10}}>
@@ -372,7 +372,7 @@ function PatientAppointment(){
                             <span style={{paddingTop:-110, fontSize: 18, fontWeight: "bold"}}>{item.name}</span>
                             <Divider dashed />
                             <span style={{paddingTop:-110}}>预约时间：{gettime(index,splitdate(value).time)}</span>
-                            <span style={{fontSize:30 , paddingLeft:130}}>{index+1}</span>
+                            <span style={{fontSize:30 , paddingLeft:100}}>{index+1}</span>
                             <br/>
                             <span style={{paddingTop:-110}}>就诊状态：{getpatientstate(item.isEnd)}</span>
                             <div style={{textAlign:'center',marginTop:10}}>

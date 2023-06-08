@@ -428,7 +428,7 @@ function EditPortal2() {
                                 }
                             </Typography>
                             <div>
-                                <Button style={{marginLeft:900}}
+                                <Button style={{marginLeft:'50vw'}}
                                         size="large"
                                         shape={"round"}
                                         onClick={submit}>提交</Button>

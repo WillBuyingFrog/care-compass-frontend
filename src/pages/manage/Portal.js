@@ -471,7 +471,7 @@ function Portal() {
                 style={{
                     padding: '50px 100px 20px 100px',
                     backgroundColor: 'rgb(230,235,247)',
-                    height: '90vh'
+                    minHeight: '90vh'
                 }}
             >
                 <div
