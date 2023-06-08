@@ -596,7 +596,7 @@ function CheckList() {
                 </Row>
                 <Table dataSource={data} columns={columns} rowKey="aaid"
                        pagination={{
-                           pageSize: 6,
+                           pageSize: 4,
                        }}
                        className='plist'
                 ></Table>
